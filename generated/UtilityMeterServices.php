@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `utility_meter` services.
@@ -22,15 +23,15 @@ final readonly class UtilityMeterServices
     {
     }
 
-    public function calibrate(ServiceTargetSource $target, string|int|float $value): void
+    public function calibrate(ServiceTargetSource $target, string|int|float $value): EventContext
     {
-        $this->ha->callService('utility_meter', 'calibrate', [
+        return $this->ha->callService('utility_meter', 'calibrate', [
             'value' => $value,
         ], $target);
     }
 
-    public function reset(ServiceTargetSource $target): void
+    public function reset(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('utility_meter', 'reset', [], $target);
+        return $this->ha->callService('utility_meter', 'reset', [], $target);
     }
 }

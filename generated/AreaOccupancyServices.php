@@ -33,6 +33,20 @@ final readonly class AreaOccupancyServices
     }
 
     /**
+     * Get Time Priors
+     *
+     * Return the learned weekly occupancy-prior forecast for each area: for every weekly slot (day of week x time of day) the probability that the area tends to be occupied. Unlike the occupancy_probability sensor (a current-state estimate), this exposes priors for future slots so other integrations can build a forward-looking occupancy profile (for example to pre-heat a room before its habitual occupancy). Returns response data only.
+     *
+     * @param ?string $areaId Area. Optional Home Assistant area_id. When omitted, the forecast for all configured areas is returned. The aggregate zone ids ("all_areas" and "floor_[floor_id]") are also accepted, but the area picker only lists real Home Assistant areas — pass an aggregate id in YAML mode
+     */
+    public function getTimePriors(?string $areaId = null): ServiceResponse
+    {
+        return $this->ha->callServiceForResponse('area_occupancy', 'get_time_priors', [
+            'area_id' => $areaId,
+        ]);
+    }
+
+    /**
      * Purge Area History
      *
      * Delete all learned history (priors, correlations, intervals, aggregates, cached occupied intervals) for a single configured area, without removing the area from the integration. Use this when a room's learned behavior is no longer accurate and you want the integration to re-learn from scratch.
@@ -54,5 +68,35 @@ final readonly class AreaOccupancyServices
     public function runAnalysis(): ServiceResponse
     {
         return $this->ha->callServiceForResponse('area_occupancy', 'run_analysis', []);
+    }
+
+    /**
+     * Set Area Option
+     *
+     * Change one configured area's detection tunables from an automation or script. Values go through the same validation and purpose-default handling the configuration UI applies, so an automation cannot put an area into a state the UI would reject. Structural configuration (which entities belong to an area, adjacent areas) is deliberately not settable here.
+     *
+     * @param string $areaId Area. The Home Assistant area_id of the configured area to change
+     * @param ?bool $decayEnabled Enable time decay. Whether occupancy probability decays once evidence stops
+     * @param array{days?: int|float, hours?: int|float, minutes?: int|float, seconds?: int|float, milliseconds?: int|float}|string|int|float|null $decayHalfLife Decay half-life. Time over which occupancy probability halves. Set to 0 to follow the area's purpose default; any other value must be between 10 seconds and 1 hour
+     * @param int|float|null $minPriorOverride Minimum prior override. Floor for the learned prior, from 0 to 1. Set to 0 to disable. 0 to 1
+     * @param int|float|null $threshold Occupancy threshold. Percentage above which the area counts as occupied. 1 to 100 %
+     * @param ?bool $waspEnabled Enable Wasp in Box. Whether the Wasp in Box virtual sensor runs for this area
+     */
+    public function setAreaOption(
+        string $areaId,
+        ?bool $decayEnabled = null,
+        array|string|int|float|null $decayHalfLife = null,
+        int|float|null $minPriorOverride = null,
+        int|float|null $threshold = null,
+        ?bool $waspEnabled = null,
+    ): ServiceResponse {
+        return $this->ha->callServiceForResponse('area_occupancy', 'set_area_option', [
+            'area_id' => $areaId,
+            'decay_enabled' => $decayEnabled,
+            'decay_half_life' => $decayHalfLife,
+            'min_prior_override' => $minPriorOverride,
+            'threshold' => $threshold,
+            'wasp_enabled' => $waspEnabled,
+        ]);
     }
 }

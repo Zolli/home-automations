@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `text` services.
@@ -22,9 +23,9 @@ final readonly class TextServices
     {
     }
 
-    public function setValue(ServiceTargetSource $target, string|int|float $value): void
+    public function setValue(ServiceTargetSource $target, string|int|float $value): EventContext
     {
-        $this->ha->callService('text', 'set_value', [
+        return $this->ha->callService('text', 'set_value', [
             'value' => $value,
         ], $target);
     }

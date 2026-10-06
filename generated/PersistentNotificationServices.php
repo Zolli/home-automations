@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `persistent_notification` services.
@@ -25,23 +26,23 @@ final readonly class PersistentNotificationServices
         string|int|float $message,
         string|int|float|null $notificationId = null,
         string|int|float|null $title = null,
-    ): void {
-        $this->ha->callService('persistent_notification', 'create', [
+    ): EventContext {
+        return $this->ha->callService('persistent_notification', 'create', [
             'message' => $message,
             'notification_id' => $notificationId,
             'title' => $title,
         ]);
     }
 
-    public function dismiss(string|int|float $notificationId): void
+    public function dismiss(string|int|float $notificationId): EventContext
     {
-        $this->ha->callService('persistent_notification', 'dismiss', [
+        return $this->ha->callService('persistent_notification', 'dismiss', [
             'notification_id' => $notificationId,
         ]);
     }
 
-    public function dismissAll(): void
+    public function dismissAll(): EventContext
     {
-        $this->ha->callService('persistent_notification', 'dismiss_all', []);
+        return $this->ha->callService('persistent_notification', 'dismiss_all', []);
     }
 }

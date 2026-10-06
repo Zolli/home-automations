@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `shell_command` services.
@@ -27,8 +28,8 @@ final readonly class ShellCommandServices
         return $this->ha->callServiceForResponse('shell_command', 'living_room_tv_turn_on', []);
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('shell_command', 'reload', []);
+        return $this->ha->callService('shell_command', 'reload', []);
     }
 }

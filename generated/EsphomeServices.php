@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `esphome` services.
@@ -24,25 +25,25 @@ final readonly class EsphomeServices
     /**
      * Performs the action advanced_sniff_start of the node rf-blind-controller
      */
-    public function rfBlindControllerAdvancedSniffStart(): void
+    public function rfBlindControllerAdvancedSniffStart(): EventContext
     {
-        $this->ha->callService('esphome', 'rf_blind_controller_advanced_sniff_start', []);
+        return $this->ha->callService('esphome', 'rf_blind_controller_advanced_sniff_start', []);
     }
 
     /**
      * Performs the action advanced_sniff_stop of the node rf-blind-controller
      */
-    public function rfBlindControllerAdvancedSniffStop(): void
+    public function rfBlindControllerAdvancedSniffStop(): EventContext
     {
-        $this->ha->callService('esphome', 'rf_blind_controller_advanced_sniff_stop', []);
+        return $this->ha->callService('esphome', 'rf_blind_controller_advanced_sniff_stop', []);
     }
 
     /**
      * Performs the action learn of the node rf-blind-controller
      */
-    public function rfBlindControllerLearn(): void
+    public function rfBlindControllerLearn(): EventContext
     {
-        $this->ha->callService('esphome', 'rf_blind_controller_learn', []);
+        return $this->ha->callService('esphome', 'rf_blind_controller_learn', []);
     }
 
     /**
@@ -56,8 +57,8 @@ final readonly class EsphomeServices
         string|int|float $code,
         int|float $length,
         int|float $protocol,
-    ): void {
-        $this->ha->callService('esphome', 'rf_blind_controller_send_advanced_code', [
+    ): EventContext {
+        return $this->ha->callService('esphome', 'rf_blind_controller_send_advanced_code', [
             'code' => $code,
             'length' => $length,
             'protocol' => $protocol,
@@ -77,8 +78,8 @@ final readonly class EsphomeServices
         int|float $high,
         int|float $low,
         int|float $sync,
-    ): void {
-        $this->ha->callService('esphome', 'rf_blind_controller_send_rf_code', [
+    ): EventContext {
+        return $this->ha->callService('esphome', 'rf_blind_controller_send_rf_code', [
             'code' => $code,
             'high' => $high,
             'low' => $low,
@@ -89,33 +90,33 @@ final readonly class EsphomeServices
     /**
      * Performs the action ble_get_info_prestige_zoli of the node toothbrush-proxy
      */
-    public function toothbrushProxyBleGetInfoPrestigeZoli(): void
+    public function toothbrushProxyBleGetInfoPrestigeZoli(): EventContext
     {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_get_info_prestige_zoli', []);
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_get_info_prestige_zoli', []);
     }
 
     /**
      * Performs the action ble_get_info_prestige_zsuzsi of the node toothbrush-proxy
      */
-    public function toothbrushProxyBleGetInfoPrestigeZsuzsi(): void
+    public function toothbrushProxyBleGetInfoPrestigeZsuzsi(): EventContext
     {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_get_info_prestige_zsuzsi', []);
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_get_info_prestige_zsuzsi', []);
     }
 
     /**
      * Performs the action ble_list_services_prestige_zoli of the node toothbrush-proxy
      */
-    public function toothbrushProxyBleListServicesPrestigeZoli(): void
+    public function toothbrushProxyBleListServicesPrestigeZoli(): EventContext
     {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_list_services_prestige_zoli', []);
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_list_services_prestige_zoli', []);
     }
 
     /**
      * Performs the action ble_list_services_prestige_zsuzsi of the node toothbrush-proxy
      */
-    public function toothbrushProxyBleListServicesPrestigeZsuzsi(): void
+    public function toothbrushProxyBleListServicesPrestigeZsuzsi(): EventContext
     {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_list_services_prestige_zsuzsi', []);
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_list_services_prestige_zsuzsi', []);
     }
 
     /**
@@ -124,9 +125,11 @@ final readonly class EsphomeServices
      * @param string|int|float $mac mac
      * @param string|int|float $timeoutS timeout_s
      */
-    public function toothbrushProxyBlePairMacPrestigeZoli(string|int|float $mac, string|int|float $timeoutS): void
-    {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_pair_mac_prestige_zoli', [
+    public function toothbrushProxyBlePairMacPrestigeZoli(
+        string|int|float $mac,
+        string|int|float $timeoutS,
+    ): EventContext {
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_pair_mac_prestige_zoli', [
             'mac' => $mac,
             'timeout_s' => $timeoutS,
         ]);
@@ -138,9 +141,11 @@ final readonly class EsphomeServices
      * @param string|int|float $mac mac
      * @param string|int|float $timeoutS timeout_s
      */
-    public function toothbrushProxyBlePairMacPrestigeZsuzsi(string|int|float $mac, string|int|float $timeoutS): void
-    {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_pair_mac_prestige_zsuzsi', [
+    public function toothbrushProxyBlePairMacPrestigeZsuzsi(
+        string|int|float $mac,
+        string|int|float $timeoutS,
+    ): EventContext {
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_pair_mac_prestige_zsuzsi', [
             'mac' => $mac,
             'timeout_s' => $timeoutS,
         ]);
@@ -152,9 +157,9 @@ final readonly class EsphomeServices
      * @param bool $enabled enabled
      * @param string|int|float $timeoutS timeout_s
      */
-    public function toothbrushProxyBlePairModePrestigeZoli(bool $enabled, string|int|float $timeoutS): void
+    public function toothbrushProxyBlePairModePrestigeZoli(bool $enabled, string|int|float $timeoutS): EventContext
     {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_pair_mode_prestige_zoli', [
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_pair_mode_prestige_zoli', [
             'enabled' => $enabled,
             'timeout_s' => $timeoutS,
         ]);
@@ -166,9 +171,9 @@ final readonly class EsphomeServices
      * @param bool $enabled enabled
      * @param string|int|float $timeoutS timeout_s
      */
-    public function toothbrushProxyBlePairModePrestigeZsuzsi(bool $enabled, string|int|float $timeoutS): void
+    public function toothbrushProxyBlePairModePrestigeZsuzsi(bool $enabled, string|int|float $timeoutS): EventContext
     {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_pair_mode_prestige_zsuzsi', [
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_pair_mode_prestige_zsuzsi', [
             'enabled' => $enabled,
             'timeout_s' => $timeoutS,
         ]);
@@ -183,8 +188,8 @@ final readonly class EsphomeServices
     public function toothbrushProxyBleReadCharPrestigeZoli(
         string|int|float $charUuid,
         string|int|float $serviceUuid,
-    ): void {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_read_char_prestige_zoli', [
+    ): EventContext {
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_read_char_prestige_zoli', [
             'char_uuid' => $charUuid,
             'service_uuid' => $serviceUuid,
         ]);
@@ -199,8 +204,8 @@ final readonly class EsphomeServices
     public function toothbrushProxyBleReadCharPrestigeZsuzsi(
         string|int|float $charUuid,
         string|int|float $serviceUuid,
-    ): void {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_read_char_prestige_zsuzsi', [
+    ): EventContext {
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_read_char_prestige_zsuzsi', [
             'char_uuid' => $charUuid,
             'service_uuid' => $serviceUuid,
         ]);
@@ -211,9 +216,9 @@ final readonly class EsphomeServices
      *
      * @param string|int|float $timeoutS timeout_s
      */
-    public function toothbrushProxyBleScanPrestigeZoli(string|int|float $timeoutS): void
+    public function toothbrushProxyBleScanPrestigeZoli(string|int|float $timeoutS): EventContext
     {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_scan_prestige_zoli', [
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_scan_prestige_zoli', [
             'timeout_s' => $timeoutS,
         ]);
     }
@@ -223,9 +228,9 @@ final readonly class EsphomeServices
      *
      * @param string|int|float $timeoutS timeout_s
      */
-    public function toothbrushProxyBleScanPrestigeZsuzsi(string|int|float $timeoutS): void
+    public function toothbrushProxyBleScanPrestigeZsuzsi(string|int|float $timeoutS): EventContext
     {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_scan_prestige_zsuzsi', [
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_scan_prestige_zsuzsi', [
             'timeout_s' => $timeoutS,
         ]);
     }
@@ -235,9 +240,9 @@ final readonly class EsphomeServices
      *
      * @param string|int|float $throttleMs throttle_ms
      */
-    public function toothbrushProxyBleSetThrottlePrestigeZoli(string|int|float $throttleMs): void
+    public function toothbrushProxyBleSetThrottlePrestigeZoli(string|int|float $throttleMs): EventContext
     {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_set_throttle_prestige_zoli', [
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_set_throttle_prestige_zoli', [
             'throttle_ms' => $throttleMs,
         ]);
     }
@@ -247,9 +252,9 @@ final readonly class EsphomeServices
      *
      * @param string|int|float $throttleMs throttle_ms
      */
-    public function toothbrushProxyBleSetThrottlePrestigeZsuzsi(string|int|float $throttleMs): void
+    public function toothbrushProxyBleSetThrottlePrestigeZsuzsi(string|int|float $throttleMs): EventContext
     {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_set_throttle_prestige_zsuzsi', [
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_set_throttle_prestige_zsuzsi', [
             'throttle_ms' => $throttleMs,
         ]);
     }
@@ -263,8 +268,8 @@ final readonly class EsphomeServices
     public function toothbrushProxyBleSubscribePrestigeZoli(
         string|int|float $charUuid,
         string|int|float $serviceUuid,
-    ): void {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_subscribe_prestige_zoli', [
+    ): EventContext {
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_subscribe_prestige_zoli', [
             'char_uuid' => $charUuid,
             'service_uuid' => $serviceUuid,
         ]);
@@ -279,8 +284,8 @@ final readonly class EsphomeServices
     public function toothbrushProxyBleSubscribePrestigeZsuzsi(
         string|int|float $charUuid,
         string|int|float $serviceUuid,
-    ): void {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_subscribe_prestige_zsuzsi', [
+    ): EventContext {
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_subscribe_prestige_zsuzsi', [
             'char_uuid' => $charUuid,
             'service_uuid' => $serviceUuid,
         ]);
@@ -291,9 +296,9 @@ final readonly class EsphomeServices
      *
      * @param string|int|float $mac mac
      */
-    public function toothbrushProxyBleUnpairMac(string|int|float $mac): void
+    public function toothbrushProxyBleUnpairMac(string|int|float $mac): EventContext
     {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_unpair_mac', [
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_unpair_mac', [
             'mac' => $mac,
         ]);
     }
@@ -301,17 +306,17 @@ final readonly class EsphomeServices
     /**
      * Performs the action ble_unpair_prestige_zoli of the node toothbrush-proxy
      */
-    public function toothbrushProxyBleUnpairPrestigeZoli(): void
+    public function toothbrushProxyBleUnpairPrestigeZoli(): EventContext
     {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_unpair_prestige_zoli', []);
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_unpair_prestige_zoli', []);
     }
 
     /**
      * Performs the action ble_unpair_prestige_zsuzsi of the node toothbrush-proxy
      */
-    public function toothbrushProxyBleUnpairPrestigeZsuzsi(): void
+    public function toothbrushProxyBleUnpairPrestigeZsuzsi(): EventContext
     {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_unpair_prestige_zsuzsi', []);
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_unpair_prestige_zsuzsi', []);
     }
 
     /**
@@ -323,8 +328,8 @@ final readonly class EsphomeServices
     public function toothbrushProxyBleUnsubscribePrestigeZoli(
         string|int|float $charUuid,
         string|int|float $serviceUuid,
-    ): void {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_unsubscribe_prestige_zoli', [
+    ): EventContext {
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_unsubscribe_prestige_zoli', [
             'char_uuid' => $charUuid,
             'service_uuid' => $serviceUuid,
         ]);
@@ -339,8 +344,8 @@ final readonly class EsphomeServices
     public function toothbrushProxyBleUnsubscribePrestigeZsuzsi(
         string|int|float $charUuid,
         string|int|float $serviceUuid,
-    ): void {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_unsubscribe_prestige_zsuzsi', [
+    ): EventContext {
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_unsubscribe_prestige_zsuzsi', [
             'char_uuid' => $charUuid,
             'service_uuid' => $serviceUuid,
         ]);
@@ -357,8 +362,8 @@ final readonly class EsphomeServices
         string|int|float $charUuid,
         string|int|float $data,
         string|int|float $serviceUuid,
-    ): void {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_write_char_prestige_zoli', [
+    ): EventContext {
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_write_char_prestige_zoli', [
             'char_uuid' => $charUuid,
             'data' => $data,
             'service_uuid' => $serviceUuid,
@@ -376,8 +381,8 @@ final readonly class EsphomeServices
         string|int|float $charUuid,
         string|int|float $data,
         string|int|float $serviceUuid,
-    ): void {
-        $this->ha->callService('esphome', 'toothbrush_proxy_ble_write_char_prestige_zsuzsi', [
+    ): EventContext {
+        return $this->ha->callService('esphome', 'toothbrush_proxy_ble_write_char_prestige_zsuzsi', [
             'char_uuid' => $charUuid,
             'data' => $data,
             'service_uuid' => $serviceUuid,

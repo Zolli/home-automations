@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `intent_script` services.
@@ -21,8 +22,8 @@ final readonly class IntentScriptServices
     {
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('intent_script', 'reload', []);
+        return $this->ha->callService('intent_script', 'reload', []);
     }
 }

@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `timer` services.
@@ -22,42 +23,42 @@ final readonly class TimerServices
     {
     }
 
-    public function cancel(ServiceTargetSource $target): void
+    public function cancel(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('timer', 'cancel', [], $target);
+        return $this->ha->callService('timer', 'cancel', [], $target);
     }
 
     /**
      * @param array{days?: int|float, hours?: int|float, minutes?: int|float, seconds?: int|float, milliseconds?: int|float}|string|int|float $duration
      */
-    public function change(ServiceTargetSource $target, array|string|int|float $duration): void
+    public function change(ServiceTargetSource $target, array|string|int|float $duration): EventContext
     {
-        $this->ha->callService('timer', 'change', [
+        return $this->ha->callService('timer', 'change', [
             'duration' => $duration,
         ], $target);
     }
 
-    public function finish(ServiceTargetSource $target): void
+    public function finish(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('timer', 'finish', [], $target);
+        return $this->ha->callService('timer', 'finish', [], $target);
     }
 
-    public function pause(ServiceTargetSource $target): void
+    public function pause(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('timer', 'pause', [], $target);
+        return $this->ha->callService('timer', 'pause', [], $target);
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('timer', 'reload', []);
+        return $this->ha->callService('timer', 'reload', []);
     }
 
     /**
      * @param array{days?: int|float, hours?: int|float, minutes?: int|float, seconds?: int|float, milliseconds?: int|float}|string|int|float|null $duration
      */
-    public function start(ServiceTargetSource $target, array|string|int|float|null $duration = null): void
+    public function start(ServiceTargetSource $target, array|string|int|float|null $duration = null): EventContext
     {
-        $this->ha->callService('timer', 'start', [
+        return $this->ha->callService('timer', 'start', [
             'duration' => $duration,
         ], $target);
     }

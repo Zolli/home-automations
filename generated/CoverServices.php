@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `cover` services.
@@ -22,36 +23,39 @@ final readonly class CoverServices
     {
     }
 
-    public function closeCover(ServiceTargetSource $target, ?string $speed = null): void
+    public function closeCover(ServiceTargetSource $target, ?string $speed = null): EventContext
     {
-        $this->ha->callService('cover', 'close_cover', [
+        return $this->ha->callService('cover', 'close_cover', [
             'speed' => $speed,
         ], $target);
     }
 
-    public function closeCoverTilt(ServiceTargetSource $target): void
+    public function closeCoverTilt(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('cover', 'close_cover_tilt', [], $target);
+        return $this->ha->callService('cover', 'close_cover_tilt', [], $target);
     }
 
-    public function openCover(ServiceTargetSource $target, ?string $speed = null): void
+    public function openCover(ServiceTargetSource $target, ?string $speed = null): EventContext
     {
-        $this->ha->callService('cover', 'open_cover', [
+        return $this->ha->callService('cover', 'open_cover', [
             'speed' => $speed,
         ], $target);
     }
 
-    public function openCoverTilt(ServiceTargetSource $target): void
+    public function openCoverTilt(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('cover', 'open_cover_tilt', [], $target);
+        return $this->ha->callService('cover', 'open_cover_tilt', [], $target);
     }
 
     /**
      * @param int|float $position 0 to 100 %
      */
-    public function setCoverPosition(ServiceTargetSource $target, int|float $position, ?string $speed = null): void
-    {
-        $this->ha->callService('cover', 'set_cover_position', [
+    public function setCoverPosition(
+        ServiceTargetSource $target,
+        int|float $position,
+        ?string $speed = null,
+    ): EventContext {
+        return $this->ha->callService('cover', 'set_cover_position', [
             'position' => $position,
             'speed' => $speed,
         ], $target);
@@ -60,30 +64,30 @@ final readonly class CoverServices
     /**
      * @param int|float $tiltPosition 0 to 100 %
      */
-    public function setCoverTiltPosition(ServiceTargetSource $target, int|float $tiltPosition): void
+    public function setCoverTiltPosition(ServiceTargetSource $target, int|float $tiltPosition): EventContext
     {
-        $this->ha->callService('cover', 'set_cover_tilt_position', [
+        return $this->ha->callService('cover', 'set_cover_tilt_position', [
             'tilt_position' => $tiltPosition,
         ], $target);
     }
 
-    public function stopCover(ServiceTargetSource $target): void
+    public function stopCover(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('cover', 'stop_cover', [], $target);
+        return $this->ha->callService('cover', 'stop_cover', [], $target);
     }
 
-    public function stopCoverTilt(ServiceTargetSource $target): void
+    public function stopCoverTilt(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('cover', 'stop_cover_tilt', [], $target);
+        return $this->ha->callService('cover', 'stop_cover_tilt', [], $target);
     }
 
-    public function toggle(ServiceTargetSource $target): void
+    public function toggle(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('cover', 'toggle', [], $target);
+        return $this->ha->callService('cover', 'toggle', [], $target);
     }
 
-    public function toggleCoverTilt(ServiceTargetSource $target): void
+    public function toggleCoverTilt(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('cover', 'toggle_cover_tilt', [], $target);
+        return $this->ha->callService('cover', 'toggle_cover_tilt', [], $target);
     }
 }

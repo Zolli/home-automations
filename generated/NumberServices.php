@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `number` services.
@@ -22,9 +23,9 @@ final readonly class NumberServices
     {
     }
 
-    public function setValue(ServiceTargetSource $target, string|int|float $value): void
+    public function setValue(ServiceTargetSource $target, string|int|float $value): EventContext
     {
-        $this->ha->callService('number', 'set_value', [
+        return $this->ha->callService('number', 'set_value', [
             'value' => $value,
         ], $target);
     }

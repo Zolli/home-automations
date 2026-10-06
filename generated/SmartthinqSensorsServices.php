@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `smartthinq_sensors` services.
@@ -29,9 +30,9 @@ final readonly class SmartthinqSensorsServices
      *
      * @param string|int|float|null $course course. Course (if not set will use current)
      */
-    public function remoteStart(ServiceTargetSource $target, string|int|float|null $course = null): void
+    public function remoteStart(ServiceTargetSource $target, string|int|float|null $course = null): EventContext
     {
-        $this->ha->callService('smartthinq_sensors', 'remote_start', [
+        return $this->ha->callService('smartthinq_sensors', 'remote_start', [
             'course' => $course,
         ], $target);
     }
@@ -43,9 +44,9 @@ final readonly class SmartthinqSensorsServices
      *
      * @param string|int|float $fanMode Fan mode. New value of fan mode
      */
-    public function setFanMode(ServiceTargetSource $target, string|int|float $fanMode): void
+    public function setFanMode(ServiceTargetSource $target, string|int|float $fanMode): EventContext
     {
-        $this->ha->callService('smartthinq_sensors', 'set_fan_mode', [
+        return $this->ha->callService('smartthinq_sensors', 'set_fan_mode', [
             'fan_mode' => $fanMode,
         ], $target);
     }
@@ -57,9 +58,9 @@ final readonly class SmartthinqSensorsServices
      *
      * @param int|float $sleepTime Timeout. Timeout for sleep mode in minutes. 0 to 720 minutes
      */
-    public function setSleepTime(ServiceTargetSource $target, int|float $sleepTime): void
+    public function setSleepTime(ServiceTargetSource $target, int|float $sleepTime): EventContext
     {
-        $this->ha->callService('smartthinq_sensors', 'set_sleep_time', [
+        return $this->ha->callService('smartthinq_sensors', 'set_sleep_time', [
             'sleep_time' => $sleepTime,
         ], $target);
     }
@@ -71,9 +72,9 @@ final readonly class SmartthinqSensorsServices
      *
      * @param ?string $timeWanted time. Time (if not set will use Home-Assistant time)
      */
-    public function setTime(ServiceTargetSource $target, ?string $timeWanted = null): void
+    public function setTime(ServiceTargetSource $target, ?string $timeWanted = null): EventContext
     {
-        $this->ha->callService('smartthinq_sensors', 'set_time', [
+        return $this->ha->callService('smartthinq_sensors', 'set_time', [
             'time_wanted' => $timeWanted,
         ], $target);
     }
@@ -83,8 +84,8 @@ final readonly class SmartthinqSensorsServices
      *
      * Send to ThinQ device the wakeup command.
      */
-    public function wakeUp(ServiceTargetSource $target): void
+    public function wakeUp(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('smartthinq_sensors', 'wake_up', [], $target);
+        return $this->ha->callService('smartthinq_sensors', 'wake_up', [], $target);
     }
 }

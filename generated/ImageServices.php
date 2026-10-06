@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `image` services.
@@ -22,9 +23,9 @@ final readonly class ImageServices
     {
     }
 
-    public function snapshot(ServiceTargetSource $target, string|int|float $filename): void
+    public function snapshot(ServiceTargetSource $target, string|int|float $filename): EventContext
     {
-        $this->ha->callService('image', 'snapshot', [
+        return $this->ha->callService('image', 'snapshot', [
             'filename' => $filename,
         ], $target);
     }

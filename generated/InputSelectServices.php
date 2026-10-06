@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `input_select` services.
@@ -22,38 +23,38 @@ final readonly class InputSelectServices
     {
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('input_select', 'reload', []);
+        return $this->ha->callService('input_select', 'reload', []);
     }
 
-    public function selectFirst(ServiceTargetSource $target): void
+    public function selectFirst(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('input_select', 'select_first', [], $target);
+        return $this->ha->callService('input_select', 'select_first', [], $target);
     }
 
-    public function selectLast(ServiceTargetSource $target): void
+    public function selectLast(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('input_select', 'select_last', [], $target);
+        return $this->ha->callService('input_select', 'select_last', [], $target);
     }
 
-    public function selectNext(ServiceTargetSource $target, ?bool $cycle = null): void
+    public function selectNext(ServiceTargetSource $target, ?bool $cycle = null): EventContext
     {
-        $this->ha->callService('input_select', 'select_next', [
+        return $this->ha->callService('input_select', 'select_next', [
             'cycle' => $cycle,
         ], $target);
     }
 
-    public function selectOption(ServiceTargetSource $target, string $option): void
+    public function selectOption(ServiceTargetSource $target, string $option): EventContext
     {
-        $this->ha->callService('input_select', 'select_option', [
+        return $this->ha->callService('input_select', 'select_option', [
             'option' => $option,
         ], $target);
     }
 
-    public function selectPrevious(ServiceTargetSource $target, ?bool $cycle = null): void
+    public function selectPrevious(ServiceTargetSource $target, ?bool $cycle = null): EventContext
     {
-        $this->ha->callService('input_select', 'select_previous', [
+        return $this->ha->callService('input_select', 'select_previous', [
             'cycle' => $cycle,
         ], $target);
     }
@@ -61,9 +62,9 @@ final readonly class InputSelectServices
     /**
      * @param list<string|int|float> $options
      */
-    public function setOptions(ServiceTargetSource $target, array $options): void
+    public function setOptions(ServiceTargetSource $target, array $options): EventContext
     {
-        $this->ha->callService('input_select', 'set_options', [
+        return $this->ha->callService('input_select', 'set_options', [
             'options' => $options,
         ], $target);
     }

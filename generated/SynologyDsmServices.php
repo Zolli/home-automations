@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `synology_dsm` services.
@@ -21,16 +22,16 @@ final readonly class SynologyDsmServices
     {
     }
 
-    public function reboot(string|int|float|null $serial = null): void
+    public function reboot(string|int|float|null $serial = null): EventContext
     {
-        $this->ha->callService('synology_dsm', 'reboot', [
+        return $this->ha->callService('synology_dsm', 'reboot', [
             'serial' => $serial,
         ]);
     }
 
-    public function shutdown(string|int|float|null $serial = null): void
+    public function shutdown(string|int|float|null $serial = null): EventContext
     {
-        $this->ha->callService('synology_dsm', 'shutdown', [
+        return $this->ha->callService('synology_dsm', 'shutdown', [
             'serial' => $serial,
         ]);
     }

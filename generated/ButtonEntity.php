@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -62,7 +63,7 @@ final readonly class ButtonEntity implements TypedEntity
         'button.cover_switch_master_bedroom_corner_window_battery_replaced' => true,
         'button.cover_switch_master_bedroom_porch_battery_replaced' => true,
         'button.cover_switch_mechanical_room_battery_replaced' => true,
-        'button.dusty_backup_map_1' => true,
+        'button.dusty_backup_saved_map' => true,
         'button.dusty_base_station_cleaning' => true,
         'button.dusty_base_station_self_repair' => true,
         'button.dusty_clear_warning' => true,
@@ -99,7 +100,6 @@ final readonly class ButtonEntity implements TypedEntity
         'button.entry_master_bedroom_window_battery_replaced' => true,
         'button.entry_master_wardrobe_door_1_battery_replaced' => true,
         'button.entry_master_wardrobe_door_2_battery_replaced' => true,
-        'button.entry_master_wardrobe_door_2_battery_replaced_2' => true,
         'button.entry_master_wardrobe_door_3_battery_replaced' => true,
         'button.entry_master_wardrobe_door_3_battery_replaced_2' => true,
         'button.entry_mechanical_room_door_battery_replaced' => true,
@@ -270,7 +270,6 @@ final readonly class ButtonEntity implements TypedEntity
         'button.light_workroom_ceiling_01_bulb_3_identify' => true,
         'button.living_room_favorite_current_song' => true,
         'button.living_room_tv_ambilight_clear_priority' => true,
-        'button.living_room_tv_ambilight_identify' => true,
         'button.living_room_tv_favorite_current_song' => true,
         'button.living_room_tv_soundbar_favorite_current_song' => true,
         'button.master_bathroom_speaker_favorite_current_song' => true,
@@ -502,8 +501,8 @@ final readonly class ButtonEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function press(): void
+    public function press(): EventContext
     {
-        $this->entity->callService('press');
+        return $this->entity->callService('press');
     }
 }

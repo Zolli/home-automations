@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `conversation` services.
@@ -36,9 +37,9 @@ final readonly class ConversationServices
         ]);
     }
 
-    public function reload(?string $agentId = null, string|int|float|null $language = null): void
+    public function reload(?string $agentId = null, string|int|float|null $language = null): EventContext
     {
-        $this->ha->callService('conversation', 'reload', [
+        return $this->ha->callService('conversation', 'reload', [
             'agent_id' => $agentId,
             'language' => $language,
         ]);

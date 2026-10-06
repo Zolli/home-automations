@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `valve` services.
@@ -22,33 +23,33 @@ final readonly class ValveServices
     {
     }
 
-    public function closeValve(ServiceTargetSource $target): void
+    public function closeValve(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('valve', 'close_valve', [], $target);
+        return $this->ha->callService('valve', 'close_valve', [], $target);
     }
 
-    public function openValve(ServiceTargetSource $target): void
+    public function openValve(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('valve', 'open_valve', [], $target);
+        return $this->ha->callService('valve', 'open_valve', [], $target);
     }
 
     /**
      * @param int|float $position 0 to 100 %
      */
-    public function setValvePosition(ServiceTargetSource $target, int|float $position): void
+    public function setValvePosition(ServiceTargetSource $target, int|float $position): EventContext
     {
-        $this->ha->callService('valve', 'set_valve_position', [
+        return $this->ha->callService('valve', 'set_valve_position', [
             'position' => $position,
         ], $target);
     }
 
-    public function stopValve(ServiceTargetSource $target): void
+    public function stopValve(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('valve', 'stop_valve', [], $target);
+        return $this->ha->callService('valve', 'stop_valve', [], $target);
     }
 
-    public function toggle(ServiceTargetSource $target): void
+    public function toggle(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('valve', 'toggle', [], $target);
+        return $this->ha->callService('valve', 'toggle', [], $target);
     }
 }

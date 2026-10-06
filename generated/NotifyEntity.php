@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -105,9 +106,9 @@ final readonly class NotifyEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function sendMessage(string|int|float $message, string|int|float|null $title = null): void
+    public function sendMessage(string|int|float $message, string|int|float|null $title = null): EventContext
     {
-        $this->entity->callService('send_message', [
+        return $this->entity->callService('send_message', [
             'message' => $message,
             'title' => $title,
         ]);

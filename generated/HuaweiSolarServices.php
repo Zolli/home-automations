@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `huawei_solar` services.
@@ -21,23 +22,23 @@ final readonly class HuaweiSolarServices
     {
     }
 
-    public function resetMaximumFeedGridPower(string $deviceId): void
+    public function resetMaximumFeedGridPower(string $deviceId): EventContext
     {
-        $this->ha->callService('huawei_solar', 'reset_maximum_feed_grid_power', [
+        return $this->ha->callService('huawei_solar', 'reset_maximum_feed_grid_power', [
             'device_id' => $deviceId,
         ]);
     }
 
-    public function setDiActivePowerScheduling(string $deviceId): void
+    public function setDiActivePowerScheduling(string $deviceId): EventContext
     {
-        $this->ha->callService('huawei_solar', 'set_di_active_power_scheduling', [
+        return $this->ha->callService('huawei_solar', 'set_di_active_power_scheduling', [
             'device_id' => $deviceId,
         ]);
     }
 
-    public function setMaximumFeedGridPower(string $deviceId, string|int|float $power): void
+    public function setMaximumFeedGridPower(string $deviceId, string|int|float $power): EventContext
     {
-        $this->ha->callService('huawei_solar', 'set_maximum_feed_grid_power', [
+        return $this->ha->callService('huawei_solar', 'set_maximum_feed_grid_power', [
             'device_id' => $deviceId,
             'power' => $power,
         ]);
@@ -46,17 +47,17 @@ final readonly class HuaweiSolarServices
     /**
      * @param int|float $powerPercentage 0 to 100 %
      */
-    public function setMaximumFeedGridPowerPercent(string $deviceId, int|float $powerPercentage): void
+    public function setMaximumFeedGridPowerPercent(string $deviceId, int|float $powerPercentage): EventContext
     {
-        $this->ha->callService('huawei_solar', 'set_maximum_feed_grid_power_percent', [
+        return $this->ha->callService('huawei_solar', 'set_maximum_feed_grid_power_percent', [
             'device_id' => $deviceId,
             'power_percentage' => $powerPercentage,
         ]);
     }
 
-    public function setZeroPowerGridConnection(string $deviceId): void
+    public function setZeroPowerGridConnection(string $deviceId): EventContext
     {
-        $this->ha->callService('huawei_solar', 'set_zero_power_grid_connection', [
+        return $this->ha->callService('huawei_solar', 'set_zero_power_grid_connection', [
             'device_id' => $deviceId,
         ]);
     }

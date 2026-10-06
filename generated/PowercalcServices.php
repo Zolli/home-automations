@@ -13,6 +13,7 @@ namespace App\Generated;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `powercalc` services.
@@ -30,9 +31,9 @@ final readonly class PowercalcServices
      *
      * @param string|int|float $playbookId Playbook. Playbook identifier
      */
-    public function activatePlaybook(ServiceTargetSource $target, string|int|float $playbookId): void
+    public function activatePlaybook(ServiceTargetSource $target, string|int|float $playbookId): EventContext
     {
-        $this->ha->callService('powercalc', 'activate_playbook', [
+        return $this->ha->callService('powercalc', 'activate_playbook', [
             'playbook_id' => $playbookId,
         ], $target);
     }
@@ -44,9 +45,9 @@ final readonly class PowercalcServices
      *
      * @param string|int|float $value Value. Value to which set the cost sensor
      */
-    public function calibrateCost(ServiceTargetSource $target, string|int|float $value): void
+    public function calibrateCost(ServiceTargetSource $target, string|int|float $value): EventContext
     {
-        $this->ha->callService('powercalc', 'calibrate_cost', [
+        return $this->ha->callService('powercalc', 'calibrate_cost', [
             'value' => $value,
         ], $target);
     }
@@ -58,9 +59,9 @@ final readonly class PowercalcServices
      *
      * @param string|int|float $value Value. Value to which set the meter
      */
-    public function calibrateEnergy(ServiceTargetSource $target, string|int|float $value): void
+    public function calibrateEnergy(ServiceTargetSource $target, string|int|float $value): EventContext
     {
-        $this->ha->callService('powercalc', 'calibrate_energy', [
+        return $this->ha->callService('powercalc', 'calibrate_energy', [
             'value' => $value,
         ], $target);
     }
@@ -72,9 +73,9 @@ final readonly class PowercalcServices
      *
      * @param string|int|float $value Value. Value to which set the meter
      */
-    public function calibrateUtilityMeter(ServiceTargetSource $target, string|int|float $value): void
+    public function calibrateUtilityMeter(ServiceTargetSource $target, string|int|float $value): EventContext
     {
-        $this->ha->callService('powercalc', 'calibrate_utility_meter', [
+        return $this->ha->callService('powercalc', 'calibrate_utility_meter', [
             'value' => $value,
         ], $target);
     }
@@ -87,9 +88,9 @@ final readonly class PowercalcServices
      * @param 'create_energy_sensor'|'create_standby_energy_sensor'|'create_cost_sensor'|'create_utility_meters'|'ignore_unavailable_state'|'energy_integration_method' $field Field
      * @param string|int|float $value Value
      */
-    public function changeGuiConfig(string $field, string|int|float $value): void
+    public function changeGuiConfig(string $field, string|int|float $value): EventContext
     {
-        $this->ha->callService('powercalc', 'change_gui_config', [
+        return $this->ha->callService('powercalc', 'change_gui_config', [
             'field' => $field,
             'value' => $value,
         ]);
@@ -127,9 +128,9 @@ final readonly class PowercalcServices
      *
      * @param string|int|float $value Value. Amount to add to the sensor
      */
-    public function increaseDailyEnergy(ServiceTargetSource $target, string|int|float $value): void
+    public function increaseDailyEnergy(ServiceTargetSource $target, string|int|float $value): EventContext
     {
-        $this->ha->callService('powercalc', 'increase_daily_energy', [
+        return $this->ha->callService('powercalc', 'increase_daily_energy', [
             'value' => $value,
         ], $target);
     }
@@ -139,9 +140,9 @@ final readonly class PowercalcServices
      *
      * Reload all Powercalc config entries
      */
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('powercalc', 'reload', []);
+        return $this->ha->callService('powercalc', 'reload', []);
     }
 
     /**
@@ -149,9 +150,9 @@ final readonly class PowercalcServices
      *
      * Reset a cost sensor to zero
      */
-    public function resetCost(ServiceTargetSource $target): void
+    public function resetCost(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('powercalc', 'reset_cost', [], $target);
+        return $this->ha->callService('powercalc', 'reset_cost', [], $target);
     }
 
     /**
@@ -159,9 +160,9 @@ final readonly class PowercalcServices
      *
      * Reset an energy sensor to zero kWh
      */
-    public function resetEnergy(ServiceTargetSource $target): void
+    public function resetEnergy(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('powercalc', 'reset_energy', [], $target);
+        return $this->ha->callService('powercalc', 'reset_energy', [], $target);
     }
 
     /**
@@ -169,9 +170,9 @@ final readonly class PowercalcServices
      *
      * Stop active playbook
      */
-    public function stopPlaybook(ServiceTargetSource $target): void
+    public function stopPlaybook(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('powercalc', 'stop_playbook', [], $target);
+        return $this->ha->callService('powercalc', 'stop_playbook', [], $target);
     }
 
     /**
@@ -181,9 +182,9 @@ final readonly class PowercalcServices
      *
      * @param string|int|float $profile Sub profile. Define one of the possible sub profiles
      */
-    public function switchSubProfile(ServiceTargetSource $target, string|int|float $profile): void
+    public function switchSubProfile(ServiceTargetSource $target, string|int|float $profile): EventContext
     {
-        $this->ha->callService('powercalc', 'switch_sub_profile', [
+        return $this->ha->callService('powercalc', 'switch_sub_profile', [
             'profile' => $profile,
         ], $target);
     }
@@ -193,8 +194,8 @@ final readonly class PowercalcServices
      *
      * Update the profile library and reinitialize discovery
      */
-    public function updateLibrary(): void
+    public function updateLibrary(): EventContext
     {
-        $this->ha->callService('powercalc', 'update_library', []);
+        return $this->ha->callService('powercalc', 'update_library', []);
     }
 }

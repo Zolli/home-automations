@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `input_button` services.
@@ -22,13 +23,13 @@ final readonly class InputButtonServices
     {
     }
 
-    public function press(ServiceTargetSource $target): void
+    public function press(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('input_button', 'press', [], $target);
+        return $this->ha->callService('input_button', 'press', [], $target);
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('input_button', 'reload', []);
+        return $this->ha->callService('input_button', 'reload', []);
     }
 }

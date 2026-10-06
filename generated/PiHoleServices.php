@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `pi_hole` services.
@@ -22,9 +23,9 @@ final readonly class PiHoleServices
     {
     }
 
-    public function disable(ServiceTargetSource $target, string|int|float $duration): void
+    public function disable(ServiceTargetSource $target, string|int|float $duration): EventContext
     {
-        $this->ha->callService('pi_hole', 'disable', [
+        return $this->ha->callService('pi_hole', 'disable', [
             'duration' => $duration,
         ], $target);
     }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `mqtt` services.
@@ -24,9 +25,9 @@ final readonly class MqttServices
     /**
      * @param int|float|null $duration 1 to 300 seconds
      */
-    public function dump(int|float|null $duration = null, string|int|float|null $topic = null): void
+    public function dump(int|float|null $duration = null, string|int|float|null $topic = null): EventContext
     {
-        $this->ha->callService('mqtt', 'dump', [
+        return $this->ha->callService('mqtt', 'dump', [
             'duration' => $duration,
             'topic' => $topic,
         ]);
@@ -43,8 +44,8 @@ final readonly class MqttServices
         ?string $payload = null,
         ?string $qos = null,
         ?bool $retain = null,
-    ): void {
-        $this->ha->callService('mqtt', 'publish', [
+    ): EventContext {
+        return $this->ha->callService('mqtt', 'publish', [
             'topic' => $topic,
             'evaluate_payload' => $evaluatePayload,
             'message_expiry_interval' => $messageExpiryInterval,
@@ -54,8 +55,8 @@ final readonly class MqttServices
         ]);
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('mqtt', 'reload', []);
+        return $this->ha->callService('mqtt', 'reload', []);
     }
 }

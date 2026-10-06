@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `time` services.
@@ -22,9 +23,9 @@ final readonly class TimeServices
     {
     }
 
-    public function setValue(ServiceTargetSource $target, string $time): void
+    public function setValue(ServiceTargetSource $target, string $time): EventContext
     {
-        $this->ha->callService('time', 'set_value', [
+        return $this->ha->callService('time', 'set_value', [
             'time' => $time,
         ], $target);
     }

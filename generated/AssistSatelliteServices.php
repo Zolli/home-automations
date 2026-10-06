@@ -13,6 +13,7 @@ namespace App\Generated;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `assist_satellite` services.
@@ -33,8 +34,8 @@ final readonly class AssistSatelliteServices
         string|int|float|null $message = null,
         ?bool $preannounce = null,
         ?array $preannounceMediaId = null,
-    ): void {
-        $this->ha->callService('assist_satellite', 'announce', [
+    ): EventContext {
+        return $this->ha->callService('assist_satellite', 'announce', [
             'media_id' => $mediaId,
             'message' => $message,
             'preannounce' => $preannounce,
@@ -76,8 +77,8 @@ final readonly class AssistSatelliteServices
         ?array $preannounceMediaId = null,
         ?array $startMediaId = null,
         string|int|float|null $startMessage = null,
-    ): void {
-        $this->ha->callService('assist_satellite', 'start_conversation', [
+    ): EventContext {
+        return $this->ha->callService('assist_satellite', 'start_conversation', [
             'extra_system_prompt' => $extraSystemPrompt,
             'preannounce' => $preannounce,
             'preannounce_media_id' => $preannounceMediaId,

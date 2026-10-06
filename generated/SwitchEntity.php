@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -71,29 +72,28 @@ final readonly class SwitchEntity implements TypedEntity
         'switch.dusty_ai_pet_detection' => true,
         'switch.dusty_auto_add_detergent' => true,
         'switch.dusty_auto_drying' => true,
-        'switch.dusty_auto_lds_lifting' => true,
         'switch.dusty_auto_mount_mop' => true,
         'switch.dusty_auto_water_refilling' => true,
         'switch.dusty_camera_light_brightness_auto' => true,
         'switch.dusty_carpet_boost' => true,
         'switch.dusty_child_lock' => true,
         'switch.dusty_clean_carpets_first' => true,
-        'switch.dusty_cleaning_sequence' => true,
         'switch.dusty_collision_avoidance' => true,
         'switch.dusty_customized_cleaning' => true,
         'switch.dusty_dnd' => true,
         'switch.dusty_dnd_disable_auto_empty' => true,
         'switch.dusty_dnd_disable_resume_cleaning' => true,
         'switch.dusty_dnd_reduce_volume' => true,
+        'switch.dusty_dynamic_obstacle_cleaning' => true,
         'switch.dusty_fill_light' => true,
         'switch.dusty_floor_direction_cleaning' => true,
         'switch.dusty_fuzzy_obstacle_detection' => true,
         'switch.dusty_gap_cleaning_extension' => true,
         'switch.dusty_hair_compression' => true,
         'switch.dusty_human_follow' => true,
-        'switch.dusty_intelligent_recognition' => true,
         'switch.dusty_intensive_carpet_cleaning' => true,
         'switch.dusty_large_particles_boost' => true,
+        'switch.dusty_lds_state' => true,
         'switch.dusty_max_suction_power' => true,
         'switch.dusty_mop_extend' => true,
         'switch.dusty_mopping_under_furnitures' => true,
@@ -103,6 +103,7 @@ final readonly class SwitchEntity implements TypedEntity
         'switch.dusty_pet_focused_detection' => true,
         'switch.dusty_pet_picture' => true,
         'switch.dusty_resume_cleaning' => true,
+        'switch.dusty_ring_light_always_on' => true,
         'switch.dusty_self_clean' => true,
         'switch.dusty_side_brush_carpet_rotate' => true,
         'switch.dusty_side_reach' => true,
@@ -381,18 +382,18 @@ final readonly class SwitchEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function toggle(): void
+    public function toggle(): EventContext
     {
-        $this->entity->callService('toggle');
+        return $this->entity->callService('toggle');
     }
 
-    public function turnOff(): void
+    public function turnOff(): EventContext
     {
-        $this->entity->callService('turn_off');
+        return $this->entity->callService('turn_off');
     }
 
-    public function turnOn(): void
+    public function turnOn(): EventContext
     {
-        $this->entity->callService('turn_on');
+        return $this->entity->callService('turn_on');
     }
 }

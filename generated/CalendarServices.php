@@ -13,6 +13,7 @@ namespace App\Generated;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `calendar` services.
@@ -33,8 +34,8 @@ final readonly class CalendarServices
         string|int|float|null $location = null,
         ?string $startDate = null,
         ?string $startDateTime = null,
-    ): void {
-        $this->ha->callService('calendar', 'create_event', [
+    ): EventContext {
+        return $this->ha->callService('calendar', 'create_event', [
             'summary' => $summary,
             'description' => $description,
             'end_date' => $endDate,

@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `smart_irrigation` services.
@@ -27,9 +28,9 @@ final readonly class SmartIrrigationServices
      *
      * Calculate irrigation requirements for all zones.
      */
-    public function calculateAllZones(?bool $deleteWeatherData = null): void
+    public function calculateAllZones(?bool $deleteWeatherData = null): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'calculate_all_zones', [
+        return $this->ha->callService('smart_irrigation', 'calculate_all_zones', [
             'delete_weather_data' => $deleteWeatherData,
         ]);
     }
@@ -39,9 +40,9 @@ final readonly class SmartIrrigationServices
      *
      * Calculate irrigation requirements for a specific zone.
      */
-    public function calculateZone(ServiceTargetSource $target, ?bool $deleteWeatherData = null): void
+    public function calculateZone(ServiceTargetSource $target, ?bool $deleteWeatherData = null): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'calculate_zone', [
+        return $this->ha->callService('smart_irrigation', 'calculate_zone', [
             'delete_weather_data' => $deleteWeatherData,
         ], $target);
     }
@@ -51,9 +52,9 @@ final readonly class SmartIrrigationServices
      *
      * Clear all collected weather data from all mappings.
      */
-    public function clearAllWeatherData(): void
+    public function clearAllWeatherData(): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'clear_all_weather_data', []);
+        return $this->ha->callService('smart_irrigation', 'clear_all_weather_data', []);
     }
 
     /**
@@ -81,8 +82,8 @@ final readonly class SmartIrrigationServices
         int|float|null $intervalHours = null,
         ?string $time = null,
         string|int|float|null $zones = null,
-    ): void {
-        $this->ha->callService('smart_irrigation', 'create_recurring_schedule', [
+    ): EventContext {
+        return $this->ha->callService('smart_irrigation', 'create_recurring_schedule', [
             'name' => $name,
             'type' => $type,
             'action' => $action,
@@ -116,8 +117,8 @@ final readonly class SmartIrrigationServices
         int|float|null $multiplierAdjustment = null,
         int|float|null $thresholdAdjustment = null,
         string|int|float|null $zones = null,
-    ): void {
-        $this->ha->callService('smart_irrigation', 'create_seasonal_adjustment', [
+    ): EventContext {
+        return $this->ha->callService('smart_irrigation', 'create_seasonal_adjustment', [
             'month_end' => $monthEnd,
             'month_start' => $monthStart,
             'name' => $name,
@@ -135,9 +136,9 @@ final readonly class SmartIrrigationServices
      *
      * @param string|int|float $scheduleId ID of the schedule to delete
      */
-    public function deleteRecurringSchedule(string|int|float $scheduleId): void
+    public function deleteRecurringSchedule(string|int|float $scheduleId): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'delete_recurring_schedule', [
+        return $this->ha->callService('smart_irrigation', 'delete_recurring_schedule', [
             'schedule_id' => $scheduleId,
         ]);
     }
@@ -149,9 +150,9 @@ final readonly class SmartIrrigationServices
      *
      * @param string|int|float $adjustmentId ID of the adjustment to delete
      */
-    public function deleteSeasonalAdjustment(string|int|float $adjustmentId): void
+    public function deleteSeasonalAdjustment(string|int|float $adjustmentId): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'delete_seasonal_adjustment', [
+        return $this->ha->callService('smart_irrigation', 'delete_seasonal_adjustment', [
             'adjustment_id' => $adjustmentId,
         ]);
     }
@@ -161,9 +162,9 @@ final readonly class SmartIrrigationServices
      *
      * Generate a 12-month watering calendar for irrigation zones based on representative climate data.
      */
-    public function generateWateringCalendar(ServiceTargetSource $target): void
+    public function generateWateringCalendar(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'generate_watering_calendar', [], $target);
+        return $this->ha->callService('smart_irrigation', 'generate_watering_calendar', [], $target);
     }
 
     /**
@@ -171,9 +172,9 @@ final readonly class SmartIrrigationServices
      *
      * Get the current status of Irrigation Unlimited entities and schedules.
      */
-    public function getIrrigationUnlimitedStatus(): void
+    public function getIrrigationUnlimitedStatus(): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'get_irrigation_unlimited_status', []);
+        return $this->ha->callService('smart_irrigation', 'get_irrigation_unlimited_status', []);
     }
 
     /**
@@ -181,9 +182,9 @@ final readonly class SmartIrrigationServices
      *
      * Reset the water bucket value for all zones.
      */
-    public function resetAllBuckets(): void
+    public function resetAllBuckets(): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'reset_all_buckets', []);
+        return $this->ha->callService('smart_irrigation', 'reset_all_buckets', []);
     }
 
     /**
@@ -191,9 +192,9 @@ final readonly class SmartIrrigationServices
      *
      * Reset the water bucket value for a specific zone.
      */
-    public function resetBucket(ServiceTargetSource $target): void
+    public function resetBucket(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'reset_bucket', [], $target);
+        return $this->ha->callService('smart_irrigation', 'reset_bucket', [], $target);
     }
 
     /**
@@ -204,9 +205,9 @@ final readonly class SmartIrrigationServices
      * @param string|int|float $data Data to send (JSON format)
      * @param int|float $zoneId Zone ID to send data for
      */
-    public function sendZoneDataToIrrigationUnlimited(string|int|float $data, int|float $zoneId): void
+    public function sendZoneDataToIrrigationUnlimited(string|int|float $data, int|float $zoneId): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'send_zone_data_to_irrigation_unlimited', [
+        return $this->ha->callService('smart_irrigation', 'send_zone_data_to_irrigation_unlimited', [
             'data' => $data,
             'zone_id' => $zoneId,
         ]);
@@ -217,9 +218,9 @@ final readonly class SmartIrrigationServices
      *
      * Set the water bucket value for all zones.
      */
-    public function setAllBuckets(mixed $newBucketValue): void
+    public function setAllBuckets(mixed $newBucketValue): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'set_all_buckets', [
+        return $this->ha->callService('smart_irrigation', 'set_all_buckets', [
             'new_bucket_value' => $newBucketValue,
         ]);
     }
@@ -229,9 +230,9 @@ final readonly class SmartIrrigationServices
      *
      * Set the irrigation multiplier value for all zones.
      */
-    public function setAllMultipliers(mixed $newMultiplierValue): void
+    public function setAllMultipliers(mixed $newMultiplierValue): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'set_all_multipliers', [
+        return $this->ha->callService('smart_irrigation', 'set_all_multipliers', [
             'new_multiplier_value' => $newMultiplierValue,
         ]);
     }
@@ -241,9 +242,9 @@ final readonly class SmartIrrigationServices
      *
      * Set the water bucket value for a specific zone.
      */
-    public function setBucket(ServiceTargetSource $target, mixed $newBucketValue): void
+    public function setBucket(ServiceTargetSource $target, mixed $newBucketValue): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'set_bucket', [
+        return $this->ha->callService('smart_irrigation', 'set_bucket', [
             'new_bucket_value' => $newBucketValue,
         ], $target);
     }
@@ -253,9 +254,9 @@ final readonly class SmartIrrigationServices
      *
      * Set the irrigation multiplier value for a specific zone.
      */
-    public function setMultiplier(ServiceTargetSource $target, mixed $newMultiplierValue): void
+    public function setMultiplier(ServiceTargetSource $target, mixed $newMultiplierValue): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'set_multiplier', [
+        return $this->ha->callService('smart_irrigation', 'set_multiplier', [
             'new_multiplier_value' => $newMultiplierValue,
         ], $target);
     }
@@ -272,8 +273,8 @@ final readonly class SmartIrrigationServices
         mixed $newMultiplierValue = null,
         mixed $newStateValue = null,
         mixed $newThroughputValue = null,
-    ): void {
-        $this->ha->callService('smart_irrigation', 'set_zone', [
+    ): EventContext {
+        return $this->ha->callService('smart_irrigation', 'set_zone', [
             'new_bucket_value' => $newBucketValue,
             'new_duration_value' => $newDurationValue,
             'new_multiplier_value' => $newMultiplierValue,
@@ -289,9 +290,9 @@ final readonly class SmartIrrigationServices
      *
      * @param string|int|float|null $zoneIds Specific zone IDs to sync (leave empty for all zones)
      */
-    public function syncWithIrrigationUnlimited(string|int|float|null $zoneIds = null): void
+    public function syncWithIrrigationUnlimited(string|int|float|null $zoneIds = null): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'sync_with_irrigation_unlimited', [
+        return $this->ha->callService('smart_irrigation', 'sync_with_irrigation_unlimited', [
             'zone_ids' => $zoneIds,
         ]);
     }
@@ -301,9 +302,9 @@ final readonly class SmartIrrigationServices
      *
      * Update irrigation settings for all zones.
      */
-    public function updateAllZones(): void
+    public function updateAllZones(): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'update_all_zones', []);
+        return $this->ha->callService('smart_irrigation', 'update_all_zones', []);
     }
 
     /**
@@ -319,8 +320,8 @@ final readonly class SmartIrrigationServices
         string|int|float $scheduleId,
         ?bool $enabled = null,
         string|int|float|null $name = null,
-    ): void {
-        $this->ha->callService('smart_irrigation', 'update_recurring_schedule', [
+    ): EventContext {
+        return $this->ha->callService('smart_irrigation', 'update_recurring_schedule', [
             'schedule_id' => $scheduleId,
             'enabled' => $enabled,
             'name' => $name,
@@ -340,8 +341,8 @@ final readonly class SmartIrrigationServices
         string|int|float $adjustmentId,
         ?bool $enabled = null,
         string|int|float|null $name = null,
-    ): void {
-        $this->ha->callService('smart_irrigation', 'update_seasonal_adjustment', [
+    ): EventContext {
+        return $this->ha->callService('smart_irrigation', 'update_seasonal_adjustment', [
             'adjustment_id' => $adjustmentId,
             'enabled' => $enabled,
             'name' => $name,
@@ -353,8 +354,8 @@ final readonly class SmartIrrigationServices
      *
      * Update irrigation settings for a specific zone.
      */
-    public function updateZone(ServiceTargetSource $target): void
+    public function updateZone(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('smart_irrigation', 'update_zone', [], $target);
+        return $this->ha->callService('smart_irrigation', 'update_zone', [], $target);
     }
 }

@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `siren` services.
@@ -22,14 +23,14 @@ final readonly class SirenServices
     {
     }
 
-    public function toggle(ServiceTargetSource $target): void
+    public function toggle(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('siren', 'toggle', [], $target);
+        return $this->ha->callService('siren', 'toggle', [], $target);
     }
 
-    public function turnOff(ServiceTargetSource $target): void
+    public function turnOff(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('siren', 'turn_off', [], $target);
+        return $this->ha->callService('siren', 'turn_off', [], $target);
     }
 
     /**
@@ -40,8 +41,8 @@ final readonly class SirenServices
         string|int|float|null $duration = null,
         string|int|float|null $tone = null,
         int|float|null $volumeLevel = null,
-    ): void {
-        $this->ha->callService('siren', 'turn_on', [
+    ): EventContext {
+        return $this->ha->callService('siren', 'turn_on', [
             'duration' => $duration,
             'tone' => $tone,
             'volume_level' => $volumeLevel,

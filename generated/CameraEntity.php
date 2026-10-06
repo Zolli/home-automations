@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -108,22 +109,22 @@ final readonly class CameraEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function disableMotionDetection(): void
+    public function disableMotionDetection(): EventContext
     {
-        $this->entity->callService('disable_motion_detection');
+        return $this->entity->callService('disable_motion_detection');
     }
 
-    public function enableMotionDetection(): void
+    public function enableMotionDetection(): EventContext
     {
-        $this->entity->callService('enable_motion_detection');
+        return $this->entity->callService('enable_motion_detection');
     }
 
     /**
      * @param 'hls'|null $format
      */
-    public function playStream(string $mediaPlayer, ?string $format = null): void
+    public function playStream(string $mediaPlayer, ?string $format = null): EventContext
     {
-        $this->entity->callService('play_stream', [
+        return $this->entity->callService('play_stream', [
             'media_player' => $mediaPlayer,
             'format' => $format,
         ]);
@@ -137,28 +138,28 @@ final readonly class CameraEntity implements TypedEntity
         string|int|float $filename,
         int|float|null $duration = null,
         int|float|null $lookback = null,
-    ): void {
-        $this->entity->callService('record', [
+    ): EventContext {
+        return $this->entity->callService('record', [
             'filename' => $filename,
             'duration' => $duration,
             'lookback' => $lookback,
         ]);
     }
 
-    public function snapshot(string|int|float $filename): void
+    public function snapshot(string|int|float $filename): EventContext
     {
-        $this->entity->callService('snapshot', [
+        return $this->entity->callService('snapshot', [
             'filename' => $filename,
         ]);
     }
 
-    public function turnOff(): void
+    public function turnOff(): EventContext
     {
-        $this->entity->callService('turn_off');
+        return $this->entity->callService('turn_off');
     }
 
-    public function turnOn(): void
+    public function turnOn(): EventContext
     {
-        $this->entity->callService('turn_on');
+        return $this->entity->callService('turn_on');
     }
 }

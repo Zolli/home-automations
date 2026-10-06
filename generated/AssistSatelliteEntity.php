@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -113,8 +114,8 @@ final readonly class AssistSatelliteEntity implements TypedEntity
         string|int|float|null $message = null,
         ?bool $preannounce = null,
         ?array $preannounceMediaId = null,
-    ): void {
-        $this->entity->callService('announce', [
+    ): EventContext {
+        return $this->entity->callService('announce', [
             'media_id' => $mediaId,
             'message' => $message,
             'preannounce' => $preannounce,
@@ -132,8 +133,8 @@ final readonly class AssistSatelliteEntity implements TypedEntity
         ?array $preannounceMediaId = null,
         ?array $startMediaId = null,
         string|int|float|null $startMessage = null,
-    ): void {
-        $this->entity->callService('start_conversation', [
+    ): EventContext {
+        return $this->entity->callService('start_conversation', [
             'extra_system_prompt' => $extraSystemPrompt,
             'preannounce' => $preannounce,
             'preannounce_media_id' => $preannounceMediaId,

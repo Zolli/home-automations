@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `remote` services.
@@ -29,8 +30,8 @@ final readonly class RemoteServices
         ServiceTargetSource $target,
         array $command,
         string|int|float|null $device = null,
-    ): void {
-        $this->ha->callService('remote', 'delete_command', [
+    ): EventContext {
+        return $this->ha->callService('remote', 'delete_command', [
             'command' => $command,
             'device' => $device,
         ], $target);
@@ -48,8 +49,8 @@ final readonly class RemoteServices
         ?string $commandType = null,
         string|int|float|null $device = null,
         int|float|null $timeout = null,
-    ): void {
-        $this->ha->callService('remote', 'learn_command', [
+    ): EventContext {
+        return $this->ha->callService('remote', 'learn_command', [
             'alternative' => $alternative,
             'command' => $command,
             'command_type' => $commandType,
@@ -71,8 +72,8 @@ final readonly class RemoteServices
         string|int|float|null $device = null,
         int|float|null $holdSecs = null,
         int|float|null $numRepeats = null,
-    ): void {
-        $this->ha->callService('remote', 'send_command', [
+    ): EventContext {
+        return $this->ha->callService('remote', 'send_command', [
             'command' => $command,
             'delay_secs' => $delaySecs,
             'device' => $device,
@@ -81,19 +82,19 @@ final readonly class RemoteServices
         ], $target);
     }
 
-    public function toggle(ServiceTargetSource $target): void
+    public function toggle(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('remote', 'toggle', [], $target);
+        return $this->ha->callService('remote', 'toggle', [], $target);
     }
 
-    public function turnOff(ServiceTargetSource $target): void
+    public function turnOff(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('remote', 'turn_off', [], $target);
+        return $this->ha->callService('remote', 'turn_off', [], $target);
     }
 
-    public function turnOn(ServiceTargetSource $target, string|int|float|null $activity = null): void
+    public function turnOn(ServiceTargetSource $target, string|int|float|null $activity = null): EventContext
     {
-        $this->ha->callService('remote', 'turn_on', [
+        return $this->ha->callService('remote', 'turn_on', [
             'activity' => $activity,
         ], $target);
     }

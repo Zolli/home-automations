@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `zone` services.
@@ -21,8 +22,8 @@ final readonly class ZoneServices
     {
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('zone', 'reload', []);
+        return $this->ha->callService('zone', 'reload', []);
     }
 }

@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -105,9 +106,9 @@ final readonly class ImageEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function snapshot(string|int|float $filename): void
+    public function snapshot(string|int|float $filename): EventContext
     {
-        $this->entity->callService('snapshot', [
+        return $this->entity->callService('snapshot', [
             'filename' => $filename,
         ]);
     }

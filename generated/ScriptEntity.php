@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -101,18 +102,18 @@ final readonly class ScriptEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function toggle(): void
+    public function toggle(): EventContext
     {
-        $this->entity->callService('toggle');
+        return $this->entity->callService('toggle');
     }
 
-    public function turnOff(): void
+    public function turnOff(): EventContext
     {
-        $this->entity->callService('turn_off');
+        return $this->entity->callService('turn_off');
     }
 
-    public function turnOn(): void
+    public function turnOn(): EventContext
     {
-        $this->entity->callService('turn_on');
+        return $this->entity->callService('turn_on');
     }
 }

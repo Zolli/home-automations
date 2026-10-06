@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `battery_notes` services.
@@ -81,8 +82,8 @@ final readonly class BatteryNotesServices
         ?string $datetimeReplaced = null,
         ?string $deviceId = null,
         ?string $sourceEntityId = null,
-    ): void {
-        $this->ha->callService('battery_notes', 'set_battery_replaced', [
+    ): EventContext {
+        return $this->ha->callService('battery_notes', 'set_battery_replaced', [
             'datetime_replaced' => $datetimeReplaced,
             'device_id' => $deviceId,
             'source_entity_id' => $sourceEntityId,

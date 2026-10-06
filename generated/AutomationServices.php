@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `automation` services.
@@ -22,32 +23,32 @@ final readonly class AutomationServices
     {
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('automation', 'reload', []);
+        return $this->ha->callService('automation', 'reload', []);
     }
 
-    public function toggle(ServiceTargetSource $target): void
+    public function toggle(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('automation', 'toggle', [], $target);
+        return $this->ha->callService('automation', 'toggle', [], $target);
     }
 
-    public function trigger(ServiceTargetSource $target, ?bool $skipCondition = null): void
+    public function trigger(ServiceTargetSource $target, ?bool $skipCondition = null): EventContext
     {
-        $this->ha->callService('automation', 'trigger', [
+        return $this->ha->callService('automation', 'trigger', [
             'skip_condition' => $skipCondition,
         ], $target);
     }
 
-    public function turnOff(ServiceTargetSource $target, ?bool $stopActions = null): void
+    public function turnOff(ServiceTargetSource $target, ?bool $stopActions = null): EventContext
     {
-        $this->ha->callService('automation', 'turn_off', [
+        return $this->ha->callService('automation', 'turn_off', [
             'stop_actions' => $stopActions,
         ], $target);
     }
 
-    public function turnOn(ServiceTargetSource $target): void
+    public function turnOn(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('automation', 'turn_on', [], $target);
+        return $this->ha->callService('automation', 'turn_on', [], $target);
     }
 }

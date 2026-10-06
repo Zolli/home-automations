@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `lock` services.
@@ -22,23 +23,23 @@ final readonly class LockServices
     {
     }
 
-    public function lock(ServiceTargetSource $target, string|int|float|null $code = null): void
+    public function lock(ServiceTargetSource $target, string|int|float|null $code = null): EventContext
     {
-        $this->ha->callService('lock', 'lock', [
+        return $this->ha->callService('lock', 'lock', [
             'code' => $code,
         ], $target);
     }
 
-    public function open(ServiceTargetSource $target, string|int|float|null $code = null): void
+    public function open(ServiceTargetSource $target, string|int|float|null $code = null): EventContext
     {
-        $this->ha->callService('lock', 'open', [
+        return $this->ha->callService('lock', 'open', [
             'code' => $code,
         ], $target);
     }
 
-    public function unlock(ServiceTargetSource $target, string|int|float|null $code = null): void
+    public function unlock(ServiceTargetSource $target, string|int|float|null $code = null): EventContext
     {
-        $this->ha->callService('lock', 'unlock', [
+        return $this->ha->callService('lock', 'unlock', [
             'code' => $code,
         ], $target);
     }

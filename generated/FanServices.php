@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `fan` services.
@@ -25,9 +26,9 @@ final readonly class FanServices
     /**
      * @param int|float|null $percentageStep 0 to 100 %
      */
-    public function decreaseSpeed(ServiceTargetSource $target, int|float|null $percentageStep = null): void
+    public function decreaseSpeed(ServiceTargetSource $target, int|float|null $percentageStep = null): EventContext
     {
-        $this->ha->callService('fan', 'decrease_speed', [
+        return $this->ha->callService('fan', 'decrease_speed', [
             'percentage_step' => $percentageStep,
         ], $target);
     }
@@ -35,16 +36,16 @@ final readonly class FanServices
     /**
      * @param int|float|null $percentageStep 0 to 100 %
      */
-    public function increaseSpeed(ServiceTargetSource $target, int|float|null $percentageStep = null): void
+    public function increaseSpeed(ServiceTargetSource $target, int|float|null $percentageStep = null): EventContext
     {
-        $this->ha->callService('fan', 'increase_speed', [
+        return $this->ha->callService('fan', 'increase_speed', [
             'percentage_step' => $percentageStep,
         ], $target);
     }
 
-    public function oscillate(ServiceTargetSource $target, bool $oscillating): void
+    public function oscillate(ServiceTargetSource $target, bool $oscillating): EventContext
     {
-        $this->ha->callService('fan', 'oscillate', [
+        return $this->ha->callService('fan', 'oscillate', [
             'oscillating' => $oscillating,
         ], $target);
     }
@@ -52,9 +53,9 @@ final readonly class FanServices
     /**
      * @param 'forward'|'reverse' $direction
      */
-    public function setDirection(ServiceTargetSource $target, string $direction): void
+    public function setDirection(ServiceTargetSource $target, string $direction): EventContext
     {
-        $this->ha->callService('fan', 'set_direction', [
+        return $this->ha->callService('fan', 'set_direction', [
             'direction' => $direction,
         ], $target);
     }
@@ -62,28 +63,28 @@ final readonly class FanServices
     /**
      * @param int|float $percentage 0 to 100 %
      */
-    public function setPercentage(ServiceTargetSource $target, int|float $percentage): void
+    public function setPercentage(ServiceTargetSource $target, int|float $percentage): EventContext
     {
-        $this->ha->callService('fan', 'set_percentage', [
+        return $this->ha->callService('fan', 'set_percentage', [
             'percentage' => $percentage,
         ], $target);
     }
 
-    public function setPresetMode(ServiceTargetSource $target, string $presetMode): void
+    public function setPresetMode(ServiceTargetSource $target, string $presetMode): EventContext
     {
-        $this->ha->callService('fan', 'set_preset_mode', [
+        return $this->ha->callService('fan', 'set_preset_mode', [
             'preset_mode' => $presetMode,
         ], $target);
     }
 
-    public function toggle(ServiceTargetSource $target): void
+    public function toggle(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('fan', 'toggle', [], $target);
+        return $this->ha->callService('fan', 'toggle', [], $target);
     }
 
-    public function turnOff(ServiceTargetSource $target): void
+    public function turnOff(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('fan', 'turn_off', [], $target);
+        return $this->ha->callService('fan', 'turn_off', [], $target);
     }
 
     /**
@@ -93,8 +94,8 @@ final readonly class FanServices
         ServiceTargetSource $target,
         int|float|null $percentage = null,
         ?string $presetMode = null,
-    ): void {
-        $this->ha->callService('fan', 'turn_on', [
+    ): EventContext {
+        return $this->ha->callService('fan', 'turn_on', [
             'percentage' => $percentage,
             'preset_mode' => $presetMode,
         ], $target);

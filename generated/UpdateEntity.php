@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -355,21 +356,21 @@ final readonly class UpdateEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function clearSkipped(): void
+    public function clearSkipped(): EventContext
     {
-        $this->entity->callService('clear_skipped');
+        return $this->entity->callService('clear_skipped');
     }
 
-    public function install(?bool $backup = null, string|int|float|null $version = null): void
+    public function install(?bool $backup = null, string|int|float|null $version = null): EventContext
     {
-        $this->entity->callService('install', [
+        return $this->entity->callService('install', [
             'backup' => $backup,
             'version' => $version,
         ]);
     }
 
-    public function skip(): void
+    public function skip(): EventContext
     {
-        $this->entity->callService('skip');
+        return $this->entity->callService('skip');
     }
 }

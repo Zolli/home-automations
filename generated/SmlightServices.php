@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `smlight` services.
@@ -32,8 +33,8 @@ final readonly class SmlightServices
         int|float $octave,
         ?string $bpm = null,
         ?string $duration = null,
-    ): void {
-        $this->ha->callService('smlight', 'play_rtttl', [
+    ): EventContext {
+        return $this->ha->callService('smlight', 'play_rtttl', [
             'device_id' => $deviceId,
             'notes' => $notes,
             'octave' => $octave,

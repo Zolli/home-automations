@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -124,33 +125,33 @@ final readonly class InputSelectEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function selectFirst(): void
+    public function selectFirst(): EventContext
     {
-        $this->entity->callService('select_first');
+        return $this->entity->callService('select_first');
     }
 
-    public function selectLast(): void
+    public function selectLast(): EventContext
     {
-        $this->entity->callService('select_last');
+        return $this->entity->callService('select_last');
     }
 
-    public function selectNext(?bool $cycle = null): void
+    public function selectNext(?bool $cycle = null): EventContext
     {
-        $this->entity->callService('select_next', [
+        return $this->entity->callService('select_next', [
             'cycle' => $cycle,
         ]);
     }
 
-    public function selectOption(string $option): void
+    public function selectOption(string $option): EventContext
     {
-        $this->entity->callService('select_option', [
+        return $this->entity->callService('select_option', [
             'option' => $option,
         ]);
     }
 
-    public function selectPrevious(?bool $cycle = null): void
+    public function selectPrevious(?bool $cycle = null): EventContext
     {
-        $this->entity->callService('select_previous', [
+        return $this->entity->callService('select_previous', [
             'cycle' => $cycle,
         ]);
     }
@@ -158,9 +159,9 @@ final readonly class InputSelectEntity implements TypedEntity
     /**
      * @param list<string|int|float> $options
      */
-    public function setOptions(array $options): void
+    public function setOptions(array $options): EventContext
     {
-        $this->entity->callService('set_options', [
+        return $this->entity->callService('set_options', [
             'options' => $options,
         ]);
     }

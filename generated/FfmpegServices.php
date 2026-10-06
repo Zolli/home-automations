@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `ffmpeg` services.
@@ -21,23 +22,23 @@ final readonly class FfmpegServices
     {
     }
 
-    public function restart(?string $entityId = null): void
+    public function restart(?string $entityId = null): EventContext
     {
-        $this->ha->callService('ffmpeg', 'restart', [
+        return $this->ha->callService('ffmpeg', 'restart', [
             'entity_id' => $entityId,
         ]);
     }
 
-    public function start(?string $entityId = null): void
+    public function start(?string $entityId = null): EventContext
     {
-        $this->ha->callService('ffmpeg', 'start', [
+        return $this->ha->callService('ffmpeg', 'start', [
             'entity_id' => $entityId,
         ]);
     }
 
-    public function stop(?string $entityId = null): void
+    public function stop(?string $entityId = null): EventContext
     {
-        $this->ha->callService('ffmpeg', 'stop', [
+        return $this->ha->callService('ffmpeg', 'stop', [
             'entity_id' => $entityId,
         ]);
     }

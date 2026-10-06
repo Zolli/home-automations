@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -171,22 +172,22 @@ final readonly class InputNumberEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function decrement(): void
+    public function decrement(): EventContext
     {
-        $this->entity->callService('decrement');
+        return $this->entity->callService('decrement');
     }
 
-    public function increment(): void
+    public function increment(): EventContext
     {
-        $this->entity->callService('increment');
+        return $this->entity->callService('increment');
     }
 
     /**
      * @param int|float $value 0 to 9.2233720368548E+18
      */
-    public function setValue(int|float $value): void
+    public function setValue(int|float $value): EventContext
     {
-        $this->entity->callService('set_value', [
+        return $this->entity->callService('set_value', [
             'value' => $value,
         ]);
     }

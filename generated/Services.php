@@ -537,11 +537,6 @@ final class Services
         get => new WaterHeaterServices($this->ha);
     }
 
-    /** Services in the `waze_travel_time` domain. */
-    public WazeTravelTimeServices $wazeTravelTime {
-        get => new WazeTravelTimeServices($this->ha);
-    }
-
     /** Services in the `weather` domain. */
     public WeatherServices $weather {
         get => new WeatherServices($this->ha);

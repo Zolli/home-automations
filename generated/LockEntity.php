@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -101,23 +102,23 @@ final readonly class LockEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function lock(string|int|float|null $code = null): void
+    public function lock(string|int|float|null $code = null): EventContext
     {
-        $this->entity->callService('lock', [
+        return $this->entity->callService('lock', [
             'code' => $code,
         ]);
     }
 
-    public function open(string|int|float|null $code = null): void
+    public function open(string|int|float|null $code = null): EventContext
     {
-        $this->entity->callService('open', [
+        return $this->entity->callService('open', [
             'code' => $code,
         ]);
     }
 
-    public function unlock(string|int|float|null $code = null): void
+    public function unlock(string|int|float|null $code = null): EventContext
     {
-        $this->entity->callService('unlock', [
+        return $this->entity->callService('unlock', [
             'code' => $code,
         ]);
     }

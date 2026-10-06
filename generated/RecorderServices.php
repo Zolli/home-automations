@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `recorder` services.
@@ -22,14 +23,14 @@ final readonly class RecorderServices
     {
     }
 
-    public function disable(): void
+    public function disable(): EventContext
     {
-        $this->ha->callService('recorder', 'disable', []);
+        return $this->ha->callService('recorder', 'disable', []);
     }
 
-    public function enable(): void
+    public function enable(): EventContext
     {
-        $this->ha->callService('recorder', 'enable', []);
+        return $this->ha->callService('recorder', 'enable', []);
     }
 
     /**
@@ -59,9 +60,12 @@ final readonly class RecorderServices
     /**
      * @param int|float|null $keepDays 0 to 365 days
      */
-    public function purge(?bool $applyFilter = null, int|float|null $keepDays = null, ?bool $repack = null): void
-    {
-        $this->ha->callService('recorder', 'purge', [
+    public function purge(
+        ?bool $applyFilter = null,
+        int|float|null $keepDays = null,
+        ?bool $repack = null,
+    ): EventContext {
+        return $this->ha->callService('recorder', 'purge', [
             'apply_filter' => $applyFilter,
             'keep_days' => $keepDays,
             'repack' => $repack,
@@ -79,8 +83,8 @@ final readonly class RecorderServices
         ?array $entityGlobs = null,
         ?array $entityId = null,
         int|float|null $keepDays = null,
-    ): void {
-        $this->ha->callService('recorder', 'purge_entities', [
+    ): EventContext {
+        return $this->ha->callService('recorder', 'purge_entities', [
             'domains' => $domains,
             'entity_globs' => $entityGlobs,
             'entity_id' => $entityId,

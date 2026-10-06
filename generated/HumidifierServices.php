@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `humidifier` services.
@@ -25,32 +26,32 @@ final readonly class HumidifierServices
     /**
      * @param int|float $humidity 0 to 100 %
      */
-    public function setHumidity(ServiceTargetSource $target, int|float $humidity): void
+    public function setHumidity(ServiceTargetSource $target, int|float $humidity): EventContext
     {
-        $this->ha->callService('humidifier', 'set_humidity', [
+        return $this->ha->callService('humidifier', 'set_humidity', [
             'humidity' => $humidity,
         ], $target);
     }
 
-    public function setMode(ServiceTargetSource $target, string $mode): void
+    public function setMode(ServiceTargetSource $target, string $mode): EventContext
     {
-        $this->ha->callService('humidifier', 'set_mode', [
+        return $this->ha->callService('humidifier', 'set_mode', [
             'mode' => $mode,
         ], $target);
     }
 
-    public function toggle(ServiceTargetSource $target): void
+    public function toggle(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('humidifier', 'toggle', [], $target);
+        return $this->ha->callService('humidifier', 'toggle', [], $target);
     }
 
-    public function turnOff(ServiceTargetSource $target): void
+    public function turnOff(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('humidifier', 'turn_off', [], $target);
+        return $this->ha->callService('humidifier', 'turn_off', [], $target);
     }
 
-    public function turnOn(ServiceTargetSource $target): void
+    public function turnOn(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('humidifier', 'turn_on', [], $target);
+        return $this->ha->callService('humidifier', 'turn_on', [], $target);
     }
 }

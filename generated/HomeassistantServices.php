@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `homeassistant` services.
@@ -22,82 +23,85 @@ final readonly class HomeassistantServices
     {
     }
 
-    public function checkConfig(): void
+    public function checkConfig(): EventContext
     {
-        $this->ha->callService('homeassistant', 'check_config', []);
+        return $this->ha->callService('homeassistant', 'check_config', []);
     }
 
-    public function reloadAll(): void
+    public function reloadAll(): EventContext
     {
-        $this->ha->callService('homeassistant', 'reload_all', []);
+        return $this->ha->callService('homeassistant', 'reload_all', []);
     }
 
-    public function reloadConfigEntry(ServiceTargetSource $target, ?string $entryId = null): void
+    public function reloadConfigEntry(ServiceTargetSource $target, ?string $entryId = null): EventContext
     {
-        $this->ha->callService('homeassistant', 'reload_config_entry', [
+        return $this->ha->callService('homeassistant', 'reload_config_entry', [
             'entry_id' => $entryId,
         ], $target);
     }
 
-    public function reloadCoreConfig(): void
+    public function reloadCoreConfig(): EventContext
     {
-        $this->ha->callService('homeassistant', 'reload_core_config', []);
+        return $this->ha->callService('homeassistant', 'reload_core_config', []);
     }
 
-    public function reloadCustomTemplates(): void
+    public function reloadCustomTemplates(): EventContext
     {
-        $this->ha->callService('homeassistant', 'reload_custom_templates', []);
+        return $this->ha->callService('homeassistant', 'reload_custom_templates', []);
     }
 
-    public function restart(): void
+    public function restart(): EventContext
     {
-        $this->ha->callService('homeassistant', 'restart', []);
+        return $this->ha->callService('homeassistant', 'restart', []);
     }
 
-    public function savePersistentStates(): void
+    public function savePersistentStates(): EventContext
     {
-        $this->ha->callService('homeassistant', 'save_persistent_states', []);
+        return $this->ha->callService('homeassistant', 'save_persistent_states', []);
     }
 
     /**
      * @param int|float $latitude -90 to 90
      * @param int|float $longitude -180 to 180
      */
-    public function setLocation(int|float $latitude, int|float $longitude, int|float|null $elevation = null): void
-    {
-        $this->ha->callService('homeassistant', 'set_location', [
+    public function setLocation(
+        int|float $latitude,
+        int|float $longitude,
+        int|float|null $elevation = null,
+    ): EventContext {
+        return $this->ha->callService('homeassistant', 'set_location', [
             'latitude' => $latitude,
             'longitude' => $longitude,
             'elevation' => $elevation,
         ]);
     }
 
-    public function stop(): void
+    public function stop(): EventContext
     {
-        $this->ha->callService('homeassistant', 'stop', []);
+        return $this->ha->callService('homeassistant', 'stop', []);
     }
 
-    public function toggle(ServiceTargetSource $target): void
+    public function toggle(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('homeassistant', 'toggle', [], $target);
+        return $this->ha->callService('homeassistant', 'toggle', [], $target);
     }
 
-    public function turnOff(ServiceTargetSource $target): void
+    public function turnOff(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('homeassistant', 'turn_off', [], $target);
+        return $this->ha->callService('homeassistant', 'turn_off', [], $target);
     }
 
-    public function turnOn(ServiceTargetSource $target): void
+    public function turnOn(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('homeassistant', 'turn_on', [], $target);
+        return $this->ha->callService('homeassistant', 'turn_on', [], $target);
     }
 
     /**
      * @param list<string> $entityId
      */
-    public function updateEntity(array $entityId): void
+    public function updateEntity(array $entityId): EventContext
     {
-        $this->ha->callService('homeassistant', 'update_entity', [
+        return $this->ha->callService('homeassistant', 'update_entity', [
             'entity_id' => $entityId,
         ]);
     }

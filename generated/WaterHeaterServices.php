@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `water_heater` services.
@@ -22,16 +23,16 @@ final readonly class WaterHeaterServices
     {
     }
 
-    public function setAwayMode(ServiceTargetSource $target, bool $awayMode): void
+    public function setAwayMode(ServiceTargetSource $target, bool $awayMode): EventContext
     {
-        $this->ha->callService('water_heater', 'set_away_mode', [
+        return $this->ha->callService('water_heater', 'set_away_mode', [
             'away_mode' => $awayMode,
         ], $target);
     }
 
-    public function setOperationMode(ServiceTargetSource $target, string $operationMode): void
+    public function setOperationMode(ServiceTargetSource $target, string $operationMode): EventContext
     {
-        $this->ha->callService('water_heater', 'set_operation_mode', [
+        return $this->ha->callService('water_heater', 'set_operation_mode', [
             'operation_mode' => $operationMode,
         ], $target);
     }
@@ -43,20 +44,20 @@ final readonly class WaterHeaterServices
         ServiceTargetSource $target,
         int|float $temperature,
         ?string $operationMode = null,
-    ): void {
-        $this->ha->callService('water_heater', 'set_temperature', [
+    ): EventContext {
+        return $this->ha->callService('water_heater', 'set_temperature', [
             'temperature' => $temperature,
             'operation_mode' => $operationMode,
         ], $target);
     }
 
-    public function turnOff(ServiceTargetSource $target): void
+    public function turnOff(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('water_heater', 'turn_off', [], $target);
+        return $this->ha->callService('water_heater', 'turn_off', [], $target);
     }
 
-    public function turnOn(ServiceTargetSource $target): void
+    public function turnOn(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('water_heater', 'turn_on', [], $target);
+        return $this->ha->callService('water_heater', 'turn_on', [], $target);
     }
 }

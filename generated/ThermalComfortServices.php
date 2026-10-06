@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `thermal_comfort` services.
@@ -26,8 +27,8 @@ final readonly class ThermalComfortServices
      *
      * Reload all Thermal Comfort entities.
      */
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('thermal_comfort', 'reload', []);
+        return $this->ha->callService('thermal_comfort', 'reload', []);
     }
 }

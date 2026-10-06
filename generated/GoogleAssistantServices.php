@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `google_assistant` services.
@@ -21,9 +22,9 @@ final readonly class GoogleAssistantServices
     {
     }
 
-    public function requestSync(string|int|float|null $agentUserId = null): void
+    public function requestSync(string|int|float|null $agentUserId = null): EventContext
     {
-        $this->ha->callService('google_assistant', 'request_sync', [
+        return $this->ha->callService('google_assistant', 'request_sync', [
             'agent_user_id' => $agentUserId,
         ]);
     }

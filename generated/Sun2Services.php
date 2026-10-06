@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `sun2` services.
@@ -29,9 +30,9 @@ final readonly class Sun2Services
         ]);
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('sun2', 'reload', []);
+        return $this->ha->callService('sun2', 'reload', []);
     }
 
     /**
@@ -45,8 +46,8 @@ final readonly class Sun2Services
         int|float|null $longitude = null,
         ?array $observerElevation = null,
         string|int|float|null $timeZone = null,
-    ): void {
-        $this->ha->callService('sun2', 'update_location', [
+    ): EventContext {
+        return $this->ha->callService('sun2', 'update_location', [
             'location' => $location,
             'latitude' => $latitude,
             'longitude' => $longitude,

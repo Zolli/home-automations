@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `device_tracker` services.
@@ -34,8 +35,8 @@ final readonly class DeviceTrackerServices
         string|int|float|null $hostName = null,
         string|int|float|null $locationName = null,
         string|int|float|null $mac = null,
-    ): void {
-        $this->ha->callService('device_tracker', 'see', [
+    ): EventContext {
+        return $this->ha->callService('device_tracker', 'see', [
             'battery' => $battery,
             'dev_id' => $devId,
             'gps' => $gps,

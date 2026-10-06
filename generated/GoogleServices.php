@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `google` services.
@@ -35,8 +36,8 @@ final readonly class GoogleServices
         string|int|float|null $location = null,
         string|int|float|null $startDate = null,
         string|int|float|null $startDateTime = null,
-    ): void {
-        $this->ha->callService('google', 'create_event', [
+    ): EventContext {
+        return $this->ha->callService('google', 'create_event', [
             'summary' => $summary,
             'description' => $description,
             'end_date' => $endDate,

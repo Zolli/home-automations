@@ -21,6 +21,7 @@ use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -137,68 +138,68 @@ final readonly class MediaPlayerEntity implements TypedEntity
         ]);
     }
 
-    public function clearPlaylist(): void
+    public function clearPlaylist(): EventContext
     {
-        $this->entity->callService('clear_playlist');
+        return $this->entity->callService('clear_playlist');
     }
 
     /**
      * @param list<string> $groupMembers
      */
-    public function join(array $groupMembers): void
+    public function join(array $groupMembers): EventContext
     {
-        $this->entity->callService('join', [
+        return $this->entity->callService('join', [
             'group_members' => $groupMembers,
         ]);
     }
 
-    public function mediaNextTrack(): void
+    public function mediaNextTrack(): EventContext
     {
-        $this->entity->callService('media_next_track');
+        return $this->entity->callService('media_next_track');
     }
 
-    public function mediaPause(): void
+    public function mediaPause(): EventContext
     {
-        $this->entity->callService('media_pause');
+        return $this->entity->callService('media_pause');
     }
 
-    public function mediaPlay(): void
+    public function mediaPlay(): EventContext
     {
-        $this->entity->callService('media_play');
+        return $this->entity->callService('media_play');
     }
 
-    public function mediaPlayPause(): void
+    public function mediaPlayPause(): EventContext
     {
-        $this->entity->callService('media_play_pause');
+        return $this->entity->callService('media_play_pause');
     }
 
-    public function mediaPreviousTrack(): void
+    public function mediaPreviousTrack(): EventContext
     {
-        $this->entity->callService('media_previous_track');
+        return $this->entity->callService('media_previous_track');
     }
 
     /**
      * @param int|float $seekPosition 0 to 9.2233720368548E+18
      */
-    public function mediaSeek(int|float $seekPosition): void
+    public function mediaSeek(int|float $seekPosition): EventContext
     {
-        $this->entity->callService('media_seek', [
+        return $this->entity->callService('media_seek', [
             'seek_position' => $seekPosition,
         ]);
     }
 
-    public function mediaStop(): void
+    public function mediaStop(): EventContext
     {
-        $this->entity->callService('media_stop');
+        return $this->entity->callService('media_stop');
     }
 
     /**
      * @param array<array-key, mixed> $media
      * @param 'play'|'next'|'add'|'replace'|null $enqueue
      */
-    public function playMedia(array $media, ?bool $announce = null, ?string $enqueue = null): void
+    public function playMedia(array $media, ?bool $announce = null, ?string $enqueue = null): EventContext
     {
-        $this->entity->callService('play_media', [
+        return $this->entity->callService('play_media', [
             'media' => $media,
             'announce' => $announce,
             'enqueue' => $enqueue,
@@ -208,9 +209,9 @@ final readonly class MediaPlayerEntity implements TypedEntity
     /**
      * @param 'off'|'all'|'one' $repeat
      */
-    public function repeatSet(string $repeat): void
+    public function repeatSet(string $repeat): EventContext
     {
-        $this->entity->callService('repeat_set', [
+        return $this->entity->callService('repeat_set', [
             'repeat' => $repeat,
         ]);
     }
@@ -232,55 +233,55 @@ final readonly class MediaPlayerEntity implements TypedEntity
         ]);
     }
 
-    public function selectSoundMode(?string $soundMode = null): void
+    public function selectSoundMode(?string $soundMode = null): EventContext
     {
-        $this->entity->callService('select_sound_mode', [
+        return $this->entity->callService('select_sound_mode', [
             'sound_mode' => $soundMode,
         ]);
     }
 
-    public function selectSource(string $source): void
+    public function selectSource(string $source): EventContext
     {
-        $this->entity->callService('select_source', [
+        return $this->entity->callService('select_source', [
             'source' => $source,
         ]);
     }
 
-    public function shuffleSet(bool $shuffle): void
+    public function shuffleSet(bool $shuffle): EventContext
     {
-        $this->entity->callService('shuffle_set', [
+        return $this->entity->callService('shuffle_set', [
             'shuffle' => $shuffle,
         ]);
     }
 
-    public function toggle(): void
+    public function toggle(): EventContext
     {
-        $this->entity->callService('toggle');
+        return $this->entity->callService('toggle');
     }
 
-    public function turnOff(): void
+    public function turnOff(): EventContext
     {
-        $this->entity->callService('turn_off');
+        return $this->entity->callService('turn_off');
     }
 
-    public function turnOn(): void
+    public function turnOn(): EventContext
     {
-        $this->entity->callService('turn_on');
+        return $this->entity->callService('turn_on');
     }
 
-    public function unjoin(): void
+    public function unjoin(): EventContext
     {
-        $this->entity->callService('unjoin');
+        return $this->entity->callService('unjoin');
     }
 
-    public function volumeDown(): void
+    public function volumeDown(): EventContext
     {
-        $this->entity->callService('volume_down');
+        return $this->entity->callService('volume_down');
     }
 
-    public function volumeMute(bool $isVolumeMuted): void
+    public function volumeMute(bool $isVolumeMuted): EventContext
     {
-        $this->entity->callService('volume_mute', [
+        return $this->entity->callService('volume_mute', [
             'is_volume_muted' => $isVolumeMuted,
         ]);
     }
@@ -288,15 +289,15 @@ final readonly class MediaPlayerEntity implements TypedEntity
     /**
      * @param int|float $volumeLevel 0 to 1
      */
-    public function volumeSet(int|float $volumeLevel): void
+    public function volumeSet(int|float $volumeLevel): EventContext
     {
-        $this->entity->callService('volume_set', [
+        return $this->entity->callService('volume_set', [
             'volume_level' => $volumeLevel,
         ]);
     }
 
-    public function volumeUp(): void
+    public function volumeUp(): EventContext
     {
-        $this->entity->callService('volume_up');
+        return $this->entity->callService('volume_up');
     }
 }

@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `irrigation_unlimited` services.
@@ -49,8 +50,8 @@ final readonly class IrrigationUnlimitedServices
         mixed $reset = null,
         int|float|null $sequenceId = null,
         int|float|null $zones = null,
-    ): void {
-        $this->ha->callService('irrigation_unlimited', 'adjust_time', [
+    ): EventContext {
+        return $this->ha->callService('irrigation_unlimited', 'adjust_time', [
             'entity_id' => $entityId,
             'actual' => $actual,
             'decrease' => $decrease,
@@ -73,9 +74,12 @@ final readonly class IrrigationUnlimitedServices
      * @param int|float|null $sequenceId Sequence Id. Id of the sequence to cancel (entity_id should be the controller). 1 to 9999
      * @param int|float|null $zones Zones. Id(s) of the zone. 0 to 9999
      */
-    public function cancel(string $entityId, int|float|null $sequenceId = null, int|float|null $zones = null): void
-    {
-        $this->ha->callService('irrigation_unlimited', 'cancel', [
+    public function cancel(
+        string $entityId,
+        int|float|null $sequenceId = null,
+        int|float|null $zones = null,
+    ): EventContext {
+        return $this->ha->callService('irrigation_unlimited', 'cancel', [
             'entity_id' => $entityId,
             'sequence_id' => $sequenceId,
             'zones' => $zones,
@@ -91,9 +95,12 @@ final readonly class IrrigationUnlimitedServices
      * @param int|float|null $sequenceId Sequence Id. Id of the sequence to disable (entity_id should be the controller). 1 to 9999
      * @param int|float|null $zones Zones. Id(s) of the zone. 0 to 9999
      */
-    public function disable(string $entityId, int|float|null $sequenceId = null, int|float|null $zones = null): void
-    {
-        $this->ha->callService('irrigation_unlimited', 'disable', [
+    public function disable(
+        string $entityId,
+        int|float|null $sequenceId = null,
+        int|float|null $zones = null,
+    ): EventContext {
+        return $this->ha->callService('irrigation_unlimited', 'disable', [
             'entity_id' => $entityId,
             'sequence_id' => $sequenceId,
             'zones' => $zones,
@@ -109,9 +116,12 @@ final readonly class IrrigationUnlimitedServices
      * @param int|float|null $sequenceId Sequence Id. Id of the sequence to enable (entity_id should be the controller). 1 to 9999
      * @param int|float|null $zones Zones. Id(s) of the zone. 0 to 9999
      */
-    public function enable(string $entityId, int|float|null $sequenceId = null, int|float|null $zones = null): void
-    {
-        $this->ha->callService('irrigation_unlimited', 'enable', [
+    public function enable(
+        string $entityId,
+        int|float|null $sequenceId = null,
+        int|float|null $zones = null,
+    ): EventContext {
+        return $this->ha->callService('irrigation_unlimited', 'enable', [
             'entity_id' => $entityId,
             'sequence_id' => $sequenceId,
             'zones' => $zones,
@@ -171,8 +181,8 @@ final readonly class IrrigationUnlimitedServices
         ?string $time = null,
         string|int|float|null $until = null,
         ?array $weekday = null,
-    ): void {
-        $this->ha->callService('irrigation_unlimited', 'load_schedule', [
+    ): EventContext {
+        return $this->ha->callService('irrigation_unlimited', 'load_schedule', [
             'schedule_id' => $scheduleId,
             'anchor' => $anchor,
             'day' => $day,
@@ -204,8 +214,8 @@ final readonly class IrrigationUnlimitedServices
         ?bool $queue = null,
         int|float|null $sequenceId = null,
         array|string|int|float|null $time = null,
-    ): void {
-        $this->ha->callService('irrigation_unlimited', 'manual_run', [
+    ): EventContext {
+        return $this->ha->callService('irrigation_unlimited', 'manual_run', [
             'entity_id' => $entityId,
             'delay' => $delay,
             'queue' => $queue,
@@ -222,9 +232,9 @@ final readonly class IrrigationUnlimitedServices
      * @param string $entityId Entity Id. Name of the Irrigation Unlimited controller or sequence entity
      * @param int|float|null $sequenceId Sequence Id. Used when entity_id is the controller. Id of the sequence to pause (0=all sequences). 1 to 9999
      */
-    public function pause(string $entityId, int|float|null $sequenceId = null): void
+    public function pause(string $entityId, int|float|null $sequenceId = null): EventContext
     {
-        $this->ha->callService('irrigation_unlimited', 'pause', [
+        return $this->ha->callService('irrigation_unlimited', 'pause', [
             'entity_id' => $entityId,
             'sequence_id' => $sequenceId,
         ]);
@@ -235,9 +245,9 @@ final readonly class IrrigationUnlimitedServices
      *
      * Reload the configuration
      */
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('irrigation_unlimited', 'reload', []);
+        return $this->ha->callService('irrigation_unlimited', 'reload', []);
     }
 
     /**
@@ -248,17 +258,17 @@ final readonly class IrrigationUnlimitedServices
      * @param string $entityId Entity Id. Name of the Irrigation Unlimited controller or sequence entity
      * @param int|float|null $sequenceId Sequence Id. Used when entity_id is the controller. Id of the sequence to resume (0=all sequences). 1 to 9999
      */
-    public function resume(string $entityId, int|float|null $sequenceId = null): void
+    public function resume(string $entityId, int|float|null $sequenceId = null): EventContext
     {
-        $this->ha->callService('irrigation_unlimited', 'resume', [
+        return $this->ha->callService('irrigation_unlimited', 'resume', [
             'entity_id' => $entityId,
             'sequence_id' => $sequenceId,
         ]);
     }
 
-    public function skip(): void
+    public function skip(): EventContext
     {
-        $this->ha->callService('irrigation_unlimited', 'skip', []);
+        return $this->ha->callService('irrigation_unlimited', 'skip', []);
     }
 
     /**
@@ -280,8 +290,8 @@ final readonly class IrrigationUnlimitedServices
         int|float|null $sequenceId = null,
         ?string $until = null,
         int|float|null $zones = null,
-    ): void {
-        $this->ha->callService('irrigation_unlimited', 'suspend', [
+    ): EventContext {
+        return $this->ha->callService('irrigation_unlimited', 'suspend', [
             'entity_id' => $entityId,
             'for' => $for,
             'reset' => $reset,
@@ -300,9 +310,12 @@ final readonly class IrrigationUnlimitedServices
      * @param int|float|null $sequenceId Sequence Id. Id of the sequence to toggle (entity_id should be the controller). 1 to 9999
      * @param int|float|null $zones Zones. Id(s) of the zone. 0 to 9999
      */
-    public function toggle(string $entityId, int|float|null $sequenceId = null, int|float|null $zones = null): void
-    {
-        $this->ha->callService('irrigation_unlimited', 'toggle', [
+    public function toggle(
+        string $entityId,
+        int|float|null $sequenceId = null,
+        int|float|null $zones = null,
+    ): EventContext {
+        return $this->ha->callService('irrigation_unlimited', 'toggle', [
             'entity_id' => $entityId,
             'sequence_id' => $sequenceId,
             'zones' => $zones,

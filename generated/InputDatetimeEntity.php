@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -114,8 +115,8 @@ final readonly class InputDatetimeEntity implements TypedEntity
         string|int|float|null $datetime = null,
         ?string $time = null,
         int|float|null $timestamp = null,
-    ): void {
-        $this->entity->callService('set_datetime', [
+    ): EventContext {
+        return $this->entity->callService('set_datetime', [
             'date' => $date,
             'datetime' => $datetime,
             'time' => $time,

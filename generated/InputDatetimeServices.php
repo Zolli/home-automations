@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `input_datetime` services.
@@ -22,9 +23,9 @@ final readonly class InputDatetimeServices
     {
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('input_datetime', 'reload', []);
+        return $this->ha->callService('input_datetime', 'reload', []);
     }
 
     /**
@@ -36,8 +37,8 @@ final readonly class InputDatetimeServices
         string|int|float|null $datetime = null,
         ?string $time = null,
         int|float|null $timestamp = null,
-    ): void {
-        $this->ha->callService('input_datetime', 'set_datetime', [
+    ): EventContext {
+        return $this->ha->callService('input_datetime', 'set_datetime', [
             'date' => $date,
             'datetime' => $datetime,
             'time' => $time,

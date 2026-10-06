@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `button` services.
@@ -22,8 +23,8 @@ final readonly class ButtonServices
     {
     }
 
-    public function press(ServiceTargetSource $target): void
+    public function press(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('button', 'press', [], $target);
+        return $this->ha->callService('button', 'press', [], $target);
     }
 }

@@ -13,6 +13,7 @@ namespace App\Generated;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `music_assistant` services.
@@ -70,8 +71,8 @@ final readonly class MusicAssistantServices
         int|float|null $announceVolume = null,
         string|int|float|null $preAnnounceUrl = null,
         ?bool $usePreAnnounce = null,
-    ): void {
-        $this->ha->callService('music_assistant', 'play_announcement', [
+    ): EventContext {
+        return $this->ha->callService('music_assistant', 'play_announcement', [
             'url' => $url,
             'announce_volume' => $announceVolume,
             'pre_announce_url' => $preAnnounceUrl,
@@ -93,8 +94,8 @@ final readonly class MusicAssistantServices
         ?string $mediaType = null,
         ?bool $radioMode = null,
         string|int|float|null $username = null,
-    ): void {
-        $this->ha->callService('music_assistant', 'play_media', [
+    ): EventContext {
+        return $this->ha->callService('music_assistant', 'play_media', [
             'media_id' => $mediaId,
             'album' => $album,
             'artist' => $artist,
@@ -135,8 +136,8 @@ final readonly class MusicAssistantServices
         ServiceTargetSource $target,
         ?bool $autoPlay = null,
         ?string $sourcePlayer = null,
-    ): void {
-        $this->ha->callService('music_assistant', 'transfer_queue', [
+    ): EventContext {
+        return $this->ha->callService('music_assistant', 'transfer_queue', [
             'auto_play' => $autoPlay,
             'source_player' => $sourcePlayer,
         ], $target);

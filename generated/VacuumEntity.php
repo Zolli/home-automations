@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -104,58 +105,58 @@ final readonly class VacuumEntity implements TypedEntity
     /**
      * @param list<string> $cleaningAreaId
      */
-    public function cleanArea(array $cleaningAreaId): void
+    public function cleanArea(array $cleaningAreaId): EventContext
     {
-        $this->entity->callService('clean_area', [
+        return $this->entity->callService('clean_area', [
             'cleaning_area_id' => $cleaningAreaId,
         ]);
     }
 
-    public function cleanSpot(): void
+    public function cleanSpot(): EventContext
     {
-        $this->entity->callService('clean_spot');
+        return $this->entity->callService('clean_spot');
     }
 
-    public function locate(): void
+    public function locate(): EventContext
     {
-        $this->entity->callService('locate');
+        return $this->entity->callService('locate');
     }
 
-    public function pause(): void
+    public function pause(): EventContext
     {
-        $this->entity->callService('pause');
+        return $this->entity->callService('pause');
     }
 
-    public function returnToBase(): void
+    public function returnToBase(): EventContext
     {
-        $this->entity->callService('return_to_base');
+        return $this->entity->callService('return_to_base');
     }
 
     /**
      * @param array<array-key, mixed>|null $params
      */
-    public function sendCommand(string|int|float $command, ?array $params = null): void
+    public function sendCommand(string|int|float $command, ?array $params = null): EventContext
     {
-        $this->entity->callService('send_command', [
+        return $this->entity->callService('send_command', [
             'command' => $command,
             'params' => $params,
         ]);
     }
 
-    public function setFanSpeed(string $fanSpeed): void
+    public function setFanSpeed(string $fanSpeed): EventContext
     {
-        $this->entity->callService('set_fan_speed', [
+        return $this->entity->callService('set_fan_speed', [
             'fan_speed' => $fanSpeed,
         ]);
     }
 
-    public function start(): void
+    public function start(): EventContext
     {
-        $this->entity->callService('start');
+        return $this->entity->callService('start');
     }
 
-    public function stop(): void
+    public function stop(): EventContext
     {
-        $this->entity->callService('stop');
+        return $this->entity->callService('stop');
     }
 }

@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -101,8 +102,8 @@ final readonly class InputButtonEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function press(): void
+    public function press(): EventContext
     {
-        $this->entity->callService('press');
+        return $this->entity->callService('press');
     }
 }

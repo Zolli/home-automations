@@ -13,6 +13,7 @@ namespace App\Generated;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `media_player` services.
@@ -34,59 +35,59 @@ final readonly class MediaPlayerServices
         ], $target);
     }
 
-    public function clearPlaylist(ServiceTargetSource $target): void
+    public function clearPlaylist(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('media_player', 'clear_playlist', [], $target);
+        return $this->ha->callService('media_player', 'clear_playlist', [], $target);
     }
 
     /**
      * @param list<string> $groupMembers
      */
-    public function join(ServiceTargetSource $target, array $groupMembers): void
+    public function join(ServiceTargetSource $target, array $groupMembers): EventContext
     {
-        $this->ha->callService('media_player', 'join', [
+        return $this->ha->callService('media_player', 'join', [
             'group_members' => $groupMembers,
         ], $target);
     }
 
-    public function mediaNextTrack(ServiceTargetSource $target): void
+    public function mediaNextTrack(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('media_player', 'media_next_track', [], $target);
+        return $this->ha->callService('media_player', 'media_next_track', [], $target);
     }
 
-    public function mediaPause(ServiceTargetSource $target): void
+    public function mediaPause(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('media_player', 'media_pause', [], $target);
+        return $this->ha->callService('media_player', 'media_pause', [], $target);
     }
 
-    public function mediaPlay(ServiceTargetSource $target): void
+    public function mediaPlay(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('media_player', 'media_play', [], $target);
+        return $this->ha->callService('media_player', 'media_play', [], $target);
     }
 
-    public function mediaPlayPause(ServiceTargetSource $target): void
+    public function mediaPlayPause(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('media_player', 'media_play_pause', [], $target);
+        return $this->ha->callService('media_player', 'media_play_pause', [], $target);
     }
 
-    public function mediaPreviousTrack(ServiceTargetSource $target): void
+    public function mediaPreviousTrack(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('media_player', 'media_previous_track', [], $target);
+        return $this->ha->callService('media_player', 'media_previous_track', [], $target);
     }
 
     /**
      * @param int|float $seekPosition 0 to 9.2233720368548E+18
      */
-    public function mediaSeek(ServiceTargetSource $target, int|float $seekPosition): void
+    public function mediaSeek(ServiceTargetSource $target, int|float $seekPosition): EventContext
     {
-        $this->ha->callService('media_player', 'media_seek', [
+        return $this->ha->callService('media_player', 'media_seek', [
             'seek_position' => $seekPosition,
         ], $target);
     }
 
-    public function mediaStop(ServiceTargetSource $target): void
+    public function mediaStop(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('media_player', 'media_stop', [], $target);
+        return $this->ha->callService('media_player', 'media_stop', [], $target);
     }
 
     /**
@@ -98,8 +99,8 @@ final readonly class MediaPlayerServices
         array $media,
         ?bool $announce = null,
         ?string $enqueue = null,
-    ): void {
-        $this->ha->callService('media_player', 'play_media', [
+    ): EventContext {
+        return $this->ha->callService('media_player', 'play_media', [
             'media' => $media,
             'announce' => $announce,
             'enqueue' => $enqueue,
@@ -109,9 +110,9 @@ final readonly class MediaPlayerServices
     /**
      * @param 'off'|'all'|'one' $repeat
      */
-    public function repeatSet(ServiceTargetSource $target, string $repeat): void
+    public function repeatSet(ServiceTargetSource $target, string $repeat): EventContext
     {
-        $this->ha->callService('media_player', 'repeat_set', [
+        return $this->ha->callService('media_player', 'repeat_set', [
             'repeat' => $repeat,
         ], $target);
     }
@@ -134,55 +135,55 @@ final readonly class MediaPlayerServices
         ], $target);
     }
 
-    public function selectSoundMode(ServiceTargetSource $target, ?string $soundMode = null): void
+    public function selectSoundMode(ServiceTargetSource $target, ?string $soundMode = null): EventContext
     {
-        $this->ha->callService('media_player', 'select_sound_mode', [
+        return $this->ha->callService('media_player', 'select_sound_mode', [
             'sound_mode' => $soundMode,
         ], $target);
     }
 
-    public function selectSource(ServiceTargetSource $target, string $source): void
+    public function selectSource(ServiceTargetSource $target, string $source): EventContext
     {
-        $this->ha->callService('media_player', 'select_source', [
+        return $this->ha->callService('media_player', 'select_source', [
             'source' => $source,
         ], $target);
     }
 
-    public function shuffleSet(ServiceTargetSource $target, bool $shuffle): void
+    public function shuffleSet(ServiceTargetSource $target, bool $shuffle): EventContext
     {
-        $this->ha->callService('media_player', 'shuffle_set', [
+        return $this->ha->callService('media_player', 'shuffle_set', [
             'shuffle' => $shuffle,
         ], $target);
     }
 
-    public function toggle(ServiceTargetSource $target): void
+    public function toggle(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('media_player', 'toggle', [], $target);
+        return $this->ha->callService('media_player', 'toggle', [], $target);
     }
 
-    public function turnOff(ServiceTargetSource $target): void
+    public function turnOff(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('media_player', 'turn_off', [], $target);
+        return $this->ha->callService('media_player', 'turn_off', [], $target);
     }
 
-    public function turnOn(ServiceTargetSource $target): void
+    public function turnOn(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('media_player', 'turn_on', [], $target);
+        return $this->ha->callService('media_player', 'turn_on', [], $target);
     }
 
-    public function unjoin(ServiceTargetSource $target): void
+    public function unjoin(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('media_player', 'unjoin', [], $target);
+        return $this->ha->callService('media_player', 'unjoin', [], $target);
     }
 
-    public function volumeDown(ServiceTargetSource $target): void
+    public function volumeDown(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('media_player', 'volume_down', [], $target);
+        return $this->ha->callService('media_player', 'volume_down', [], $target);
     }
 
-    public function volumeMute(ServiceTargetSource $target, bool $isVolumeMuted): void
+    public function volumeMute(ServiceTargetSource $target, bool $isVolumeMuted): EventContext
     {
-        $this->ha->callService('media_player', 'volume_mute', [
+        return $this->ha->callService('media_player', 'volume_mute', [
             'is_volume_muted' => $isVolumeMuted,
         ], $target);
     }
@@ -190,15 +191,15 @@ final readonly class MediaPlayerServices
     /**
      * @param int|float $volumeLevel 0 to 1
      */
-    public function volumeSet(ServiceTargetSource $target, int|float $volumeLevel): void
+    public function volumeSet(ServiceTargetSource $target, int|float $volumeLevel): EventContext
     {
-        $this->ha->callService('media_player', 'volume_set', [
+        return $this->ha->callService('media_player', 'volume_set', [
             'volume_level' => $volumeLevel,
         ], $target);
     }
 
-    public function volumeUp(ServiceTargetSource $target): void
+    public function volumeUp(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('media_player', 'volume_up', [], $target);
+        return $this->ha->callService('media_player', 'volume_up', [], $target);
     }
 }

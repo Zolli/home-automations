@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `homeconnect_ws` services.
@@ -24,9 +25,9 @@ final readonly class HomeconnectWsServices
     /**
      * @param array{days?: int|float, hours?: int|float, minutes?: int|float, seconds?: int|float, milliseconds?: int|float}|string|int|float $finishIn
      */
-    public function setFinishIn(string $deviceId, array|string|int|float $finishIn): void
+    public function setFinishIn(string $deviceId, array|string|int|float $finishIn): EventContext
     {
-        $this->ha->callService('homeconnect_ws', 'set_finish_in', [
+        return $this->ha->callService('homeconnect_ws', 'set_finish_in', [
             'device_id' => $deviceId,
             'finish_in' => $finishIn,
         ]);
@@ -35,9 +36,9 @@ final readonly class HomeconnectWsServices
     /**
      * @param array{days?: int|float, hours?: int|float, minutes?: int|float, seconds?: int|float, milliseconds?: int|float}|string|int|float $startIn
      */
-    public function setStartIn(string $deviceId, array|string|int|float $startIn): void
+    public function setStartIn(string $deviceId, array|string|int|float $startIn): EventContext
     {
-        $this->ha->callService('homeconnect_ws', 'set_start_in', [
+        return $this->ha->callService('homeconnect_ws', 'set_start_in', [
             'device_id' => $deviceId,
             'start_in' => $startIn,
         ]);
@@ -51,8 +52,8 @@ final readonly class HomeconnectWsServices
         string $deviceId,
         array|string|int|float|null $finishIn = null,
         array|string|int|float|null $startIn = null,
-    ): void {
-        $this->ha->callService('homeconnect_ws', 'start_program', [
+    ): EventContext {
+        return $this->ha->callService('homeconnect_ws', 'start_program', [
             'device_id' => $deviceId,
             'finish_in' => $finishIn,
             'start_in' => $startIn,

@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `hass_dyson` services.
@@ -29,9 +30,9 @@ final readonly class HassDysonServices
      *
      * @param string $deviceId Device. The Dyson device to cancel the timer for
      */
-    public function cancelSleepTimer(string $deviceId): void
+    public function cancelSleepTimer(string $deviceId): EventContext
     {
-        $this->ha->callService('hass_dyson', 'cancel_sleep_timer', [
+        return $this->ha->callService('hass_dyson', 'cancel_sleep_timer', [
             'device_id' => $deviceId,
         ]);
     }
@@ -61,9 +62,9 @@ final readonly class HassDysonServices
      *
      * @param ?string $deviceId Device. The Dyson device to refresh data for (optional - refreshes all if not specified)
      */
-    public function refreshAccountData(?string $deviceId = null): void
+    public function refreshAccountData(?string $deviceId = null): EventContext
     {
-        $this->ha->callService('hass_dyson', 'refresh_account_data', [
+        return $this->ha->callService('hass_dyson', 'refresh_account_data', [
             'device_id' => $deviceId,
         ]);
     }
@@ -76,9 +77,9 @@ final readonly class HassDysonServices
      * @param string $deviceId Device. The Dyson device to reset filter for
      * @param 'hepa'|'carbon'|'both' $filterType Filter Type. Type of filter to reset
      */
-    public function resetFilter(string $deviceId, string $filterType): void
+    public function resetFilter(string $deviceId, string $filterType): EventContext
     {
-        $this->ha->callService('hass_dyson', 'reset_filter', [
+        return $this->ha->callService('hass_dyson', 'reset_filter', [
             'device_id' => $deviceId,
             'filter_type' => $filterType,
         ]);
@@ -93,9 +94,9 @@ final readonly class HassDysonServices
      * @param int|float $lowerAngle Lower Angle. Lower oscillation angle in degrees (0-350). 0 to 350 °
      * @param int|float $upperAngle Upper Angle. Upper oscillation angle in degrees (0-350). 0 to 350 °
      */
-    public function setOscillationAngles(string $deviceId, int|float $lowerAngle, int|float $upperAngle): void
+    public function setOscillationAngles(string $deviceId, int|float $lowerAngle, int|float $upperAngle): EventContext
     {
-        $this->ha->callService('hass_dyson', 'set_oscillation_angles', [
+        return $this->ha->callService('hass_dyson', 'set_oscillation_angles', [
             'device_id' => $deviceId,
             'lower_angle' => $lowerAngle,
             'upper_angle' => $upperAngle,
@@ -110,9 +111,9 @@ final readonly class HassDysonServices
      * @param string $deviceId Device. The Dyson device to set the timer for
      * @param int|float $minutes Minutes. Timer duration in minutes (15-540). 15 to 540 min
      */
-    public function setSleepTimer(string $deviceId, int|float $minutes): void
+    public function setSleepTimer(string $deviceId, int|float $minutes): EventContext
     {
-        $this->ha->callService('hass_dyson', 'set_sleep_timer', [
+        return $this->ha->callService('hass_dyson', 'set_sleep_timer', [
             'device_id' => $deviceId,
             'minutes' => $minutes,
         ]);

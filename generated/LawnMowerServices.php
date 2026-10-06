@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `lawn_mower` services.
@@ -22,18 +23,18 @@ final readonly class LawnMowerServices
     {
     }
 
-    public function dock(ServiceTargetSource $target): void
+    public function dock(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('lawn_mower', 'dock', [], $target);
+        return $this->ha->callService('lawn_mower', 'dock', [], $target);
     }
 
-    public function pause(ServiceTargetSource $target): void
+    public function pause(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('lawn_mower', 'pause', [], $target);
+        return $this->ha->callService('lawn_mower', 'pause', [], $target);
     }
 
-    public function startMowing(ServiceTargetSource $target): void
+    public function startMowing(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('lawn_mower', 'start_mowing', [], $target);
+        return $this->ha->callService('lawn_mower', 'start_mowing', [], $target);
     }
 }

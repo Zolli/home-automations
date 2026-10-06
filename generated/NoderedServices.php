@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `nodered` services.
@@ -29,8 +30,8 @@ final readonly class NoderedServices
         ServiceTargetSource $target,
         ?array $message = null,
         string|int|float|null $outputPath = null,
-    ): void {
-        $this->ha->callService('nodered', 'trigger', [
+    ): EventContext {
+        return $this->ha->callService('nodered', 'trigger', [
             'message' => $message,
             'output_path' => $outputPath,
         ], $target);

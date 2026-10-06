@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `switch` services.
@@ -22,18 +23,18 @@ final readonly class SwitchServices
     {
     }
 
-    public function toggle(ServiceTargetSource $target): void
+    public function toggle(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('switch', 'toggle', [], $target);
+        return $this->ha->callService('switch', 'toggle', [], $target);
     }
 
-    public function turnOff(ServiceTargetSource $target): void
+    public function turnOff(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('switch', 'turn_off', [], $target);
+        return $this->ha->callService('switch', 'turn_off', [], $target);
     }
 
-    public function turnOn(ServiceTargetSource $target): void
+    public function turnOn(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('switch', 'turn_on', [], $target);
+        return $this->ha->callService('switch', 'turn_on', [], $target);
     }
 }

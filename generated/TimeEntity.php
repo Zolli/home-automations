@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -107,9 +108,9 @@ final readonly class TimeEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function setValue(string $time): void
+    public function setValue(string $time): EventContext
     {
-        $this->entity->callService('set_value', [
+        return $this->entity->callService('set_value', [
             'time' => $time,
         ]);
     }

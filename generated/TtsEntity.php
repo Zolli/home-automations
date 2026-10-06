@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -110,8 +111,8 @@ final readonly class TtsEntity implements TypedEntity
         ?bool $cache = null,
         string|int|float|null $language = null,
         ?array $options = null,
-    ): void {
-        $this->entity->callService('speak', [
+    ): EventContext {
+        return $this->entity->callService('speak', [
             'media_player_entity_id' => $mediaPlayerEntityId,
             'message' => $message,
             'cache' => $cache,

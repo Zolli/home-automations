@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `backup` services.
@@ -21,13 +22,13 @@ final readonly class BackupServices
     {
     }
 
-    public function create(): void
+    public function create(): EventContext
     {
-        $this->ha->callService('backup', 'create', []);
+        return $this->ha->callService('backup', 'create', []);
     }
 
-    public function createAutomatic(): void
+    public function createAutomatic(): EventContext
     {
-        $this->ha->callService('backup', 'create_automatic', []);
+        return $this->ha->callService('backup', 'create_automatic', []);
     }
 }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `frontend` services.
@@ -21,14 +22,14 @@ final readonly class FrontendServices
     {
     }
 
-    public function reloadThemes(): void
+    public function reloadThemes(): EventContext
     {
-        $this->ha->callService('frontend', 'reload_themes', []);
+        return $this->ha->callService('frontend', 'reload_themes', []);
     }
 
-    public function setTheme(?string $name = null, ?string $nameDark = null): void
+    public function setTheme(?string $name = null, ?string $nameDark = null): EventContext
     {
-        $this->ha->callService('frontend', 'set_theme', [
+        return $this->ha->callService('frontend', 'set_theme', [
             'name' => $name,
             'name_dark' => $nameDark,
         ]);

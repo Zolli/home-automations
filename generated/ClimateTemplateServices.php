@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `climate_template` services.
@@ -21,8 +22,8 @@ final readonly class ClimateTemplateServices
     {
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('climate_template', 'reload', []);
+        return $this->ha->callService('climate_template', 'reload', []);
     }
 }

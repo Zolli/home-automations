@@ -13,6 +13,7 @@ namespace App\Generated;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `sonos` services.
@@ -23,9 +24,9 @@ final readonly class SonosServices
     {
     }
 
-    public function clearSleepTimer(ServiceTargetSource $target): void
+    public function clearSleepTimer(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('sonos', 'clear_sleep_timer', [], $target);
+        return $this->ha->callService('sonos', 'clear_sleep_timer', [], $target);
     }
 
     public function getQueue(ServiceTargetSource $target): ServiceResponse
@@ -36,9 +37,9 @@ final readonly class SonosServices
     /**
      * @param int|float|null $queuePosition 0 to 10000
      */
-    public function playQueue(ServiceTargetSource $target, int|float|null $queuePosition = null): void
+    public function playQueue(ServiceTargetSource $target, int|float|null $queuePosition = null): EventContext
     {
-        $this->ha->callService('sonos', 'play_queue', [
+        return $this->ha->callService('sonos', 'play_queue', [
             'queue_position' => $queuePosition,
         ], $target);
     }
@@ -46,16 +47,16 @@ final readonly class SonosServices
     /**
      * @param int|float|null $queuePosition 0 to 10000
      */
-    public function removeFromQueue(ServiceTargetSource $target, int|float|null $queuePosition = null): void
+    public function removeFromQueue(ServiceTargetSource $target, int|float|null $queuePosition = null): EventContext
     {
-        $this->ha->callService('sonos', 'remove_from_queue', [
+        return $this->ha->callService('sonos', 'remove_from_queue', [
             'queue_position' => $queuePosition,
         ], $target);
     }
 
-    public function restore(ServiceTargetSource $target, ?bool $withGroup = null): void
+    public function restore(ServiceTargetSource $target, ?bool $withGroup = null): EventContext
     {
-        $this->ha->callService('sonos', 'restore', [
+        return $this->ha->callService('sonos', 'restore', [
             'with_group' => $withGroup,
         ], $target);
     }
@@ -63,16 +64,16 @@ final readonly class SonosServices
     /**
      * @param int|float|null $sleepTime 0 to 7200 seconds
      */
-    public function setSleepTimer(ServiceTargetSource $target, int|float|null $sleepTime = null): void
+    public function setSleepTimer(ServiceTargetSource $target, int|float|null $sleepTime = null): EventContext
     {
-        $this->ha->callService('sonos', 'set_sleep_timer', [
+        return $this->ha->callService('sonos', 'set_sleep_timer', [
             'sleep_time' => $sleepTime,
         ], $target);
     }
 
-    public function snapshot(ServiceTargetSource $target, ?bool $withGroup = null): void
+    public function snapshot(ServiceTargetSource $target, ?bool $withGroup = null): EventContext
     {
-        $this->ha->callService('sonos', 'snapshot', [
+        return $this->ha->callService('sonos', 'snapshot', [
             'with_group' => $withGroup,
         ], $target);
     }
@@ -88,8 +89,8 @@ final readonly class SonosServices
         ?bool $includeLinkedZones = null,
         ?string $time = null,
         int|float|null $volume = null,
-    ): void {
-        $this->ha->callService('sonos', 'update_alarm', [
+    ): EventContext {
+        return $this->ha->callService('sonos', 'update_alarm', [
             'alarm_id' => $alarmId,
             'enabled' => $enabled,
             'include_linked_zones' => $includeLinkedZones,

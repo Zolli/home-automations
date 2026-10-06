@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `history_stats` services.
@@ -21,8 +22,8 @@ final readonly class HistoryStatsServices
     {
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('history_stats', 'reload', []);
+        return $this->ha->callService('history_stats', 'reload', []);
     }
 }

@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `adaptive_lighting` services.
@@ -41,8 +42,8 @@ final readonly class AdaptiveLightingServices
         ?bool $preferRgbColor = null,
         string|int|float|null $transition = null,
         ?bool $turnOnLights = null,
-    ): void {
-        $this->ha->callService('adaptive_lighting', 'apply', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_lighting', 'apply', [
             'adapt_brightness' => $adaptBrightness,
             'adapt_color' => $adaptColor,
             'entity_id' => $entityId,
@@ -121,8 +122,8 @@ final readonly class AdaptiveLightingServices
         string|int|float|null $transition = null,
         ?bool $turnOnLights = null,
         ?string $useDefaults = null,
-    ): void {
-        $this->ha->callService('adaptive_lighting', 'change_switch_settings', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_lighting', 'change_switch_settings', [
             'adapt_delay' => $adaptDelay,
             'autoreset_control_seconds' => $autoresetControlSeconds,
             'detect_non_ha_changes' => $detectNonHaChanges,
@@ -168,8 +169,8 @@ final readonly class AdaptiveLightingServices
         ?string $entityId = null,
         ?array $lights = null,
         ?bool $manualControl = null,
-    ): void {
-        $this->ha->callService('adaptive_lighting', 'set_manual_control', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_lighting', 'set_manual_control', [
             'entity_id' => $entityId,
             'lights' => $lights,
             'manual_control' => $manualControl,

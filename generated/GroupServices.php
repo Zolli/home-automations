@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `group` services.
@@ -21,17 +22,17 @@ final readonly class GroupServices
     {
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('group', 'reload', []);
+        return $this->ha->callService('group', 'reload', []);
     }
 
     /**
      * @param array<array-key, mixed> $objectId
      */
-    public function remove(array $objectId): void
+    public function remove(array $objectId): EventContext
     {
-        $this->ha->callService('group', 'remove', [
+        return $this->ha->callService('group', 'remove', [
             'object_id' => $objectId,
         ]);
     }
@@ -49,8 +50,8 @@ final readonly class GroupServices
         ?string $icon = null,
         string|int|float|null $name = null,
         ?array $removeEntities = null,
-    ): void {
-        $this->ha->callService('group', 'set', [
+    ): EventContext {
+        return $this->ha->callService('group', 'set', [
             'object_id' => $objectId,
             'add_entities' => $addEntities,
             'all' => $all,

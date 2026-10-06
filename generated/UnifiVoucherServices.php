@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `unifi_voucher` services.
@@ -38,8 +39,8 @@ final readonly class UnifiVoucherServices
         int|float|null $rateMaxDown = null,
         int|float|null $rateMaxUp = null,
         int|float|null $usageQuota = null,
-    ): void {
-        $this->ha->callService('unifi_voucher', 'create', [
+    ): EventContext {
+        return $this->ha->callService('unifi_voucher', 'create', [
             'duration' => $duration,
             'note' => $note,
             'number' => $number,
@@ -50,9 +51,9 @@ final readonly class UnifiVoucherServices
         ]);
     }
 
-    public function delete(string|int|float|null $id = null): void
+    public function delete(string|int|float|null $id = null): EventContext
     {
-        $this->ha->callService('unifi_voucher', 'delete', [
+        return $this->ha->callService('unifi_voucher', 'delete', [
             'id' => $id,
         ]);
     }
@@ -62,8 +63,8 @@ final readonly class UnifiVoucherServices
         return $this->ha->callServiceForResponse('unifi_voucher', 'list', []);
     }
 
-    public function update(): void
+    public function update(): EventContext
     {
-        $this->ha->callService('unifi_voucher', 'update', []);
+        return $this->ha->callService('unifi_voucher', 'update', []);
     }
 }

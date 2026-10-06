@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -101,16 +102,16 @@ final readonly class WaterHeaterEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function setAwayMode(bool $awayMode): void
+    public function setAwayMode(bool $awayMode): EventContext
     {
-        $this->entity->callService('set_away_mode', [
+        return $this->entity->callService('set_away_mode', [
             'away_mode' => $awayMode,
         ]);
     }
 
-    public function setOperationMode(string $operationMode): void
+    public function setOperationMode(string $operationMode): EventContext
     {
-        $this->entity->callService('set_operation_mode', [
+        return $this->entity->callService('set_operation_mode', [
             'operation_mode' => $operationMode,
         ]);
     }
@@ -118,21 +119,21 @@ final readonly class WaterHeaterEntity implements TypedEntity
     /**
      * @param int|float $temperature 0 to 250 °
      */
-    public function setTemperature(int|float $temperature, ?string $operationMode = null): void
+    public function setTemperature(int|float $temperature, ?string $operationMode = null): EventContext
     {
-        $this->entity->callService('set_temperature', [
+        return $this->entity->callService('set_temperature', [
             'temperature' => $temperature,
             'operation_mode' => $operationMode,
         ]);
     }
 
-    public function turnOff(): void
+    public function turnOff(): EventContext
     {
-        $this->entity->callService('turn_off');
+        return $this->entity->callService('turn_off');
     }
 
-    public function turnOn(): void
+    public function turnOn(): EventContext
     {
-        $this->entity->callService('turn_on');
+        return $this->entity->callService('turn_on');
     }
 }

@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `input_number` services.
@@ -22,27 +23,27 @@ final readonly class InputNumberServices
     {
     }
 
-    public function decrement(ServiceTargetSource $target): void
+    public function decrement(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('input_number', 'decrement', [], $target);
+        return $this->ha->callService('input_number', 'decrement', [], $target);
     }
 
-    public function increment(ServiceTargetSource $target): void
+    public function increment(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('input_number', 'increment', [], $target);
+        return $this->ha->callService('input_number', 'increment', [], $target);
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('input_number', 'reload', []);
+        return $this->ha->callService('input_number', 'reload', []);
     }
 
     /**
      * @param int|float $value 0 to 9.2233720368548E+18
      */
-    public function setValue(ServiceTargetSource $target, int|float $value): void
+    public function setValue(ServiceTargetSource $target, int|float $value): EventContext
     {
-        $this->ha->callService('input_number', 'set_value', [
+        return $this->ha->callService('input_number', 'set_value', [
             'value' => $value,
         ], $target);
     }

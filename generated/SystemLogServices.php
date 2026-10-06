@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `system_log` services.
@@ -21,9 +22,9 @@ final readonly class SystemLogServices
     {
     }
 
-    public function clear(): void
+    public function clear(): EventContext
     {
-        $this->ha->callService('system_log', 'clear', []);
+        return $this->ha->callService('system_log', 'clear', []);
     }
 
     /**
@@ -33,8 +34,8 @@ final readonly class SystemLogServices
         string|int|float $message,
         ?string $level = null,
         string|int|float|null $logger = null,
-    ): void {
-        $this->ha->callService('system_log', 'write', [
+    ): EventContext {
+        return $this->ha->callService('system_log', 'write', [
             'message' => $message,
             'level' => $level,
             'logger' => $logger,

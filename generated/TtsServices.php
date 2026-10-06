@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `tts` services.
@@ -22,9 +23,9 @@ final readonly class TtsServices
     {
     }
 
-    public function clearCache(): void
+    public function clearCache(): EventContext
     {
-        $this->ha->callService('tts', 'clear_cache', []);
+        return $this->ha->callService('tts', 'clear_cache', []);
     }
 
     /**
@@ -40,8 +41,8 @@ final readonly class TtsServices
         ?bool $cache = null,
         string|int|float|null $language = null,
         ?array $options = null,
-    ): void {
-        $this->ha->callService('tts', 'cloud_say', [
+    ): EventContext {
+        return $this->ha->callService('tts', 'cloud_say', [
             'entity_id' => $entityId,
             'message' => $message,
             'cache' => $cache,
@@ -60,8 +61,8 @@ final readonly class TtsServices
         ?bool $cache = null,
         string|int|float|null $language = null,
         ?array $options = null,
-    ): void {
-        $this->ha->callService('tts', 'speak', [
+    ): EventContext {
+        return $this->ha->callService('tts', 'speak', [
             'media_player_entity_id' => $mediaPlayerEntityId,
             'message' => $message,
             'cache' => $cache,

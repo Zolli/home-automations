@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -184,7 +185,6 @@ final readonly class LightEntity implements TypedEntity
         'light.light_shed_floodlights' => true,
         'light.light_wardrobe_ceiling' => true,
         'light.living_room_brightness' => true,
-        'light.living_room_tv_ambilight' => true,
         'light.living_room_tv_ambilight_2' => true,
         'light.lobby_brightness' => true,
         'light.lobby_ceiling_01_bulb_1' => true,
@@ -317,8 +317,8 @@ final readonly class LightEntity implements TypedEntity
         int|float|null $transition = null,
         ?bool $white = null,
         ?array $xyColor = null,
-    ): void {
-        $this->entity->callService('toggle', [
+    ): EventContext {
+        return $this->entity->callService('toggle', [
             'brightness' => $brightness,
             'brightness_pct' => $brightnessPct,
             'color_name' => $colorName,
@@ -340,9 +340,9 @@ final readonly class LightEntity implements TypedEntity
      * @param 'long'|'short'|null $flash
      * @param int|float|null $transition 0 to 300 seconds
      */
-    public function turnOff(?string $flash = null, int|float|null $transition = null): void
+    public function turnOff(?string $flash = null, int|float|null $transition = null): EventContext
     {
-        $this->entity->callService('turn_off', [
+        return $this->entity->callService('turn_off', [
             'flash' => $flash,
             'transition' => $transition,
         ]);
@@ -381,8 +381,8 @@ final readonly class LightEntity implements TypedEntity
         int|float|null $transition = null,
         ?bool $white = null,
         ?array $xyColor = null,
-    ): void {
-        $this->entity->callService('turn_on', [
+    ): EventContext {
+        return $this->entity->callService('turn_on', [
             'brightness' => $brightness,
             'brightness_pct' => $brightnessPct,
             'brightness_step' => $brightnessStep,

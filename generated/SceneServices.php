@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `scene` services.
@@ -26,9 +27,9 @@ final readonly class SceneServices
      * @param array<array-key, mixed> $entities
      * @param int|float|null $transition 0 to 300 seconds
      */
-    public function apply(array $entities, int|float|null $transition = null): void
+    public function apply(array $entities, int|float|null $transition = null): EventContext
     {
-        $this->ha->callService('scene', 'apply', [
+        return $this->ha->callService('scene', 'apply', [
             'entities' => $entities,
             'transition' => $transition,
         ]);
@@ -38,31 +39,34 @@ final readonly class SceneServices
      * @param array<array-key, mixed>|null $entities
      * @param list<string>|null $snapshotEntities
      */
-    public function create(string|int|float $sceneId, ?array $entities = null, ?array $snapshotEntities = null): void
-    {
-        $this->ha->callService('scene', 'create', [
+    public function create(
+        string|int|float $sceneId,
+        ?array $entities = null,
+        ?array $snapshotEntities = null,
+    ): EventContext {
+        return $this->ha->callService('scene', 'create', [
             'scene_id' => $sceneId,
             'entities' => $entities,
             'snapshot_entities' => $snapshotEntities,
         ]);
     }
 
-    public function delete(ServiceTargetSource $target): void
+    public function delete(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('scene', 'delete', [], $target);
+        return $this->ha->callService('scene', 'delete', [], $target);
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('scene', 'reload', []);
+        return $this->ha->callService('scene', 'reload', []);
     }
 
     /**
      * @param int|float|null $transition 0 to 300 seconds
      */
-    public function turnOn(ServiceTargetSource $target, int|float|null $transition = null): void
+    public function turnOn(ServiceTargetSource $target, int|float|null $transition = null): EventContext
     {
-        $this->ha->callService('scene', 'turn_on', [
+        return $this->ha->callService('scene', 'turn_on', [
             'transition' => $transition,
         ], $target);
     }

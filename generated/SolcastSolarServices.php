@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `solcast_solar` services.
@@ -27,9 +28,9 @@ final readonly class SolcastSolarServices
      *
      * Deletes cached Solcast forecast and estimated actual data files, then reloads integration data
      */
-    public function clearAllSolcastData(): void
+    public function clearAllSolcastData(): EventContext
     {
-        $this->ha->callService('solcast_solar', 'clear_all_solcast_data', []);
+        return $this->ha->callService('solcast_solar', 'clear_all_solcast_data', []);
     }
 
     /**
@@ -47,9 +48,9 @@ final readonly class SolcastSolarServices
      *
      * Force fetches estimated actuals from Solcast
      */
-    public function forceUpdateEstimates(): void
+    public function forceUpdateEstimates(): EventContext
     {
-        $this->ha->callService('solcast_solar', 'force_update_estimates', []);
+        return $this->ha->callService('solcast_solar', 'force_update_estimates', []);
     }
 
     /**
@@ -57,9 +58,9 @@ final readonly class SolcastSolarServices
      *
      * Force fetches the forecasts from Solcast
      */
-    public function forceUpdateForecasts(): void
+    public function forceUpdateForecasts(): EventContext
     {
-        $this->ha->callService('solcast_solar', 'force_update_forecasts', []);
+        return $this->ha->callService('solcast_solar', 'force_update_forecasts', []);
     }
 
     /**
@@ -127,9 +128,9 @@ final readonly class SolcastSolarServices
      *
      * Deprecated; use the set_options action with the hard_limit option set to 0 instead
      */
-    public function removeHardLimit(): void
+    public function removeHardLimit(): EventContext
     {
-        $this->ha->callService('solcast_solar', 'remove_hard_limit', []);
+        return $this->ha->callService('solcast_solar', 'remove_hard_limit', []);
     }
 
     /**
@@ -137,9 +138,9 @@ final readonly class SolcastSolarServices
      *
      * Deprecated; use the set_options action with the custom_hours option instead
      */
-    public function setCustomHours(mixed $hours = null): void
+    public function setCustomHours(mixed $hours = null): EventContext
     {
-        $this->ha->callService('solcast_solar', 'set_custom_hours', [
+        return $this->ha->callService('solcast_solar', 'set_custom_hours', [
             'hours' => $hours,
         ]);
     }
@@ -149,9 +150,9 @@ final readonly class SolcastSolarServices
      *
      * Set the hourly or half-hourly forecast dampening factors
      */
-    public function setDampening(mixed $dampFactor = null, mixed $site = null): void
+    public function setDampening(mixed $dampFactor = null, mixed $site = null): EventContext
     {
-        $this->ha->callService('solcast_solar', 'set_dampening', [
+        return $this->ha->callService('solcast_solar', 'set_dampening', [
             'damp_factor' => $dampFactor,
             'site' => $site,
         ]);
@@ -164,9 +165,9 @@ final readonly class SolcastSolarServices
      *
      * @param mixed $hardLimit Set the max value in kW that the inverter can produce. Use 0 to disable the hard limit
      */
-    public function setHardLimit(mixed $hardLimit = null): void
+    public function setHardLimit(mixed $hardLimit = null): EventContext
     {
-        $this->ha->callService('solcast_solar', 'set_hard_limit', [
+        return $this->ha->callService('solcast_solar', 'set_hard_limit', [
             'hard_limit' => $hardLimit,
         ]);
     }
@@ -197,8 +198,8 @@ final readonly class SolcastSolarServices
         mixed $siteExportEntity = null,
         mixed $siteExportLimit = null,
         mixed $useActuals = null,
-    ): void {
-        $this->ha->callService('solcast_solar', 'set_options', [
+    ): EventContext {
+        return $this->ha->callService('solcast_solar', 'set_options', [
             'api_key' => $apiKey,
             'api_limit' => $apiLimit,
             'attr_brk_detailed' => $attrBrkDetailed,
@@ -227,8 +228,8 @@ final readonly class SolcastSolarServices
      *
      * Fetches the forecasts from Solcast
      */
-    public function updateForecasts(): void
+    public function updateForecasts(): EventContext
     {
-        $this->ha->callService('solcast_solar', 'update_forecasts', []);
+        return $this->ha->callService('solcast_solar', 'update_forecasts', []);
     }
 }

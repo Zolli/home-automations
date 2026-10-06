@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `notify` services.
@@ -35,8 +36,8 @@ final readonly class NotifyServices
         ?array $data = null,
         ?array $target = null,
         string|int|float|null $title = null,
-    ): void {
-        $this->ha->callService('notify', 'everyone_on_mobile_app', [
+    ): EventContext {
+        return $this->ha->callService('notify', 'everyone_on_mobile_app', [
             'message' => $message,
             'data' => $data,
             'target' => $target,
@@ -57,8 +58,8 @@ final readonly class NotifyServices
         ?array $data = null,
         ?array $target = null,
         string|int|float|null $title = null,
-    ): void {
-        $this->ha->callService('notify', 'lg_webos_tv_oled65c9pla', [
+    ): EventContext {
+        return $this->ha->callService('notify', 'lg_webos_tv_oled65c9pla', [
             'message' => $message,
             'data' => $data,
             'target' => $target,
@@ -79,8 +80,8 @@ final readonly class NotifyServices
         ?array $data = null,
         ?array $target = null,
         string|int|float|null $title = null,
-    ): void {
-        $this->ha->callService('notify', 'mobile_app_zoli_phone', [
+    ): EventContext {
+        return $this->ha->callService('notify', 'mobile_app_zoli_phone', [
             'message' => $message,
             'data' => $data,
             'target' => $target,
@@ -101,8 +102,8 @@ final readonly class NotifyServices
         ?array $data = null,
         ?array $target = null,
         string|int|float|null $title = null,
-    ): void {
-        $this->ha->callService('notify', 'mobile_app_zsuzsi_phone', [
+    ): EventContext {
+        return $this->ha->callService('notify', 'mobile_app_zsuzsi_phone', [
             'message' => $message,
             'data' => $data,
             'target' => $target,
@@ -123,8 +124,8 @@ final readonly class NotifyServices
         ?array $data = null,
         ?array $target = null,
         string|int|float|null $title = null,
-    ): void {
-        $this->ha->callService('notify', 'notify', [
+    ): EventContext {
+        return $this->ha->callService('notify', 'notify', [
             'message' => $message,
             'data' => $data,
             'target' => $target,
@@ -139,8 +140,8 @@ final readonly class NotifyServices
         string|int|float $message,
         ?array $data = null,
         string|int|float|null $title = null,
-    ): void {
-        $this->ha->callService('notify', 'persistent_notification', [
+    ): EventContext {
+        return $this->ha->callService('notify', 'persistent_notification', [
             'message' => $message,
             'data' => $data,
             'title' => $title,
@@ -151,8 +152,8 @@ final readonly class NotifyServices
         ServiceTargetSource $target,
         string|int|float $message,
         string|int|float|null $title = null,
-    ): void {
-        $this->ha->callService('notify', 'send_message', [
+    ): EventContext {
+        return $this->ha->callService('notify', 'send_message', [
             'message' => $message,
             'title' => $title,
         ], $target);

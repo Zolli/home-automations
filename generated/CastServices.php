@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `cast` services.
@@ -25,8 +26,8 @@ final readonly class CastServices
         string $entityId,
         string|int|float $viewPath,
         string|int|float|null $dashboardPath = null,
-    ): void {
-        $this->ha->callService('cast', 'show_lovelace_view', [
+    ): EventContext {
+        return $this->ha->callService('cast', 'show_lovelace_view', [
             'entity_id' => $entityId,
             'view_path' => $viewPath,
             'dashboard_path' => $dashboardPath,

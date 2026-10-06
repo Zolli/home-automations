@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `wake_on_lan` services.
@@ -29,8 +30,8 @@ final readonly class WakeOnLanServices
         string|int|float|null $broadcastAddress = null,
         int|float|null $broadcastPort = null,
         string|int|float|null $secureonPassword = null,
-    ): void {
-        $this->ha->callService('wake_on_lan', 'send_magic_packet', [
+    ): EventContext {
+        return $this->ha->callService('wake_on_lan', 'send_magic_packet', [
             'mac' => $mac,
             'broadcast_address' => $broadcastAddress,
             'broadcast_port' => $broadcastPort,

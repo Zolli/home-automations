@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `input_text` services.
@@ -22,14 +23,14 @@ final readonly class InputTextServices
     {
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('input_text', 'reload', []);
+        return $this->ha->callService('input_text', 'reload', []);
     }
 
-    public function setValue(ServiceTargetSource $target, string|int|float $value): void
+    public function setValue(ServiceTargetSource $target, string|int|float $value): EventContext
     {
-        $this->ha->callService('input_text', 'set_value', [
+        return $this->ha->callService('input_text', 'set_value', [
             'value' => $value,
         ], $target);
     }

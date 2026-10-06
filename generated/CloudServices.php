@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `cloud` services.
@@ -21,13 +22,13 @@ final readonly class CloudServices
     {
     }
 
-    public function remoteConnect(): void
+    public function remoteConnect(): EventContext
     {
-        $this->ha->callService('cloud', 'remote_connect', []);
+        return $this->ha->callService('cloud', 'remote_connect', []);
     }
 
-    public function remoteDisconnect(): void
+    public function remoteDisconnect(): EventContext
     {
-        $this->ha->callService('cloud', 'remote_disconnect', []);
+        return $this->ha->callService('cloud', 'remote_disconnect', []);
     }
 }

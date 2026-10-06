@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `counter` services.
@@ -22,27 +23,27 @@ final readonly class CounterServices
     {
     }
 
-    public function decrement(ServiceTargetSource $target): void
+    public function decrement(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('counter', 'decrement', [], $target);
+        return $this->ha->callService('counter', 'decrement', [], $target);
     }
 
-    public function increment(ServiceTargetSource $target): void
+    public function increment(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('counter', 'increment', [], $target);
+        return $this->ha->callService('counter', 'increment', [], $target);
     }
 
-    public function reset(ServiceTargetSource $target): void
+    public function reset(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('counter', 'reset', [], $target);
+        return $this->ha->callService('counter', 'reset', [], $target);
     }
 
     /**
      * @param int|float $value -9.2233720368548E+18 to 9.2233720368548E+18
      */
-    public function setValue(ServiceTargetSource $target, int|float $value): void
+    public function setValue(ServiceTargetSource $target, int|float $value): EventContext
     {
-        $this->ha->callService('counter', 'set_value', [
+        return $this->ha->callService('counter', 'set_value', [
             'value' => $value,
         ], $target);
     }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `logger` services.
@@ -24,15 +25,15 @@ final readonly class LoggerServices
     /**
      * @param 'debug'|'info'|'warning'|'error'|'fatal'|'critical'|null $level
      */
-    public function setDefaultLevel(?string $level = null): void
+    public function setDefaultLevel(?string $level = null): EventContext
     {
-        $this->ha->callService('logger', 'set_default_level', [
+        return $this->ha->callService('logger', 'set_default_level', [
             'level' => $level,
         ]);
     }
 
-    public function setLevel(): void
+    public function setLevel(): EventContext
     {
-        $this->ha->callService('logger', 'set_level', []);
+        return $this->ha->callService('logger', 'set_level', []);
     }
 }

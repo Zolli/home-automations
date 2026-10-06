@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -101,37 +102,37 @@ final readonly class TimerEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function cancel(): void
+    public function cancel(): EventContext
     {
-        $this->entity->callService('cancel');
+        return $this->entity->callService('cancel');
     }
 
     /**
      * @param array{days?: int|float, hours?: int|float, minutes?: int|float, seconds?: int|float, milliseconds?: int|float}|string|int|float $duration
      */
-    public function change(array|string|int|float $duration): void
+    public function change(array|string|int|float $duration): EventContext
     {
-        $this->entity->callService('change', [
+        return $this->entity->callService('change', [
             'duration' => $duration,
         ]);
     }
 
-    public function finish(): void
+    public function finish(): EventContext
     {
-        $this->entity->callService('finish');
+        return $this->entity->callService('finish');
     }
 
-    public function pause(): void
+    public function pause(): EventContext
     {
-        $this->entity->callService('pause');
+        return $this->entity->callService('pause');
     }
 
     /**
      * @param array{days?: int|float, hours?: int|float, minutes?: int|float, seconds?: int|float, milliseconds?: int|float}|string|int|float|null $duration
      */
-    public function start(array|string|int|float|null $duration = null): void
+    public function start(array|string|int|float|null $duration = null): EventContext
     {
-        $this->entity->callService('start', [
+        return $this->entity->callService('start', [
             'duration' => $duration,
         ]);
     }

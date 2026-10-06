@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `light` services.
@@ -52,8 +53,8 @@ final readonly class LightServices
         int|float|null $transition = null,
         ?bool $white = null,
         ?array $xyColor = null,
-    ): void {
-        $this->ha->callService('light', 'toggle', [
+    ): EventContext {
+        return $this->ha->callService('light', 'toggle', [
             'brightness' => $brightness,
             'brightness_pct' => $brightnessPct,
             'color_name' => $colorName,
@@ -79,8 +80,8 @@ final readonly class LightServices
         ServiceTargetSource $target,
         ?string $flash = null,
         int|float|null $transition = null,
-    ): void {
-        $this->ha->callService('light', 'turn_off', [
+    ): EventContext {
+        return $this->ha->callService('light', 'turn_off', [
             'flash' => $flash,
             'transition' => $transition,
         ], $target);
@@ -120,8 +121,8 @@ final readonly class LightServices
         int|float|null $transition = null,
         ?bool $white = null,
         ?array $xyColor = null,
-    ): void {
-        $this->ha->callService('light', 'turn_on', [
+    ): EventContext {
+        return $this->ha->callService('light', 'turn_on', [
             'brightness' => $brightness,
             'brightness_pct' => $brightnessPct,
             'brightness_step' => $brightnessStep,

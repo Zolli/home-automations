@@ -21,6 +21,7 @@ use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -129,8 +130,8 @@ final readonly class CalendarEntity implements TypedEntity
         string|int|float|null $location = null,
         ?string $startDate = null,
         ?string $startDateTime = null,
-    ): void {
-        $this->entity->callService('create_event', [
+    ): EventContext {
+        return $this->entity->callService('create_event', [
             'summary' => $summary,
             'description' => $description,
             'end_date' => $endDate,

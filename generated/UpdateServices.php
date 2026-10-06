@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `update` services.
@@ -22,24 +23,24 @@ final readonly class UpdateServices
     {
     }
 
-    public function clearSkipped(ServiceTargetSource $target): void
+    public function clearSkipped(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('update', 'clear_skipped', [], $target);
+        return $this->ha->callService('update', 'clear_skipped', [], $target);
     }
 
     public function install(
         ServiceTargetSource $target,
         ?bool $backup = null,
         string|int|float|null $version = null,
-    ): void {
-        $this->ha->callService('update', 'install', [
+    ): EventContext {
+        return $this->ha->callService('update', 'install', [
             'backup' => $backup,
             'version' => $version,
         ], $target);
     }
 
-    public function skip(ServiceTargetSource $target): void
+    public function skip(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('update', 'skip', [], $target);
+        return $this->ha->callService('update', 'skip', [], $target);
     }
 }

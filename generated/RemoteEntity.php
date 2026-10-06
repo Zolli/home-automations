@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -104,9 +105,9 @@ final readonly class RemoteEntity implements TypedEntity
     /**
      * @param array<array-key, mixed> $command
      */
-    public function deleteCommand(array $command, string|int|float|null $device = null): void
+    public function deleteCommand(array $command, string|int|float|null $device = null): EventContext
     {
-        $this->entity->callService('delete_command', [
+        return $this->entity->callService('delete_command', [
             'command' => $command,
             'device' => $device,
         ]);
@@ -123,8 +124,8 @@ final readonly class RemoteEntity implements TypedEntity
         ?string $commandType = null,
         string|int|float|null $device = null,
         int|float|null $timeout = null,
-    ): void {
-        $this->entity->callService('learn_command', [
+    ): EventContext {
+        return $this->entity->callService('learn_command', [
             'alternative' => $alternative,
             'command' => $command,
             'command_type' => $commandType,
@@ -145,8 +146,8 @@ final readonly class RemoteEntity implements TypedEntity
         string|int|float|null $device = null,
         int|float|null $holdSecs = null,
         int|float|null $numRepeats = null,
-    ): void {
-        $this->entity->callService('send_command', [
+    ): EventContext {
+        return $this->entity->callService('send_command', [
             'command' => $command,
             'delay_secs' => $delaySecs,
             'device' => $device,
@@ -155,19 +156,19 @@ final readonly class RemoteEntity implements TypedEntity
         ]);
     }
 
-    public function toggle(): void
+    public function toggle(): EventContext
     {
-        $this->entity->callService('toggle');
+        return $this->entity->callService('toggle');
     }
 
-    public function turnOff(): void
+    public function turnOff(): EventContext
     {
-        $this->entity->callService('turn_off');
+        return $this->entity->callService('turn_off');
     }
 
-    public function turnOn(string|int|float|null $activity = null): void
+    public function turnOn(string|int|float|null $activity = null): EventContext
     {
-        $this->entity->callService('turn_on', [
+        return $this->entity->callService('turn_on', [
             'activity' => $activity,
         ]);
     }

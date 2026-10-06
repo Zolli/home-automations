@@ -13,6 +13,7 @@ namespace App\Generated;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `zwave_js` services.
@@ -36,8 +37,8 @@ final readonly class ZwaveJsServices
         ?array $deviceId = null,
         string|int|float|null $endpoint = null,
         ?array $entityId = null,
-    ): void {
-        $this->ha->callService('zwave_js', 'bulk_set_partial_config_parameters', [
+    ): EventContext {
+        return $this->ha->callService('zwave_js', 'bulk_set_partial_config_parameters', [
             'parameter' => $parameter,
             'value' => $value,
             'area_id' => $areaId,
@@ -47,9 +48,9 @@ final readonly class ZwaveJsServices
         ]);
     }
 
-    public function clearLockUsercode(ServiceTargetSource $target, string|int|float $codeSlot): void
+    public function clearLockUsercode(ServiceTargetSource $target, string|int|float $codeSlot): EventContext
     {
-        $this->ha->callService('zwave_js', 'clear_lock_usercode', [
+        return $this->ha->callService('zwave_js', 'clear_lock_usercode', [
             'code_slot' => $codeSlot,
         ], $target);
     }
@@ -57,16 +58,16 @@ final readonly class ZwaveJsServices
     /**
      * @param int|float $userId 1 to 65535
      */
-    public function deleteAllCredentials(ServiceTargetSource $target, int|float $userId): void
+    public function deleteAllCredentials(ServiceTargetSource $target, int|float $userId): EventContext
     {
-        $this->ha->callService('zwave_js', 'delete_all_credentials', [
+        return $this->ha->callService('zwave_js', 'delete_all_credentials', [
             'user_id' => $userId,
         ], $target);
     }
 
-    public function deleteAllUsers(ServiceTargetSource $target): void
+    public function deleteAllUsers(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('zwave_js', 'delete_all_users', [], $target);
+        return $this->ha->callService('zwave_js', 'delete_all_users', [], $target);
     }
 
     /**
@@ -79,8 +80,8 @@ final readonly class ZwaveJsServices
         int|float $credentialSlot,
         string $credentialType,
         int|float $userId,
-    ): void {
-        $this->ha->callService('zwave_js', 'delete_credential', [
+    ): EventContext {
+        return $this->ha->callService('zwave_js', 'delete_credential', [
             'credential_slot' => $credentialSlot,
             'credential_type' => $credentialType,
             'user_id' => $userId,
@@ -90,9 +91,9 @@ final readonly class ZwaveJsServices
     /**
      * @param int|float $userId 1 to 65535
      */
-    public function deleteUser(ServiceTargetSource $target, int|float $userId): void
+    public function deleteUser(ServiceTargetSource $target, int|float $userId): EventContext
     {
-        $this->ha->callService('zwave_js', 'delete_user', [
+        return $this->ha->callService('zwave_js', 'delete_user', [
             'user_id' => $userId,
         ], $target);
     }
@@ -130,8 +131,8 @@ final readonly class ZwaveJsServices
         ?array $deviceId = null,
         string|int|float|null $endpoint = null,
         ?array $entityId = null,
-    ): void {
-        $this->ha->callService('zwave_js', 'invoke_cc_api', [
+    ): EventContext {
+        return $this->ha->callService('zwave_js', 'invoke_cc_api', [
             'command_class' => $commandClass,
             'method_name' => $methodName,
             'parameters' => $parameters,
@@ -160,8 +161,8 @@ final readonly class ZwaveJsServices
         ?array $entityId = null,
         ?array $options = null,
         string|int|float|null $propertyKey = null,
-    ): void {
-        $this->ha->callService('zwave_js', 'multicast_set_value', [
+    ): EventContext {
+        return $this->ha->callService('zwave_js', 'multicast_set_value', [
             'command_class' => $commandClass,
             'property' => $property,
             'value' => $value,
@@ -180,9 +181,9 @@ final readonly class ZwaveJsServices
      * @param list<string>|null $deviceId
      * @param list<string>|null $entityId
      */
-    public function ping(?array $areaId = null, ?array $deviceId = null, ?array $entityId = null): void
+    public function ping(?array $areaId = null, ?array $deviceId = null, ?array $entityId = null): EventContext
     {
-        $this->ha->callService('zwave_js', 'ping', [
+        return $this->ha->callService('zwave_js', 'ping', [
             'area_id' => $areaId,
             'device_id' => $deviceId,
             'entity_id' => $entityId,
@@ -202,8 +203,8 @@ final readonly class ZwaveJsServices
         ?array $deviceId = null,
         ?array $entityId = null,
         int|float|null $notificationEvent = null,
-    ): void {
-        $this->ha->callService('zwave_js', 'refresh_notifications', [
+    ): EventContext {
+        return $this->ha->callService('zwave_js', 'refresh_notifications', [
             'notification_type' => $notificationType,
             'area_id' => $areaId,
             'device_id' => $deviceId,
@@ -215,9 +216,9 @@ final readonly class ZwaveJsServices
     /**
      * @param list<string> $entityId
      */
-    public function refreshValue(array $entityId, ?bool $refreshAllValues = null): void
+    public function refreshValue(array $entityId, ?bool $refreshAllValues = null): EventContext
     {
-        $this->ha->callService('zwave_js', 'refresh_value', [
+        return $this->ha->callService('zwave_js', 'refresh_value', [
             'entity_id' => $entityId,
             'refresh_all_values' => $refreshAllValues,
         ]);
@@ -234,8 +235,8 @@ final readonly class ZwaveJsServices
         ?array $entityId = null,
         string|int|float|null $meterType = null,
         string|int|float|null $value = null,
-    ): void {
-        $this->ha->callService('zwave_js', 'reset_meter', [
+    ): EventContext {
+        return $this->ha->callService('zwave_js', 'reset_meter', [
             'area_id' => $areaId,
             'device_id' => $deviceId,
             'entity_id' => $entityId,
@@ -261,8 +262,8 @@ final readonly class ZwaveJsServices
         ?array $entityId = null,
         int|float|null $valueFormat = null,
         int|float|null $valueSize = null,
-    ): void {
-        $this->ha->callService('zwave_js', 'set_config_parameter', [
+    ): EventContext {
+        return $this->ha->callService('zwave_js', 'set_config_parameter', [
             'parameter' => $parameter,
             'value' => $value,
             'area_id' => $areaId,
@@ -309,8 +310,8 @@ final readonly class ZwaveJsServices
         int|float|null $holdAndReleaseTime = null,
         int|float|null $lockTimeout = null,
         ?bool $twistAssist = null,
-    ): void {
-        $this->ha->callService('zwave_js', 'set_lock_configuration', [
+    ): EventContext {
+        return $this->ha->callService('zwave_js', 'set_lock_configuration', [
             'operation_type' => $operationType,
             'auto_relock_time' => $autoRelockTime,
             'block_to_block' => $blockToBlock,
@@ -324,8 +325,8 @@ final readonly class ZwaveJsServices
         ServiceTargetSource $target,
         string|int|float $codeSlot,
         string|int|float $usercode,
-    ): void {
-        $this->ha->callService('zwave_js', 'set_lock_usercode', [
+    ): EventContext {
+        return $this->ha->callService('zwave_js', 'set_lock_usercode', [
             'code_slot' => $codeSlot,
             'usercode' => $usercode,
         ], $target);
@@ -379,8 +380,8 @@ final readonly class ZwaveJsServices
         ?array $options = null,
         string|int|float|null $propertyKey = null,
         ?bool $waitForResult = null,
-    ): void {
-        $this->ha->callService('zwave_js', 'set_value', [
+    ): EventContext {
+        return $this->ha->callService('zwave_js', 'set_value', [
             'command_class' => $commandClass,
             'property' => $property,
             'value' => $value,

@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `image_processing` services.
@@ -22,8 +23,8 @@ final readonly class ImageProcessingServices
     {
     }
 
-    public function scan(ServiceTargetSource $target): void
+    public function scan(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('image_processing', 'scan', [], $target);
+        return $this->ha->callService('image_processing', 'scan', [], $target);
     }
 }

@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -345,9 +346,9 @@ final readonly class NumberEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function setValue(string|int|float $value): void
+    public function setValue(string|int|float $value): EventContext
     {
-        $this->entity->callService('set_value', [
+        return $this->entity->callService('set_value', [
             'value' => $value,
         ]);
     }

@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `alarm_control_panel` services.
@@ -22,51 +23,53 @@ final readonly class AlarmControlPanelServices
     {
     }
 
-    public function alarmArmAway(ServiceTargetSource $target, string|int|float|null $code = null): void
+    public function alarmArmAway(ServiceTargetSource $target, string|int|float|null $code = null): EventContext
     {
-        $this->ha->callService('alarm_control_panel', 'alarm_arm_away', [
+        return $this->ha->callService('alarm_control_panel', 'alarm_arm_away', [
             'code' => $code,
         ], $target);
     }
 
-    public function alarmArmCustomBypass(ServiceTargetSource $target, string|int|float|null $code = null): void
-    {
-        $this->ha->callService('alarm_control_panel', 'alarm_arm_custom_bypass', [
+    public function alarmArmCustomBypass(
+        ServiceTargetSource $target,
+        string|int|float|null $code = null,
+    ): EventContext {
+        return $this->ha->callService('alarm_control_panel', 'alarm_arm_custom_bypass', [
             'code' => $code,
         ], $target);
     }
 
-    public function alarmArmHome(ServiceTargetSource $target, string|int|float|null $code = null): void
+    public function alarmArmHome(ServiceTargetSource $target, string|int|float|null $code = null): EventContext
     {
-        $this->ha->callService('alarm_control_panel', 'alarm_arm_home', [
+        return $this->ha->callService('alarm_control_panel', 'alarm_arm_home', [
             'code' => $code,
         ], $target);
     }
 
-    public function alarmArmNight(ServiceTargetSource $target, string|int|float|null $code = null): void
+    public function alarmArmNight(ServiceTargetSource $target, string|int|float|null $code = null): EventContext
     {
-        $this->ha->callService('alarm_control_panel', 'alarm_arm_night', [
+        return $this->ha->callService('alarm_control_panel', 'alarm_arm_night', [
             'code' => $code,
         ], $target);
     }
 
-    public function alarmArmVacation(ServiceTargetSource $target, string|int|float|null $code = null): void
+    public function alarmArmVacation(ServiceTargetSource $target, string|int|float|null $code = null): EventContext
     {
-        $this->ha->callService('alarm_control_panel', 'alarm_arm_vacation', [
+        return $this->ha->callService('alarm_control_panel', 'alarm_arm_vacation', [
             'code' => $code,
         ], $target);
     }
 
-    public function alarmDisarm(ServiceTargetSource $target, string|int|float|null $code = null): void
+    public function alarmDisarm(ServiceTargetSource $target, string|int|float|null $code = null): EventContext
     {
-        $this->ha->callService('alarm_control_panel', 'alarm_disarm', [
+        return $this->ha->callService('alarm_control_panel', 'alarm_disarm', [
             'code' => $code,
         ], $target);
     }
 
-    public function alarmTrigger(ServiceTargetSource $target, string|int|float|null $code = null): void
+    public function alarmTrigger(ServiceTargetSource $target, string|int|float|null $code = null): EventContext
     {
-        $this->ha->callService('alarm_control_panel', 'alarm_trigger', [
+        return $this->ha->callService('alarm_control_panel', 'alarm_trigger', [
             'code' => $code,
         ], $target);
     }

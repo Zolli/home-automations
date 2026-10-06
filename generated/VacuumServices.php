@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `vacuum` services.
@@ -25,58 +26,61 @@ final readonly class VacuumServices
     /**
      * @param list<string> $cleaningAreaId
      */
-    public function cleanArea(ServiceTargetSource $target, array $cleaningAreaId): void
+    public function cleanArea(ServiceTargetSource $target, array $cleaningAreaId): EventContext
     {
-        $this->ha->callService('vacuum', 'clean_area', [
+        return $this->ha->callService('vacuum', 'clean_area', [
             'cleaning_area_id' => $cleaningAreaId,
         ], $target);
     }
 
-    public function cleanSpot(ServiceTargetSource $target): void
+    public function cleanSpot(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('vacuum', 'clean_spot', [], $target);
+        return $this->ha->callService('vacuum', 'clean_spot', [], $target);
     }
 
-    public function locate(ServiceTargetSource $target): void
+    public function locate(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('vacuum', 'locate', [], $target);
+        return $this->ha->callService('vacuum', 'locate', [], $target);
     }
 
-    public function pause(ServiceTargetSource $target): void
+    public function pause(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('vacuum', 'pause', [], $target);
+        return $this->ha->callService('vacuum', 'pause', [], $target);
     }
 
-    public function returnToBase(ServiceTargetSource $target): void
+    public function returnToBase(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('vacuum', 'return_to_base', [], $target);
+        return $this->ha->callService('vacuum', 'return_to_base', [], $target);
     }
 
     /**
      * @param array<array-key, mixed>|null $params
      */
-    public function sendCommand(ServiceTargetSource $target, string|int|float $command, ?array $params = null): void
-    {
-        $this->ha->callService('vacuum', 'send_command', [
+    public function sendCommand(
+        ServiceTargetSource $target,
+        string|int|float $command,
+        ?array $params = null,
+    ): EventContext {
+        return $this->ha->callService('vacuum', 'send_command', [
             'command' => $command,
             'params' => $params,
         ], $target);
     }
 
-    public function setFanSpeed(ServiceTargetSource $target, string $fanSpeed): void
+    public function setFanSpeed(ServiceTargetSource $target, string $fanSpeed): EventContext
     {
-        $this->ha->callService('vacuum', 'set_fan_speed', [
+        return $this->ha->callService('vacuum', 'set_fan_speed', [
             'fan_speed' => $fanSpeed,
         ], $target);
     }
 
-    public function start(ServiceTargetSource $target): void
+    public function start(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('vacuum', 'start', [], $target);
+        return $this->ha->callService('vacuum', 'start', [], $target);
     }
 
-    public function stop(ServiceTargetSource $target): void
+    public function stop(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('vacuum', 'stop', [], $target);
+        return $this->ha->callService('vacuum', 'stop', [], $target);
     }
 }

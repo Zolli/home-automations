@@ -13,6 +13,7 @@ namespace App\Generated;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `adaptive_cover_pro` services.
@@ -28,9 +29,9 @@ final readonly class AdaptiveCoverProServices
      *
      * Panic button — sends stop_cover to every configured cover on the targeted instances (capability-checked), regardless of whether the cover is currently moving, then disables the integration. With no target, acts on all ACP instances and all their covers.
      */
-    public function emergencyStop(ServiceTargetSource $target): void
+    public function emergencyStop(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('adaptive_cover_pro', 'emergency_stop', [], $target);
+        return $this->ha->callService('adaptive_cover_pro', 'emergency_stop', [], $target);
     }
 
     /**
@@ -45,8 +46,8 @@ final readonly class AdaptiveCoverProServices
         ServiceTargetSource $target,
         array|string|int|float|null $duration = null,
         ?string $endTime = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'engage_manual_override', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'engage_manual_override', [
             'duration' => $duration,
             'end_time' => $endTime,
         ], $target);
@@ -111,9 +112,9 @@ final readonly class AdaptiveCoverProServices
      *
      * @param 'auto'|'all_open'|'all_closed'|'privacy' $scene Scene. The scene to activate, or "auto" to release the claim
      */
-    public function groupActivateScene(ServiceTargetSource $target, string $scene): void
+    public function groupActivateScene(ServiceTargetSource $target, string $scene): EventContext
     {
-        $this->ha->callService('adaptive_cover_pro', 'group_activate_scene', [
+        return $this->ha->callService('adaptive_cover_pro', 'group_activate_scene', [
             'scene' => $scene,
         ], $target);
     }
@@ -123,9 +124,9 @@ final readonly class AdaptiveCoverProServices
      *
      * Clears manual overrides on every ACP member of the targeted cover groups and resends each member's pipeline position. With no target, acts on all cover groups.
      */
-    public function groupClearOverrides(ServiceTargetSource $target): void
+    public function groupClearOverrides(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('adaptive_cover_pro', 'group_clear_overrides', [], $target);
+        return $this->ha->callService('adaptive_cover_pro', 'group_clear_overrides', [], $target);
     }
 
     /**
@@ -133,9 +134,9 @@ final readonly class AdaptiveCoverProServices
      *
      * Freezes every member of the targeted cover groups in place at safety priority. A member's own safety trigger still wins ties. With no target, locks all cover groups.
      */
-    public function groupLock(ServiceTargetSource $target): void
+    public function groupLock(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('adaptive_cover_pro', 'group_lock', [], $target);
+        return $this->ha->callService('adaptive_cover_pro', 'group_lock', [], $target);
     }
 
     /**
@@ -145,9 +146,9 @@ final readonly class AdaptiveCoverProServices
      *
      * @param bool $enabled Enabled. True to enable member automation, false to disable it
      */
-    public function groupSetAutomation(ServiceTargetSource $target, bool $enabled): void
+    public function groupSetAutomation(ServiceTargetSource $target, bool $enabled): EventContext
     {
-        $this->ha->callService('adaptive_cover_pro', 'group_set_automation', [
+        return $this->ha->callService('adaptive_cover_pro', 'group_set_automation', [
             'enabled' => $enabled,
         ], $target);
     }
@@ -164,8 +165,8 @@ final readonly class AdaptiveCoverProServices
         ServiceTargetSource $target,
         int|float $position,
         int|float|null $tilt = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'group_set_position', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'group_set_position', [
             'position' => $position,
             'tilt' => $tilt,
         ], $target);
@@ -176,9 +177,9 @@ final readonly class AdaptiveCoverProServices
      *
      * Stops every member cover of the targeted cover groups mid-travel. With no target, acts on all cover groups.
      */
-    public function groupStop(ServiceTargetSource $target): void
+    public function groupStop(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('adaptive_cover_pro', 'group_stop', [], $target);
+        return $this->ha->callService('adaptive_cover_pro', 'group_stop', [], $target);
     }
 
     /**
@@ -186,9 +187,9 @@ final readonly class AdaptiveCoverProServices
      *
      * Releases the group lock on the targeted cover groups. An active scene is re-applied; otherwise members return to their own automation. With no target, unlocks all cover groups.
      */
-    public function groupUnlock(ServiceTargetSource $target): void
+    public function groupUnlock(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('adaptive_cover_pro', 'group_unlock', [], $target);
+        return $this->ha->callService('adaptive_cover_pro', 'group_unlock', [], $target);
     }
 
     /**
@@ -212,9 +213,9 @@ final readonly class AdaptiveCoverProServices
      *
      * Disables Adaptive Cover Pro on the targeted instances. Any ACP-in-flight cover moves are stopped immediately (cover.stop_cover). Deferred motion and weather timers are cancelled and reconciliation state is cleared.
      */
-    public function integrationDisable(ServiceTargetSource $target): void
+    public function integrationDisable(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('adaptive_cover_pro', 'integration_disable', [], $target);
+        return $this->ha->callService('adaptive_cover_pro', 'integration_disable', [], $target);
     }
 
     /**
@@ -222,9 +223,9 @@ final readonly class AdaptiveCoverProServices
      *
      * Re-enables Adaptive Cover Pro on the targeted instances. Covers stay where they are; positioning resumes on the next natural update cycle.
      */
-    public function integrationEnable(ServiceTargetSource $target): void
+    public function integrationEnable(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('adaptive_cover_pro', 'integration_enable', [], $target);
+        return $this->ha->callService('adaptive_cover_pro', 'integration_enable', [], $target);
     }
 
     /**
@@ -249,8 +250,8 @@ final readonly class AdaptiveCoverProServices
         ?bool $returnSunset = null,
         ?string $startEntity = null,
         ?string $startTime = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_automation_timing', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_automation_timing', [
             'delta_position' => $deltaPosition,
             'delta_time' => $deltaTime,
             'end_entity' => $endEntity,
@@ -269,9 +270,9 @@ final readonly class AdaptiveCoverProServices
      * @param array<array-key, mixed> $axes Axes. Map of axis targets — include only the axes you want to move. Keys are "position" and/or "tilt"; each value is 0–100%. For example, set position to 60 and tilt to 30
      * @param ?bool $force Force. When true, skip manual-override engagement. Default false — service calls engage manual override like a dashboard slider
      */
-    public function setAxes(ServiceTargetSource $target, array $axes, ?bool $force = null): void
+    public function setAxes(ServiceTargetSource $target, array $axes, ?bool $force = null): EventContext
     {
-        $this->ha->callService('adaptive_cover_pro', 'set_axes', [
+        return $this->ha->callService('adaptive_cover_pro', 'set_axes', [
             'axes' => $axes,
             'force' => $force,
         ], $target);
@@ -299,8 +300,8 @@ final readonly class AdaptiveCoverProServices
         int|float|null $blindSpotLeftGamma = null,
         int|float|null $blindSpotRight = null,
         int|float|null $blindSpotRightGamma = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_blind_spot', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_blind_spot', [
             'blind_spot' => $blindSpot,
             'blind_spot_elevation' => $blindSpotElevation,
             'blind_spot_elevation_mode' => $blindSpotElevationMode,
@@ -345,8 +346,8 @@ final readonly class AdaptiveCoverProServices
         ?array $trackingSeasons = null,
         ?bool $transparentBlind = null,
         ?bool $winterCloseInsulation = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_climate', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_climate', [
             'climate_mode' => $climateMode,
             'extreme_heat_position' => $extremeHeatPosition,
             'outside_temp' => $outsideTemp,
@@ -399,8 +400,8 @@ final readonly class AdaptiveCoverProServices
         int|float|null $tiltMax = null,
         int|float|null $tiltMin = null,
         ?bool $useMy = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_custom_position', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_custom_position', [
             'slot' => $slot,
             'min_mode' => $minMode,
             'outside_window' => $outsideWindow,
@@ -432,8 +433,8 @@ final readonly class AdaptiveCoverProServices
         ?bool $forceOverrideMinMode = null,
         int|float|null $forceOverridePosition = null,
         ?array $forceOverrideSensors = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_force_override', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_force_override', [
             'force_override_min_mode' => $forceOverrideMinMode,
             'force_override_position' => $forceOverridePosition,
             'force_override_sensors' => $forceOverrideSensors,
@@ -472,8 +473,8 @@ final readonly class AdaptiveCoverProServices
         int|float|null $windowDepth = null,
         int|float|null $windowHeight = null,
         int|float|null $windowWidth = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_geometry', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_geometry', [
             'angle' => $angle,
             'length_awning' => $lengthAwning,
             'sill_height' => $sillHeight,
@@ -507,8 +508,8 @@ final readonly class AdaptiveCoverProServices
         string|int|float|null $interpList = null,
         string|int|float|null $interpListNew = null,
         int|float|null $interpStart = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_interpolation', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_interpolation', [
             'interp' => $interp,
             'interp_end' => $interpEnd,
             'interp_list' => $interpList,
@@ -545,8 +546,8 @@ final readonly class AdaptiveCoverProServices
         int|float|null $luxThreshold = null,
         ?string $weatherEntity = null,
         ?array $weatherState = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_light_cloud', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_light_cloud', [
             'cloud_coverage_entity' => $cloudCoverageEntity,
             'cloud_coverage_threshold' => $cloudCoverageThreshold,
             'cloud_suppression' => $cloudSuppression,
@@ -580,8 +581,8 @@ final readonly class AdaptiveCoverProServices
         ?string $manualOverrideDurationMode = null,
         ?bool $manualOverrideReset = null,
         int|float|null $manualThreshold = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_manual_override', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_manual_override', [
             'manual_ignore_external' => $manualIgnoreExternal,
             'manual_ignore_intermediate' => $manualIgnoreIntermediate,
             'manual_override_duration' => $manualOverrideDuration,
@@ -603,8 +604,8 @@ final readonly class AdaptiveCoverProServices
         ServiceTargetSource $target,
         ?array $motionSensors = null,
         int|float|null $motionTimeout = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_motion', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_motion', [
             'motion_sensors' => $motionSensors,
             'motion_timeout' => $motionTimeout,
         ], $target);
@@ -624,8 +625,8 @@ final readonly class AdaptiveCoverProServices
         ?array $occupancyMediaPlayers = null,
         ?array $occupancySensors = null,
         int|float|null $occupancyTimeout = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_occupancy', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_occupancy', [
             'occupancy_media_players' => $occupancyMediaPlayers,
             'occupancy_sensors' => $occupancySensors,
             'occupancy_timeout' => $occupancyTimeout,
@@ -640,9 +641,12 @@ final readonly class AdaptiveCoverProServices
      * @param string|int|float $option Option key. The internal option key to update (e.g. 'default_percentage', 'sunset_position')
      * @param string|int|float $value Value. New value for the option. Pass null to clear an optional field
      */
-    public function setOption(ServiceTargetSource $target, string|int|float $option, string|int|float $value): void
-    {
-        $this->ha->callService('adaptive_cover_pro', 'set_option', [
+    public function setOption(
+        ServiceTargetSource $target,
+        string|int|float $option,
+        string|int|float $value,
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_option', [
             'option' => $option,
             'value' => $value,
         ], $target);
@@ -656,9 +660,9 @@ final readonly class AdaptiveCoverProServices
      * @param int|float $position Position. Target position (0–100%). 0 to 100 %
      * @param ?bool $force Force. When true, bypass the priority pipeline check and skip manual-override engagement. Default false — service calls respect force_override / weather and engage manual override like a dashboard slider
      */
-    public function setPosition(ServiceTargetSource $target, int|float $position, ?bool $force = null): void
+    public function setPosition(ServiceTargetSource $target, int|float $position, ?bool $force = null): EventContext
     {
-        $this->ha->callService('adaptive_cover_pro', 'set_position', [
+        return $this->ha->callService('adaptive_cover_pro', 'set_position', [
             'position' => $position,
             'force' => $force,
         ], $target);
@@ -690,8 +694,8 @@ final readonly class AdaptiveCoverProServices
         int|float|null $minPosition = null,
         int|float|null $minPositionSunTracking = null,
         int|float|null $openCloseThreshold = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_position_limits', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_position_limits', [
             'default_percentage' => $defaultPercentage,
             'enable_max_position' => $enableMaxPosition,
             'enable_min_position' => $enableMinPosition,
@@ -730,8 +734,8 @@ final readonly class AdaptiveCoverProServices
         int|float|null $minElevation = null,
         ?bool $minimizeMovements = null,
         int|float|null $setAzimuth = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_sun_tracking', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_sun_tracking', [
             'distance_shaded_area' => $distanceShadedArea,
             'enable_sun_tracking' => $enableSunTracking,
             'fov_left' => $fovLeft,
@@ -764,8 +768,8 @@ final readonly class AdaptiveCoverProServices
         int|float|null $sunsetOffset = null,
         int|float|null $sunsetPosition = null,
         ?bool $sunsetUseMy = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_sunset_sunrise', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_sunset_sunrise', [
             'my_position_value' => $myPositionValue,
             'sunrise_gates_start' => $sunriseGatesStart,
             'sunrise_offset' => $sunriseOffset,
@@ -783,9 +787,9 @@ final readonly class AdaptiveCoverProServices
      * @param int|float $tilt Tilt. Target tilt (0–100%). 0 to 100 %
      * @param ?bool $force Force. When true, skip manual-override engagement. Default false — service calls engage manual override like a dashboard slider
      */
-    public function setTilt(ServiceTargetSource $target, int|float $tilt, ?bool $force = null): void
+    public function setTilt(ServiceTargetSource $target, int|float $tilt, ?bool $force = null): EventContext
     {
-        $this->ha->callService('adaptive_cover_pro', 'set_tilt', [
+        return $this->ha->callService('adaptive_cover_pro', 'set_tilt', [
             'tilt' => $tilt,
             'force' => $force,
         ], $target);
@@ -807,8 +811,8 @@ final readonly class AdaptiveCoverProServices
         ?string $venetianMode = null,
         int|float|null $venetianPostSettleHold = null,
         int|float|null $venetianTiltSkipAbove = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_venetian', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_venetian', [
             'venetian_backrotate_publish_lag' => $venetianBackrotatePublishLag,
             'venetian_mode' => $venetianMode,
             'venetian_post_settle_hold' => $venetianPostSettleHold,
@@ -854,8 +858,8 @@ final readonly class AdaptiveCoverProServices
         int|float|null $weatherWindDirectionTolerance = null,
         ?string $weatherWindSpeedSensor = null,
         int|float|null $weatherWindSpeedThreshold = null,
-    ): void {
-        $this->ha->callService('adaptive_cover_pro', 'set_weather_safety', [
+    ): EventContext {
+        return $this->ha->callService('adaptive_cover_pro', 'set_weather_safety', [
             'weather_bypass_auto_control' => $weatherBypassAutoControl,
             'weather_is_raining_sensor' => $weatherIsRainingSensor,
             'weather_is_windy_sensor' => $weatherIsWindySensor,
@@ -879,8 +883,8 @@ final readonly class AdaptiveCoverProServices
      *
      * Sends stop_cover to the targeted covers via the ACP proxy so the command is recognised as ACP-originated. Engages manual override so the next automatic cycle does not immediately counter-command the cover. Compatible with manual_ignore_external mode — the Lovelace card stop button should call this service instead of cover.stop_cover directly.
      */
-    public function stop(ServiceTargetSource $target): void
+    public function stop(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('adaptive_cover_pro', 'stop', [], $target);
+        return $this->ha->callService('adaptive_cover_pro', 'stop', [], $target);
     }
 }

@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `shelly` services.
@@ -33,9 +34,9 @@ final readonly class ShellyServices
     /**
      * @param array<array-key, mixed> $value
      */
-    public function setKvsValue(string $deviceId, string|int|float $key, array $value): void
+    public function setKvsValue(string $deviceId, string|int|float $key, array $value): EventContext
     {
-        $this->ha->callService('shelly', 'set_kvs_value', [
+        return $this->ha->callService('shelly', 'set_kvs_value', [
             'device_id' => $deviceId,
             'key' => $key,
             'value' => $value,

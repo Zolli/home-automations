@@ -13,6 +13,7 @@ namespace App\Generated;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `matter` services.
@@ -31,8 +32,8 @@ final readonly class MatterServices
         ServiceTargetSource $target,
         int|float $credentialIndex,
         string $credentialType,
-    ): void {
-        $this->ha->callService('matter', 'clear_lock_credential', [
+    ): EventContext {
+        return $this->ha->callService('matter', 'clear_lock_credential', [
             'credential_index' => $credentialIndex,
             'credential_type' => $credentialType,
         ], $target);
@@ -41,9 +42,9 @@ final readonly class MatterServices
     /**
      * @param int|float $userIndex 1 to 65534
      */
-    public function clearLockUser(ServiceTargetSource $target, int|float $userIndex): void
+    public function clearLockUser(ServiceTargetSource $target, int|float $userIndex): EventContext
     {
-        $this->ha->callService('matter', 'clear_lock_user', [
+        return $this->ha->callService('matter', 'clear_lock_user', [
             'user_index' => $userIndex,
         ], $target);
     }
@@ -110,8 +111,8 @@ final readonly class MatterServices
         int|float|null $userIndex = null,
         string|int|float|null $userName = null,
         ?string $userType = null,
-    ): void {
-        $this->ha->callService('matter', 'set_lock_user', [
+    ): EventContext {
+        return $this->ha->callService('matter', 'set_lock_user', [
             'credential_rule' => $credentialRule,
             'user_index' => $userIndex,
             'user_name' => $userName,
@@ -128,8 +129,8 @@ final readonly class MatterServices
         int|float $duration,
         ?bool $emergencyBoost = null,
         int|float|null $temporarySetpoint = null,
-    ): void {
-        $this->ha->callService('matter', 'water_heater_boost', [
+    ): EventContext {
+        return $this->ha->callService('matter', 'water_heater_boost', [
             'duration' => $duration,
             'emergency_boost' => $emergencyBoost,
             'temporary_setpoint' => $temporarySetpoint,

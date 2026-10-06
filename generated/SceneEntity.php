@@ -20,6 +20,7 @@ use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 
 /**
@@ -153,17 +154,17 @@ final readonly class SceneEntity implements TypedEntity
         return $this->entity->toServiceTarget();
     }
 
-    public function delete(): void
+    public function delete(): EventContext
     {
-        $this->entity->callService('delete');
+        return $this->entity->callService('delete');
     }
 
     /**
      * @param int|float|null $transition 0 to 300 seconds
      */
-    public function turnOn(int|float|null $transition = null): void
+    public function turnOn(int|float|null $transition = null): EventContext
     {
-        $this->entity->callService('turn_on', [
+        return $this->entity->callService('turn_on', [
             'transition' => $transition,
         ]);
     }

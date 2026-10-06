@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `input_boolean` services.
@@ -22,23 +23,23 @@ final readonly class InputBooleanServices
     {
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('input_boolean', 'reload', []);
+        return $this->ha->callService('input_boolean', 'reload', []);
     }
 
-    public function toggle(ServiceTargetSource $target): void
+    public function toggle(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('input_boolean', 'toggle', [], $target);
+        return $this->ha->callService('input_boolean', 'toggle', [], $target);
     }
 
-    public function turnOff(ServiceTargetSource $target): void
+    public function turnOff(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('input_boolean', 'turn_off', [], $target);
+        return $this->ha->callService('input_boolean', 'turn_off', [], $target);
     }
 
-    public function turnOn(ServiceTargetSource $target): void
+    public function turnOn(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('input_boolean', 'turn_on', [], $target);
+        return $this->ha->callService('input_boolean', 'turn_on', [], $target);
     }
 }

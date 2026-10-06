@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `unifi_access` services.
@@ -25,9 +26,12 @@ final readonly class UnifiAccessServices
      * @param 'keep_lock'|'keep_unlock'|'custom'|'reset'|'lock_early' $rule
      * @param array{days?: int|float, hours?: int|float, minutes?: int|float, seconds?: int|float, milliseconds?: int|float}|string|int|float|null $interval
      */
-    public function setLockRule(string $deviceId, string $rule, array|string|int|float|null $interval = null): void
-    {
-        $this->ha->callService('unifi_access', 'set_lock_rule', [
+    public function setLockRule(
+        string $deviceId,
+        string $rule,
+        array|string|int|float|null $interval = null,
+    ): EventContext {
+        return $this->ha->callService('unifi_access', 'set_lock_rule', [
             'device_id' => $deviceId,
             'rule' => $rule,
             'interval' => $interval,

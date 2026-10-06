@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `camera` services.
@@ -22,22 +23,22 @@ final readonly class CameraServices
     {
     }
 
-    public function disableMotionDetection(ServiceTargetSource $target): void
+    public function disableMotionDetection(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('camera', 'disable_motion_detection', [], $target);
+        return $this->ha->callService('camera', 'disable_motion_detection', [], $target);
     }
 
-    public function enableMotionDetection(ServiceTargetSource $target): void
+    public function enableMotionDetection(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('camera', 'enable_motion_detection', [], $target);
+        return $this->ha->callService('camera', 'enable_motion_detection', [], $target);
     }
 
     /**
      * @param 'hls'|null $format
      */
-    public function playStream(ServiceTargetSource $target, string $mediaPlayer, ?string $format = null): void
+    public function playStream(ServiceTargetSource $target, string $mediaPlayer, ?string $format = null): EventContext
     {
-        $this->ha->callService('camera', 'play_stream', [
+        return $this->ha->callService('camera', 'play_stream', [
             'media_player' => $mediaPlayer,
             'format' => $format,
         ], $target);
@@ -52,28 +53,28 @@ final readonly class CameraServices
         string|int|float $filename,
         int|float|null $duration = null,
         int|float|null $lookback = null,
-    ): void {
-        $this->ha->callService('camera', 'record', [
+    ): EventContext {
+        return $this->ha->callService('camera', 'record', [
             'filename' => $filename,
             'duration' => $duration,
             'lookback' => $lookback,
         ], $target);
     }
 
-    public function snapshot(ServiceTargetSource $target, string|int|float $filename): void
+    public function snapshot(ServiceTargetSource $target, string|int|float $filename): EventContext
     {
-        $this->ha->callService('camera', 'snapshot', [
+        return $this->ha->callService('camera', 'snapshot', [
             'filename' => $filename,
         ], $target);
     }
 
-    public function turnOff(ServiceTargetSource $target): void
+    public function turnOff(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('camera', 'turn_off', [], $target);
+        return $this->ha->callService('camera', 'turn_off', [], $target);
     }
 
-    public function turnOn(ServiceTargetSource $target): void
+    public function turnOn(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('camera', 'turn_on', [], $target);
+        return $this->ha->callService('camera', 'turn_on', [], $target);
     }
 }

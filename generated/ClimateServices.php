@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `climate` services.
@@ -22,9 +23,9 @@ final readonly class ClimateServices
     {
     }
 
-    public function setFanMode(ServiceTargetSource $target, string $fanMode): void
+    public function setFanMode(ServiceTargetSource $target, string $fanMode): EventContext
     {
-        $this->ha->callService('climate', 'set_fan_mode', [
+        return $this->ha->callService('climate', 'set_fan_mode', [
             'fan_mode' => $fanMode,
         ], $target);
     }
@@ -32,37 +33,37 @@ final readonly class ClimateServices
     /**
      * @param int|float $humidity 30 to 99 %
      */
-    public function setHumidity(ServiceTargetSource $target, int|float $humidity): void
+    public function setHumidity(ServiceTargetSource $target, int|float $humidity): EventContext
     {
-        $this->ha->callService('climate', 'set_humidity', [
+        return $this->ha->callService('climate', 'set_humidity', [
             'humidity' => $humidity,
         ], $target);
     }
 
-    public function setHvacMode(ServiceTargetSource $target, ?string $hvacMode = null): void
+    public function setHvacMode(ServiceTargetSource $target, ?string $hvacMode = null): EventContext
     {
-        $this->ha->callService('climate', 'set_hvac_mode', [
+        return $this->ha->callService('climate', 'set_hvac_mode', [
             'hvac_mode' => $hvacMode,
         ], $target);
     }
 
-    public function setPresetMode(ServiceTargetSource $target, string $presetMode): void
+    public function setPresetMode(ServiceTargetSource $target, string $presetMode): EventContext
     {
-        $this->ha->callService('climate', 'set_preset_mode', [
+        return $this->ha->callService('climate', 'set_preset_mode', [
             'preset_mode' => $presetMode,
         ], $target);
     }
 
-    public function setSwingHorizontalMode(ServiceTargetSource $target, string $swingHorizontalMode): void
+    public function setSwingHorizontalMode(ServiceTargetSource $target, string $swingHorizontalMode): EventContext
     {
-        $this->ha->callService('climate', 'set_swing_horizontal_mode', [
+        return $this->ha->callService('climate', 'set_swing_horizontal_mode', [
             'swing_horizontal_mode' => $swingHorizontalMode,
         ], $target);
     }
 
-    public function setSwingMode(ServiceTargetSource $target, string $swingMode): void
+    public function setSwingMode(ServiceTargetSource $target, string $swingMode): EventContext
     {
-        $this->ha->callService('climate', 'set_swing_mode', [
+        return $this->ha->callService('climate', 'set_swing_mode', [
             'swing_mode' => $swingMode,
         ], $target);
     }
@@ -78,8 +79,8 @@ final readonly class ClimateServices
         int|float|null $targetTempHigh = null,
         int|float|null $targetTempLow = null,
         int|float|null $temperature = null,
-    ): void {
-        $this->ha->callService('climate', 'set_temperature', [
+    ): EventContext {
+        return $this->ha->callService('climate', 'set_temperature', [
             'hvac_mode' => $hvacMode,
             'target_temp_high' => $targetTempHigh,
             'target_temp_low' => $targetTempLow,
@@ -87,18 +88,18 @@ final readonly class ClimateServices
         ], $target);
     }
 
-    public function toggle(ServiceTargetSource $target): void
+    public function toggle(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('climate', 'toggle', [], $target);
+        return $this->ha->callService('climate', 'toggle', [], $target);
     }
 
-    public function turnOff(ServiceTargetSource $target): void
+    public function turnOff(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('climate', 'turn_off', [], $target);
+        return $this->ha->callService('climate', 'turn_off', [], $target);
     }
 
-    public function turnOn(ServiceTargetSource $target): void
+    public function turnOn(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('climate', 'turn_on', [], $target);
+        return $this->ha->callService('climate', 'turn_on', [], $target);
     }
 }

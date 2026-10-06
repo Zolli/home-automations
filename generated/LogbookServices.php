@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `logbook` services.
@@ -26,8 +27,8 @@ final readonly class LogbookServices
         string|int|float $name,
         string|int|float|null $domain = null,
         ?string $entityId = null,
-    ): void {
-        $this->ha->callService('logbook', 'log', [
+    ): EventContext {
+        return $this->ha->callService('logbook', 'log', [
             'message' => $message,
             'name' => $name,
             'domain' => $domain,

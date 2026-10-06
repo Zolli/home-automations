@@ -13,6 +13,7 @@ namespace App\Generated;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `schedule` services.
@@ -28,8 +29,8 @@ final readonly class ScheduleServices
         return $this->ha->callServiceForResponse('schedule', 'get_schedule', [], $target);
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('schedule', 'reload', []);
+        return $this->ha->callService('schedule', 'reload', []);
     }
 }

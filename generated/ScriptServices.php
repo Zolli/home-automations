@@ -13,6 +13,7 @@ namespace App\Generated;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `script` services.
@@ -39,23 +40,23 @@ final readonly class ScriptServices
         return $this->ha->callServiceForResponse('script', 'cover_rise_all', []);
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('script', 'reload', []);
+        return $this->ha->callService('script', 'reload', []);
     }
 
-    public function toggle(ServiceTargetSource $target): void
+    public function toggle(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('script', 'toggle', [], $target);
+        return $this->ha->callService('script', 'toggle', [], $target);
     }
 
-    public function turnOff(ServiceTargetSource $target): void
+    public function turnOff(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('script', 'turn_off', [], $target);
+        return $this->ha->callService('script', 'turn_off', [], $target);
     }
 
-    public function turnOn(ServiceTargetSource $target): void
+    public function turnOn(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('script', 'turn_on', [], $target);
+        return $this->ha->callService('script', 'turn_on', [], $target);
     }
 }

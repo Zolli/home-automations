@@ -56,4 +56,9 @@ final readonly class SelectState
     {
         return $this->raw->getArrayAttribute('options');
     }
+
+    public function getUnitOfMeasurement(): ?string
+    {
+        return $this->raw->getStringAttribute('unit_of_measurement');
+    }
 }

@@ -13,6 +13,7 @@ namespace App\Generated;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `chime_tts` services.
@@ -52,9 +53,9 @@ final readonly class ChimeTtsServices
      *
      * Replay the last service call to chime_tts.say with the same parameters
      */
-    public function replay(): void
+    public function replay(): EventContext
     {
-        $this->ha->callService('chime_tts', 'replay', []);
+        return $this->ha->callService('chime_tts', 'replay', []);
     }
 
     /**
@@ -117,8 +118,8 @@ final readonly class ChimeTtsServices
         ?bool $unjoinPlayers = null,
         string|int|float|null $voice = null,
         int|float|null $volumeLevel = null,
-    ): void {
-        $this->ha->callService('chime_tts', 'say', [
+    ): EventContext {
+        return $this->ha->callService('chime_tts', 'say', [
             'announce' => $announce,
             'audio_conversion' => $audioConversion,
             'cache' => $cache,

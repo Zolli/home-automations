@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `person` services.
@@ -21,8 +22,8 @@ final readonly class PersonServices
     {
     }
 
-    public function reload(): void
+    public function reload(): EventContext
     {
-        $this->ha->callService('person', 'reload', []);
+        return $this->ha->callService('person', 'reload', []);
     }
 }

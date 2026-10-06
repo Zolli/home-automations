@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceTargetSource;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `dreame_vacuum` services.
@@ -22,45 +23,21 @@ final readonly class DreameVacuumServices
     {
     }
 
-    public function selectSelectFirst(ServiceTargetSource $target): void
+    public function update(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'select_select_first', [], $target);
+        return $this->ha->callService('dreame_vacuum', 'update', []);
     }
 
-    public function selectSelectLast(ServiceTargetSource $target): void
+    public function vacuumBackupMap(ServiceTargetSource $target, int|float|null $mapId = null): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'select_select_last', [], $target);
-    }
-
-    public function selectSelectNext(ServiceTargetSource $target, ?bool $cycle = null): void
-    {
-        $this->ha->callService('dreame_vacuum', 'select_select_next', [
-            'cycle' => $cycle,
-        ], $target);
-    }
-
-    public function selectSelectPrevious(ServiceTargetSource $target, ?bool $cycle = null): void
-    {
-        $this->ha->callService('dreame_vacuum', 'select_select_previous', [
-            'cycle' => $cycle,
-        ], $target);
-    }
-
-    public function update(): void
-    {
-        $this->ha->callService('dreame_vacuum', 'update', []);
-    }
-
-    public function vacuumBackupMap(ServiceTargetSource $target, int|float|null $mapId = null): void
-    {
-        $this->ha->callService('dreame_vacuum', 'vacuum_backup_map', [
+        return $this->ha->callService('dreame_vacuum', 'vacuum_backup_map', [
             'map_id' => $mapId,
         ], $target);
     }
 
-    public function vacuumCallAction(): void
+    public function vacuumCallAction(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_call_action', []);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_call_action', []);
     }
 
     /**
@@ -75,8 +52,8 @@ final readonly class DreameVacuumServices
         int|float|null $repeats = null,
         int|float|null $suctionLevel = null,
         int|float|null $waterVolume = null,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_clean_segment', [
+    ): EventContext {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_clean_segment', [
             'segments' => $segments,
             'repeats' => $repeats,
             'suction_level' => $suctionLevel,
@@ -96,8 +73,8 @@ final readonly class DreameVacuumServices
         int|float|null $repeats = null,
         int|float|null $suctionLevel = null,
         int|float|null $waterVolume = null,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_clean_spot', [
+    ): EventContext {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_clean_spot', [
             'points' => $points,
             'repeats' => $repeats,
             'suction_level' => $suctionLevel,
@@ -117,8 +94,8 @@ final readonly class DreameVacuumServices
         int|float|null $repeats = null,
         int|float|null $suctionLevel = null,
         int|float|null $waterVolume = null,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_clean_zone', [
+    ): EventContext {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_clean_zone', [
             'zone' => $zone,
             'repeats' => $repeats,
             'suction_level' => $suctionLevel,
@@ -126,31 +103,38 @@ final readonly class DreameVacuumServices
         ], $target);
     }
 
-    public function vacuumDeleteMap(ServiceTargetSource $target, int|float|null $mapId = null): void
+    public function vacuumDeleteMap(ServiceTargetSource $target, int|float|null $mapId = null): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_delete_map', [
+        return $this->ha->callService('dreame_vacuum', 'vacuum_delete_map', [
             'map_id' => $mapId,
         ], $target);
     }
 
-    public function vacuumDiscardTemporaryMap(ServiceTargetSource $target): void
+    public function vacuumDeleteShortcut(ServiceTargetSource $target, int|float $shortcutId): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_discard_temporary_map', [], $target);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_delete_shortcut', [
+            'shortcut_id' => $shortcutId,
+        ], $target);
+    }
+
+    public function vacuumDiscardTemporaryMap(ServiceTargetSource $target): EventContext
+    {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_discard_temporary_map', [], $target);
     }
 
     /**
      * @param array<array-key, mixed>|null $points
      */
-    public function vacuumFollowPath(ServiceTargetSource $target, ?array $points = null): void
+    public function vacuumFollowPath(ServiceTargetSource $target, ?array $points = null): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_follow_path', [
+        return $this->ha->callService('dreame_vacuum', 'vacuum_follow_path', [
             'points' => $points,
         ], $target);
     }
 
-    public function vacuumGoto(ServiceTargetSource $target, int|float $x, int|float $y): void
+    public function vacuumGoto(ServiceTargetSource $target, int|float $x, int|float $y): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_goto', [
+        return $this->ha->callService('dreame_vacuum', 'vacuum_goto', [
             'x' => $x,
             'y' => $y,
         ], $target);
@@ -162,8 +146,8 @@ final readonly class DreameVacuumServices
         string|int|float $md5,
         int|float $size,
         string|int|float $url,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_install_voice_pack', [
+    ): EventContext {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_install_voice_pack', [
             'lang_id' => $langId,
             'md5' => $md5,
             'size' => $size,
@@ -171,18 +155,9 @@ final readonly class DreameVacuumServices
         ], $target);
     }
 
-    /**
-     * @param array<array-key, mixed> $segments
-     */
-    public function vacuumMergeSegments(
-        ServiceTargetSource $target,
-        array $segments,
-        int|float|null $mapId = null,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_merge_segments', [
-            'segments' => $segments,
-            'map_id' => $mapId,
-        ], $target);
+    public function vacuumMergeSegments(): EventContext
+    {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_merge_segments', []);
     }
 
     /**
@@ -193,16 +168,19 @@ final readonly class DreameVacuumServices
         ServiceTargetSource $target,
         int|float $rotation,
         int|float $velocity,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_remote_control_move_step', [
+    ): EventContext {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_remote_control_move_step', [
             'rotation' => $rotation,
             'velocity' => $velocity,
         ], $target);
     }
 
-    public function vacuumRenameMap(ServiceTargetSource $target, int|float $mapId, string|int|float $mapName): void
-    {
-        $this->ha->callService('dreame_vacuum', 'vacuum_rename_map', [
+    public function vacuumRenameMap(
+        ServiceTargetSource $target,
+        int|float $mapId,
+        string|int|float $mapName,
+    ): EventContext {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_rename_map', [
             'map_id' => $mapId,
             'map_name' => $mapName,
         ], $target);
@@ -215,8 +193,8 @@ final readonly class DreameVacuumServices
         ServiceTargetSource $target,
         int|float $segmentId,
         string|int|float $segmentName,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_rename_segment', [
+    ): EventContext {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_rename_segment', [
             'segment_id' => $segmentId,
             'segment_name' => $segmentName,
         ], $target);
@@ -226,31 +204,31 @@ final readonly class DreameVacuumServices
         ServiceTargetSource $target,
         int|float $shortcutId,
         string|int|float $shortcutName,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_rename_shortcut', [
+    ): EventContext {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_rename_shortcut', [
             'shortcut_id' => $shortcutId,
             'shortcut_name' => $shortcutName,
         ], $target);
     }
 
-    public function vacuumReplaceTemporaryMap(ServiceTargetSource $target, int|float|null $mapId = null): void
+    public function vacuumReplaceTemporaryMap(ServiceTargetSource $target, int|float|null $mapId = null): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_replace_temporary_map', [
+        return $this->ha->callService('dreame_vacuum', 'vacuum_replace_temporary_map', [
             'map_id' => $mapId,
         ], $target);
     }
 
-    public function vacuumRequestMap(ServiceTargetSource $target): void
+    public function vacuumRequestMap(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_request_map', [], $target);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_request_map', [], $target);
     }
 
     /**
-     * @param 'main_brush'|'side_brush'|'filter'|'tank_filter'|'sensor'|'mop_pad'|'silver_ion'|'detergent'|'squeegee'|'onboard_dirty_water_tank'|'dirty_water_tank'|'deodorizer'|'wheel'|'scale_inhibitor' $consumable
+     * @param 'main_brush'|'side_brush'|'filter'|'tank_filter'|'sensor'|'mop_pad'|'silver_ion'|'detergent'|'squeegee'|'onboard_dirty_water_tank'|'dirty_water_tank'|'deodorizer'|'wheel'|'scale_inhibitor'|'fluffing_roller'|'roller_mop_filter'|'water_outlet_filter' $consumable
      */
-    public function vacuumResetConsumable(ServiceTargetSource $target, string $consumable): void
+    public function vacuumResetConsumable(ServiceTargetSource $target, string $consumable): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_reset_consumable', [
+        return $this->ha->callService('dreame_vacuum', 'vacuum_reset_consumable', [
             'consumable' => $consumable,
         ], $target);
     }
@@ -262,8 +240,8 @@ final readonly class DreameVacuumServices
         ServiceTargetSource $target,
         int|float $recoveryMapIndex,
         int|float|null $mapId = null,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_restore_map', [
+    ): EventContext {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_restore_map', [
             'recovery_map_index' => $recoveryMapIndex,
             'map_id' => $mapId,
         ], $target);
@@ -273,79 +251,53 @@ final readonly class DreameVacuumServices
         ServiceTargetSource $target,
         string|int|float $fileUrl,
         int|float|null $mapId = null,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_restore_map_from_file', [
+    ): EventContext {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_restore_map_from_file', [
             'file_url' => $fileUrl,
             'map_id' => $mapId,
         ], $target);
     }
 
-    public function vacuumSaveTemporaryMap(ServiceTargetSource $target): void
+    public function vacuumSaveTemporaryMap(ServiceTargetSource $target): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_save_temporary_map', [], $target);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_save_temporary_map', [], $target);
     }
 
-    public function vacuumSelectMap(ServiceTargetSource $target, int|float $mapId): void
+    public function vacuumSelectMap(ServiceTargetSource $target, int|float $mapId): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_select_map', [
+        return $this->ha->callService('dreame_vacuum', 'vacuum_select_map', [
             'map_id' => $mapId,
         ], $target);
     }
 
-    /**
-     * @param array<array-key, mixed>|null $carpets
-     * @param array<array-key, mixed>|null $deletedCarpets
-     */
-    public function vacuumSetCarpetArea(
-        ServiceTargetSource $target,
-        ?array $carpets = null,
-        ?array $deletedCarpets = null,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_carpet_area', [
-            'carpets' => $carpets,
-            'deleted_carpets' => $deletedCarpets,
-        ], $target);
+    public function vacuumSetCarpetArea(): EventContext
+    {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_carpet_area', []);
     }
 
-    public function vacuumSetCarpetType(): void
+    public function vacuumSetCarpetType(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_carpet_type', []);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_carpet_type', []);
     }
 
     /**
      * @param array<array-key, mixed> $cleaningSequence
      */
-    public function vacuumSetCleaningSequence(ServiceTargetSource $target, array $cleaningSequence): void
+    public function vacuumSetCleaningSequence(ServiceTargetSource $target, array $cleaningSequence): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_cleaning_sequence', [
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_cleaning_sequence', [
             'cleaning_sequence' => $cleaningSequence,
         ], $target);
     }
 
-    public function vacuumSetCurtain(): void
+    public function vacuumSetCurtain(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_curtain', []);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_curtain', []);
     }
 
-    /**
-     * @param array<array-key, mixed> $id
-     * @param int|float $type 0 to 1
-     * @param int|float|null $carpetCleaning 0 to 6
-     * @param array<array-key, mixed>|null $carpetPreferences
-     */
-    public function vacuumSetCustomCarpetCleaning(
-        ServiceTargetSource $target,
-        array $id,
-        int|float $type,
-        int|float|null $carpetCleaning = null,
-        ?array $carpetPreferences = null,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_custom_carpet_cleaning', [
-            'id' => $id,
-            'type' => $type,
-            'carpet_cleaning' => $carpetCleaning,
-            'carpet_preferences' => $carpetPreferences,
-        ], $target);
+    public function vacuumSetCustomCarpetCleaning(): EventContext
+    {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_custom_carpet_cleaning', []);
     }
 
     /**
@@ -353,6 +305,8 @@ final readonly class DreameVacuumServices
      * @param array<array-key, mixed> $segmentId
      * @param array<array-key, mixed> $suctionLevel
      * @param array<array-key, mixed>|null $cleaningMode
+     * @param array<array-key, mixed>|null $mopPressure
+     * @param array<array-key, mixed>|null $mopTemperature
      * @param array<array-key, mixed>|null $waterVolume
      * @param array<array-key, mixed>|null $wetnessLevel
      */
@@ -362,37 +316,46 @@ final readonly class DreameVacuumServices
         array $segmentId,
         array $suctionLevel,
         ?array $cleaningMode = null,
+        ?array $mopPressure = null,
+        ?array $mopTemperature = null,
         ?array $waterVolume = null,
         ?array $wetnessLevel = null,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_custom_cleaning', [
+    ): EventContext {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_custom_cleaning', [
             'repeats' => $repeats,
             'segment_id' => $segmentId,
             'suction_level' => $suctionLevel,
             'cleaning_mode' => $cleaningMode,
+            'mop_pressure' => $mopPressure,
+            'mop_temperature' => $mopTemperature,
             'water_volume' => $waterVolume,
             'wetness_level' => $wetnessLevel,
         ], $target);
     }
 
-    public function vacuumSetFloorMaterial(): void
+    public function vacuumSetFloorMaterial(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_floor_material', []);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_floor_material', []);
     }
 
-    public function vacuumSetFurniture(): void
+    public function vacuumSetFurniture(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_furniture', []);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_furniture', []);
     }
 
-    public function vacuumSetHiddenSegments(): void
+    public function vacuumSetHiddenSegments(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_hidden_segments', []);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_hidden_segments', []);
     }
 
-    public function vacuumSetLowLyingArea(): void
+    public function vacuumSetLowLyingArea(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_low_lying_area', []);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_low_lying_area', []);
+    }
+
+    public function vacuumSetMopType(): EventContext
+    {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_mop_type', []);
     }
 
     public function vacuumSetObstacleIgnore(
@@ -400,98 +363,65 @@ final readonly class DreameVacuumServices
         bool $obstacleIgnored,
         int|float $x,
         int|float $y,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_obstacle_ignore', [
+    ): EventContext {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_obstacle_ignore', [
             'obstacle_ignored' => $obstacleIgnored,
             'x' => $x,
             'y' => $y,
         ], $target);
     }
 
-    /**
-     * @param array<array-key, mixed>|null $points
-     */
-    public function vacuumSetPredefinedPoints(ServiceTargetSource $target, ?array $points = null): void
+    public function vacuumSetPredefinedPoints(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_predefined_points', [
-            'points' => $points,
-        ], $target);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_predefined_points', []);
     }
 
-    public function vacuumSetProperty(): void
+    public function vacuumSetProperty(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_property', []);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_property', []);
     }
 
-    /**
-     * @param array<array-key, mixed>|null $noMops
-     * @param array<array-key, mixed>|null $walls
-     * @param array<array-key, mixed>|null $zones
-     */
-    public function vacuumSetRestrictedZone(
-        ServiceTargetSource $target,
-        ?array $noMops = null,
-        ?array $walls = null,
-        ?array $zones = null,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_restricted_zone', [
-            'no_mops' => $noMops,
-            'walls' => $walls,
-            'zones' => $zones,
-        ], $target);
-    }
-
-    public function vacuumSetRouterPosition(ServiceTargetSource $target, int|float $x, int|float $y): void
+    public function vacuumSetRestrictedZone(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_router_position', [
-            'x' => $x,
-            'y' => $y,
-        ], $target);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_restricted_zone', []);
     }
 
-    public function vacuumSetSegmentType(): void
+    public function vacuumSetRouterPosition(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_segment_type', []);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_router_position', []);
     }
 
-    public function vacuumSetThreshold(): void
+    public function vacuumSetSegmentType(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_threshold', []);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_segment_type', []);
     }
 
-    /**
-     * @param array<array-key, mixed>|null $virtualThresholds
-     */
-    public function vacuumSetVirtualThreshold(ServiceTargetSource $target, ?array $virtualThresholds = null): void
+    public function vacuumSetThreshold(): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_set_virtual_threshold', [
-            'virtual_thresholds' => $virtualThresholds,
-        ], $target);
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_threshold', []);
     }
 
-    /**
-     * @param array<array-key, mixed> $line
-     * @param int|float $segment 1 to 60
-     */
-    public function vacuumSplitSegments(
-        ServiceTargetSource $target,
-        array $line,
-        int|float $segment,
-        int|float|null $mapId = null,
-    ): void {
-        $this->ha->callService('dreame_vacuum', 'vacuum_split_segments', [
-            'line' => $line,
-            'segment' => $segment,
-            'map_id' => $mapId,
-        ], $target);
+    public function vacuumSetVirtualThreshold(): EventContext
+    {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_virtual_threshold', []);
+    }
+
+    public function vacuumSetWalls(): EventContext
+    {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_set_walls', []);
+    }
+
+    public function vacuumSplitSegments(): EventContext
+    {
+        return $this->ha->callService('dreame_vacuum', 'vacuum_split_segments', []);
     }
 
     /**
      * @param int|float $shortcutId 32 to 128
      */
-    public function vacuumStartShortcut(ServiceTargetSource $target, int|float $shortcutId): void
+    public function vacuumStartShortcut(ServiceTargetSource $target, int|float $shortcutId): EventContext
     {
-        $this->ha->callService('dreame_vacuum', 'vacuum_start_shortcut', [
+        return $this->ha->callService('dreame_vacuum', 'vacuum_start_shortcut', [
             'shortcut_id' => $shortcutId,
         ], $target);
     }

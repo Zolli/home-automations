@@ -12,6 +12,7 @@ namespace App\Generated;
 
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Service\ServiceResponse;
+use Stewart\Contracts\State\EventContext;
 
 /**
  * The `webostv` services.
@@ -22,9 +23,9 @@ final readonly class WebostvServices
     {
     }
 
-    public function button(string|int|float $button, string $entityId): void
+    public function button(string|int|float $button, string $entityId): EventContext
     {
-        $this->ha->callService('webostv', 'button', [
+        return $this->ha->callService('webostv', 'button', [
             'button' => $button,
             'entity_id' => $entityId,
         ]);
