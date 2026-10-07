@@ -4,13 +4,14 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": ">=8.4.1",
+        "php": ">=8.5",
+        "opis/json-schema": "^2",
         "psr/log": "^3.0",
-        "stewart-php/codegen": "^0.5",
-        "stewart-php/contracts": "^0.5",
-        "stewart-php/mqtt": "^0.5",
-        "stewart-php/runtime": "^0.5",
-        "stewart-php/store-redis": "^0.5",
+        "stewart-php/codegen": "^0.7",
+        "stewart-php/contracts": "^0.7",
+        "stewart-php/mqtt": "^0.7",
+        "stewart-php/runtime": "^0.7",
+        "stewart-php/store-redis": "^0.7",
         "symfony/dependency-injection": "^7.4 || ^8.0"
     },
     "require-dev": {
@@ -20,7 +21,8 @@
     "autoload": {
         "psr-4": {
             "App\\": "apps/",
-            "App\\Generated\\": "generated/"
+            "App\\Generated\\": "generated/",
+            "Shared\\": "src/"
         }
     },
     "autoload-dev": {

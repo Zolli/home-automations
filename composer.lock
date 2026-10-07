@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d1c839d9d2dfee02c5292642f2f9a55a",
+    "content-hash": "b776abcbb80c6841689790aec2c6bc7e",
     "packages": [
         {
             "name": "amphp/amp",
@@ -550,6 +550,103 @@
                 }
             ],
             "time": "2026-05-15T23:29:38+00:00"
+        },
+        {
+            "name": "amphp/http-server",
+            "version": "v3.4.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/amphp/http-server.git",
+                "reference": "8a971bf92cf8cf2bc511f37a75b39126d5305315"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/amphp/http-server/zipball/8a971bf92cf8cf2bc511f37a75b39126d5305315",
+                "reference": "8a971bf92cf8cf2bc511f37a75b39126d5305315",
+                "shasum": ""
+            },
+            "require": {
+                "amphp/amp": "^3",
+                "amphp/byte-stream": "^2",
+                "amphp/cache": "^2",
+                "amphp/hpack": "^3",
+                "amphp/http": "^2",
+                "amphp/pipeline": "^1",
+                "amphp/socket": "^2.1",
+                "amphp/sync": "^2.2",
+                "league/uri": "^7.1",
+                "league/uri-interfaces": "^7.1",
+                "php": ">=8.1",
+                "psr/http-message": "^1 | ^2",
+                "psr/log": "^1 | ^2 | ^3",
+                "revolt/event-loop": "^1"
+            },
+            "require-dev": {
+                "amphp/http-client": "^5",
+                "amphp/log": "^2",
+                "amphp/php-cs-fixer-config": "^2",
+                "amphp/phpunit-util": "^3",
+                "league/uri-components": "^7.1",
+                "monolog/monolog": "^3",
+                "phpunit/phpunit": "^9",
+                "psalm/phar": "6.16.1"
+            },
+            "suggest": {
+                "ext-zlib": "Allows GZip compression of response bodies"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Driver/functions.php",
+                    "src/Middleware/functions.php",
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "Amp\\Http\\Server\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Lowrey",
+                    "email": "rdlowrey@php.net"
+                },
+                {
+                    "name": "Bob Weinand"
+                },
+                {
+                    "name": "Niklas Keller",
+                    "email": "me@kelunik.com"
+                },
+                {
+                    "name": "Aaron Piotrowski",
+                    "email": "aaron@trowski.com"
+                }
+            ],
+            "description": "A non-blocking HTTP application server for PHP based on Amp.",
+            "homepage": "https://github.com/amphp/http-server",
+            "keywords": [
+                "amp",
+                "amphp",
+                "async",
+                "http",
+                "non-blocking",
+                "server"
+            ],
+            "support": {
+                "issues": "https://github.com/amphp/http-server/issues",
+                "source": "https://github.com/amphp/http-server/tree/v3.4.6"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/amphp",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-06-27T10:31:48+00:00"
         },
         {
             "name": "amphp/parallel",
@@ -2007,6 +2104,196 @@
             "time": "2026-07-17T23:02:45+00:00"
         },
         {
+            "name": "opis/json-schema",
+            "version": "2.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/opis/json-schema.git",
+                "reference": "8458763e0dd0b6baa310e04f1829fc73da4e8c8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/opis/json-schema/zipball/8458763e0dd0b6baa310e04f1829fc73da4e8c8a",
+                "reference": "8458763e0dd0b6baa310e04f1829fc73da4e8c8a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "opis/string": "^2.1",
+                "opis/uri": "^1.0",
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "ext-bcmath": "*",
+                "ext-intl": "*",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Opis\\JsonSchema\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sorin Sarca",
+                    "email": "sarca_sorin@hotmail.com"
+                },
+                {
+                    "name": "Marius Sarca",
+                    "email": "marius.sarca@gmail.com"
+                }
+            ],
+            "description": "Json Schema Validator for PHP",
+            "homepage": "https://opis.io/json-schema",
+            "keywords": [
+                "json",
+                "json-schema",
+                "schema",
+                "validation",
+                "validator"
+            ],
+            "support": {
+                "issues": "https://github.com/opis/json-schema/issues",
+                "source": "https://github.com/opis/json-schema/tree/2.6.0"
+            },
+            "time": "2025-10-17T12:46:48+00:00"
+        },
+        {
+            "name": "opis/string",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/opis/string.git",
+                "reference": "3e4d2aaff518ac518530b89bb26ed40f4503635e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/opis/string/zipball/3e4d2aaff518ac518530b89bb26ed40f4503635e",
+                "reference": "3e4d2aaff518ac518530b89bb26ed40f4503635e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-iconv": "*",
+                "ext-json": "*",
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Opis\\String\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Marius Sarca",
+                    "email": "marius.sarca@gmail.com"
+                },
+                {
+                    "name": "Sorin Sarca",
+                    "email": "sarca_sorin@hotmail.com"
+                }
+            ],
+            "description": "Multibyte strings as objects",
+            "homepage": "https://opis.io/string",
+            "keywords": [
+                "multi-byte",
+                "opis",
+                "string",
+                "string manipulation",
+                "utf-8"
+            ],
+            "support": {
+                "issues": "https://github.com/opis/string/issues",
+                "source": "https://github.com/opis/string/tree/2.1.0"
+            },
+            "time": "2025-10-17T12:38:41+00:00"
+        },
+        {
+            "name": "opis/uri",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/opis/uri.git",
+                "reference": "0f3ca49ab1a5e4a6681c286e0b2cc081b93a7d5a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/opis/uri/zipball/0f3ca49ab1a5e4a6681c286e0b2cc081b93a7d5a",
+                "reference": "0f3ca49ab1a5e4a6681c286e0b2cc081b93a7d5a",
+                "shasum": ""
+            },
+            "require": {
+                "opis/string": "^2.0",
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Opis\\Uri\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Marius Sarca",
+                    "email": "marius.sarca@gmail.com"
+                },
+                {
+                    "name": "Sorin Sarca",
+                    "email": "sarca_sorin@hotmail.com"
+                }
+            ],
+            "description": "Build, parse and validate URIs and URI-templates",
+            "homepage": "https://opis.io",
+            "keywords": [
+                "URI Template",
+                "parse url",
+                "punycode",
+                "uri",
+                "uri components",
+                "url",
+                "validate uri"
+            ],
+            "support": {
+                "issues": "https://github.com/opis/uri/issues",
+                "source": "https://github.com/opis/uri/tree/1.1.0"
+            },
+            "time": "2021-05-22T15:57:08+00:00"
+        },
+        {
             "name": "psr/container",
             "version": "2.0.2",
             "source": {
@@ -2291,7 +2578,7 @@
         },
         {
             "name": "stewart-php/client",
-            "version": "v0.5.0",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/client.git",
@@ -2347,13 +2634,13 @@
             ],
             "description": "Home Assistant WebSocket client. Usable on its own",
             "support": {
-                "source": "https://github.com/stewart-php/client/tree/v0.5.0"
+                "source": "https://github.com/stewart-php/client/tree/v0.7.0"
             },
             "time": "2026-10-06T12:37:11+00:00"
         },
         {
             "name": "stewart-php/codegen",
-            "version": "v0.5.0",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/codegen.git",
@@ -2400,22 +2687,22 @@
             ],
             "description": "Generates typed entity and service classes from a Home Assistant instance",
             "support": {
-                "source": "https://github.com/stewart-php/codegen/tree/v0.5.0"
+                "source": "https://github.com/stewart-php/codegen/tree/v0.7.0"
             },
             "time": "2026-10-06T12:37:21+00:00"
         },
         {
             "name": "stewart-php/contracts",
-            "version": "v0.5.0",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/contracts.git",
-                "reference": "6179c46f1d500713b301df0a0704ea58a6cf96de"
+                "reference": "bc0422bbac23bb2b1c69211c0d8c9a398e3a4122"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/contracts/zipball/6179c46f1d500713b301df0a0704ea58a6cf96de",
-                "reference": "6179c46f1d500713b301df0a0704ea58a6cf96de",
+                "url": "https://api.github.com/repos/stewart-php/contracts/zipball/bc0422bbac23bb2b1c69211c0d8c9a398e3a4122",
+                "reference": "bc0422bbac23bb2b1c69211c0d8c9a398e3a4122",
                 "shasum": ""
             },
             "require": {
@@ -2443,13 +2730,13 @@
             ],
             "description": "Stewart core abstractions. Pure PHP and one cron parser",
             "support": {
-                "source": "https://github.com/stewart-php/contracts/tree/v0.5.0"
+                "source": "https://github.com/stewart-php/contracts/tree/v0.7.0"
             },
-            "time": "2026-10-06T12:37:12+00:00"
+            "time": "2026-10-07T09:36:36+00:00"
         },
         {
             "name": "stewart-php/mqtt",
-            "version": "v0.5.0",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/mqtt.git",
@@ -2493,27 +2780,29 @@
             ],
             "description": "MQTT 3.1.1 client that connects Stewart apps to an MQTT server. Non-blocking, over amphp",
             "support": {
-                "source": "https://github.com/stewart-php/mqtt/tree/v0.5.0"
+                "source": "https://github.com/stewart-php/mqtt/tree/v0.7.0"
             },
             "time": "2026-10-04T12:16:44+00:00"
         },
         {
             "name": "stewart-php/runtime",
-            "version": "v0.5.0",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/runtime.git",
-                "reference": "2d4f764186afd103938d5c28b6434e51addb6c9c"
+                "reference": "df62587c4610617d70dd52bc1287f8b3bf7bd39b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/runtime/zipball/2d4f764186afd103938d5c28b6434e51addb6c9c",
-                "reference": "2d4f764186afd103938d5c28b6434e51addb6c9c",
+                "url": "https://api.github.com/repos/stewart-php/runtime/zipball/df62587c4610617d70dd52bc1287f8b3bf7bd39b",
+                "reference": "df62587c4610617d70dd52bc1287f8b3bf7bd39b",
                 "shasum": ""
             },
             "require": {
                 "amphp/amp": "^3.1.1",
                 "amphp/byte-stream": "^2.1",
+                "amphp/http": "^2.1",
+                "amphp/http-server": "^3.4",
                 "amphp/parallel": "^2.4",
                 "amphp/socket": "^2.4",
                 "amphp/sync": "^2.3",
@@ -2571,22 +2860,22 @@
             ],
             "description": "Stewart broker, workers and the channel protocol between them.",
             "support": {
-                "source": "https://github.com/stewart-php/runtime/tree/v0.5.0"
+                "source": "https://github.com/stewart-php/runtime/tree/v0.7.0"
             },
-            "time": "2026-10-06T12:37:19+00:00"
+            "time": "2026-10-07T09:36:39+00:00"
         },
         {
             "name": "stewart-php/store",
-            "version": "v0.5.0",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/store.git",
-                "reference": "d8e61de9c844d5baefadc9d0895fd57673c86d51"
+                "reference": "baf2ec3bdfad0a1089a4c17f49ad273084fed4a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/store/zipball/d8e61de9c844d5baefadc9d0895fd57673c86d51",
-                "reference": "d8e61de9c844d5baefadc9d0895fd57673c86d51",
+                "url": "https://api.github.com/repos/stewart-php/store/zipball/baf2ec3bdfad0a1089a4c17f49ad273084fed4a0",
+                "reference": "baf2ec3bdfad0a1089a4c17f49ad273084fed4a0",
                 "shasum": ""
             },
             "require": {
@@ -2619,13 +2908,13 @@
             ],
             "description": "Scoping, encoding and hydration for Stewart's key-value storage. Backend-agnostic",
             "support": {
-                "source": "https://github.com/stewart-php/store/tree/v0.5.0"
+                "source": "https://github.com/stewart-php/store/tree/v0.7.0"
             },
-            "time": "2026-10-04T12:16:48+00:00"
+            "time": "2026-10-06T18:30:11+00:00"
         },
         {
             "name": "stewart-php/store-redis",
-            "version": "v0.5.0",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/store-redis.git",
@@ -2674,13 +2963,13 @@
             ],
             "description": "Redis backend for Stewart's key-value storage. Non-blocking, over amphp",
             "support": {
-                "source": "https://github.com/stewart-php/store-redis/tree/v0.5.0"
+                "source": "https://github.com/stewart-php/store-redis/tree/v0.7.0"
             },
             "time": "2026-10-04T12:16:43+00:00"
         },
         {
             "name": "stewart-php/sun",
-            "version": "v0.5.0",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/sun.git",
@@ -2718,13 +3007,13 @@
             "description": "Sunrise, sunset, twilight, golden hour and sun position for a location, computed locally",
             "support": {
                 "issues": "https://github.com/stewart-php/sun/issues",
-                "source": "https://github.com/stewart-php/sun/tree/v0.5.0"
+                "source": "https://github.com/stewart-php/sun/tree/v0.7.0"
             },
             "time": "2026-10-05T21:43:40+00:00"
         },
         {
             "name": "stewart-php/support",
-            "version": "v0.5.0",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/support.git",
@@ -2763,7 +3052,7 @@
             ],
             "description": "Framework-internal helpers shared by the Stewart packages. Not part of the app-facing API",
             "support": {
-                "source": "https://github.com/stewart-php/support/tree/v0.5.0"
+                "source": "https://github.com/stewart-php/support/tree/v0.7.0"
             },
             "time": "2026-10-04T12:16:45+00:00"
         },
@@ -3395,16 +3684,16 @@
         },
         {
             "name": "symfony/polyfill-deepclone",
-            "version": "v1.43.0",
+            "version": "v1.43.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-deepclone.git",
-                "reference": "8db92c5508a3f7f82d8688d32f0a4868a26e58ad"
+                "reference": "aaba44b6ee7299ae65717811c55b57ab9bc0fedd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-deepclone/zipball/8db92c5508a3f7f82d8688d32f0a4868a26e58ad",
-                "reference": "8db92c5508a3f7f82d8688d32f0a4868a26e58ad",
+                "url": "https://api.github.com/repos/symfony/polyfill-deepclone/zipball/aaba44b6ee7299ae65717811c55b57ab9bc0fedd",
+                "reference": "aaba44b6ee7299ae65717811c55b57ab9bc0fedd",
                 "shasum": ""
             },
             "require": {
@@ -3458,7 +3747,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-deepclone/tree/v1.43.0"
+                "source": "https://github.com/symfony/polyfill-deepclone/tree/v1.43.1"
             },
             "funding": [
                 {
@@ -3478,7 +3767,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-30T09:07:27+00:00"
+            "time": "2026-10-06T19:46:18+00:00"
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
@@ -6204,7 +6493,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.4.1"
+        "php": ">=8.5"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"

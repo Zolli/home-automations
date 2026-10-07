@@ -52,10 +52,12 @@ class CoverEventHandlersApp implements App
 
         $this->lightTurnOnDelay = $this->scheduler->runAfter(
             Duration::seconds(20),
-            fn() => $this->services->light->turnOn(
-                $this->entities->light->getEntity('light.light_kitchen_all'),
-                brightnessPct: 40
-            )
+            function (): void {
+                $this->services->light->turnOn(
+                    $this->entities->light->getEntity('light.light_kitchen_all'),
+                    brightnessPct: 40
+                );
+            }
         );
     }
 

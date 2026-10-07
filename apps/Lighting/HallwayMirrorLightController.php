@@ -46,7 +46,7 @@ class HallwayMirrorLightController implements App
 
     private function onButtonPress(StateChange $change): void
     {
-        $eventType = $change->to->getStringAttribute('event_type');
+        $eventType = $change->to?->getStringAttribute('event_type');
         $this->logger->info(sprintf('EventType: %s', $eventType));
 
         $ceilingLight = $this->entities->light->getEntity('light.light_hallway_ceiling_03');

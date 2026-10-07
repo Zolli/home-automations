@@ -9,7 +9,6 @@ use Psr\Log\LoggerInterface;
 use Stewart\Contracts\App;
 use Stewart\Contracts\Automation;
 use Stewart\Contracts\HaContext;
-use Stewart\Contracts\Mqtt\Mqtt;
 use Stewart\Contracts\Schedule\Scheduler;
 use Stewart\Contracts\Selector\Selector;
 
@@ -22,10 +21,12 @@ final class TimedLightApp implements App
     /** @var array<string, TimedLightComponent> */
     private array $timedLightComponentsByName = [];
 
+    /**
+     * @param list<array<string, mixed>> $configuration
+     */
     public function __construct(
         private readonly HaContext $context,
         private readonly Entities $entities,
-        private readonly Mqtt $mqtt,
         private readonly LoggerInterface $logger,
         private readonly Scheduler $scheduler,
         array $configuration,
@@ -40,7 +41,6 @@ final class TimedLightApp implements App
             $this->logger->info("[TIMED-LIGHT] Initializing for: " . $config->name);
 
             $timeLightComponent = new TimedLightComponent(
-                $this->mqtt,
                 $this->scheduler,
                 $this->entities->light->getEntity($config->lightEntityId),
                 $config->timeoutSeconds,
@@ -66,5 +66,8 @@ final class TimedLightApp implements App
 
     public function dispose(): void
     {
+        foreach ($this->timedLightComponentsByName as $component) {
+            $component->dispose();
+        }
     }
 }

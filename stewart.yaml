@@ -1,8 +1,10 @@
 # Only what differs from the defaults: `make config-reference` lists every setting, `make config` shows what is in
 # effect. Secrets (the Home Assistant token, the control token) belong in .env, never here.
+log_level: debug
 
 apps:
   timed-light:
+    enabled: false
     options:
       configuration:
         - name: 'pantry-cabinet-1'
@@ -11,3 +13,13 @@ apps:
           lightEntityId: 'light.led_controller_pantry_channel_2'
           coverEntityId: ''
           timeoutSeconds: 60
+  hallway-mirror-light-controller:
+    enabled: false
+  master-bathroom-mirror-controller:
+    enabled: false
+  cover-event-handlers:
+    enabled: false
+  notification-mqtt-bridge:
+    options:
+      topic: 'stewart/notify'
+      actionTopic: 'stewart/notify/action'

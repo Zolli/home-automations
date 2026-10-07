@@ -50,7 +50,7 @@ class MasterBathroomMirrorController implements App
 
     private function onWallButtonPress(StateChange $change): void
     {
-        $eventType = $change->to->getStringAttribute('event_type');
+        $eventType = $change->to?->getStringAttribute('event_type');
         $mirrorLight = $this->entities->light->getEntity('light.master_bathroom_mirror_led_ch1');
         $mirrorLightAdaptiveBrightnessSwitch = $this
             ->entities

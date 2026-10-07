@@ -49,6 +49,95 @@ make run ONLY=hello            # only these apps, even if disabled in stewart.ya
 make run ONLY=hello DRY_RUN=1  # service calls are logged and answered as succeeded, never sent
 ```
 
+### Shared components
+
+Code that several apps use lives in `src/` under the `Shared\` namespace and is registered in `services.php`, so apps
+receive it by type. `Shared\Condition` evaluates conditions against Home Assistant state; `Shared\Notification` sends
+notifications.
+
+## Notifications
+
+Inject `Shared\Notification\Notifier` and send a `Notification` built with `NotificationBuilder::create()`. A
+notification has a message, one or more destinations, and meta. A destination is only sent to when all of its
+conditions hold.
+
+```php
+$this->notifier->send(
+    NotificationBuilder::create()
+        ->withBody('Dusty is full of debris, please empty it')
+        ->withTitle('Empty the vacuum bin')
+        ->withServiceData(['notification_icon' => 'mdi:robot-vacuum-variant', 'color' => '#f47100'])
+        ->withAppendedButtons(new NotificationButton('DONE', 'Done'), new NotificationButton('NEXT', 'Next time'))
+        ->withImportance(Importance::Low)
+        ->withAppendedDestinations(NotifyServiceSender::createDestination('notify.mobile_app_zoli_phone')
+            ->withAppendedConditions(new ImportanceCondition(new EntityId('input_select.zoli_notification_level'))))
+        ->withAppendedDestinations(ChimeTtsSender::createDestination('media_player.kitchen_speaker', ['chime_path' => 'bells'])
+            ->withAppendedConditions(CompareCondition::equals('input_boolean.guest_mode', 'off')))
+        ->buildNotification(),
+)->listenForActions($this->ha)->onAction('DONE', fn(NotificationAction $action) => $this->resetBinCounter());
+```
+
+| Destination type | Service call |
+|---|---|
+| `notify_service` | `notify.<service>` per target, with `message`, `title`, then `additionalData` and `options` merged in. Phones, the TV (`notify.lg_webos_*`) and `notify.persistent_notification` are all this type |
+| `tts` | One `chime_tts.say` for all target `media_player` entities, with `message` and `options` (`chime_path`, `volume_level`, `announce`, …) |
+
+| Condition | Satisfied when |
+|---|---|
+| `eq`, `neq`, `gt`, `gte`, `lt`, `lte` | The entity's state, or its `attribute`, compares to `value`. Numeric values compare as numbers; `gt`…`lte` are never satisfied by non-numeric values; a missing entity never satisfies |
+| `importance` | The notification's importance (`low` < `normal` < `high` < `critical`) is at least the level held by `field`, e.g. an `input_select`. An unknown or unavailable level lets the notification through |
+
+`meta.debug` logs every destination: sent with its service call, or skipped with its conditions.
+
+### Buttons
+
+`send()` returns a `SentNotification`; `listenForActions($this->ha)` returns an `ActionListener` whose
+`onAction('DONE', …)` and `onAnyAction(…)` receive a `NotificationAction` with the action, the user who pressed it and
+`getReplyText()`. Pass the app's own `HaContext`: presses are then watched in the app's scope, so they stop when the app
+is disposed and wait while it is paused. Button keys are sent as `<id>:<action>` so presses find their notification
+(`URI` buttons are left alone), and the id becomes the notification's `tag` unless one is set. Callbacks live in
+memory: they expire after 2 hours, `stopListening()` removes them sooner, a newer listener for the same id replaces
+them, and a restart drops them. When no destination was sent to, `wasDelivered()` is false and `listenForActions()`
+returns a stopped listener that ignores callbacks.
+
+### Over MQTT
+
+The `notification-mqtt-bridge` app sends every JSON payload published to `stewart/notify`, so Node-RED and other
+clients notify the same way. Invalid payloads are logged and dropped. Button presses are published as
+`{"id", "action", "replyText", "userId"}` to `meta.replyTopic`, or to `stewart/notify/action`. Both topics are
+options in `stewart.yaml`.
+
+```json
+{
+  "message": {
+    "title": "Empty the vacuum bin",
+    "body": "Dusty is full of debris, please empty it",
+    "buttons": [{"action": "DONE", "title": "Done"}]
+  },
+  "destinations": [
+    {"type": "notify_service", "target": "notify.mobile_app_zoli_phone",
+     "conditions": [{"type": "importance", "field": "input_select.zoli_notification_level"}]},
+    {"type": "tts", "target": ["media_player.kitchen_speaker"], "options": {"chime_path": "bells"},
+     "conditions": [{"type": "lt", "field": "sun.sun", "attribute": "elevation", "value": 10}]}
+  ],
+  "meta": {"importance": "low", "debug": true, "id": "vacuum-bin", "replyTopic": "nodered/vacuum/action"}
+}
+```
+
+Only `message.body` and `destinations` (each with `type` and `target`) are required; `type` must be a registered
+destination type. Each entry in `message.buttons` needs `action` and `title`; other keys are passed on as button options.
+`message.additionalData` is merged into the service call data as is. Payloads are checked against
+[`notification.schema.json`](src/Notification/Payload/notification.schema.json): unknown keys are rejected,
+`meta.importance` is lowercase, and every violation is logged with its path, e.g. `destinations[0].target is required`.
+
+### Extending
+
+A new destination type is a case on `Shared\Notification\DestinationType` plus a class implementing
+`Shared\Notification\Sender\DestinationSender` that returns that case from `getSupportedType()`, rejects bad targets in `validateDestination()` and builds a `ServiceCallCollection` for a
+destination, with a static `createDestination()` shortcut for apps; a new condition type implements
+`Shared\Condition\ConditionType`. Register either in `services.php` with `$services->set(…)` and it is picked up by
+its interface.
+
 ## Configuration
 
 `stewart.yaml` holds what differs from the defaults; `make config-reference` lists every setting and `make config`

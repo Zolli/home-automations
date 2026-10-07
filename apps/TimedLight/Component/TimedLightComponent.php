@@ -4,7 +4,6 @@ namespace App\TimedLight\Component;
 
 use App\Generated\CoverEntity;
 use App\Generated\LightEntity;
-use Stewart\Contracts\Mqtt\Mqtt;
 use Stewart\Contracts\Schedule\ScheduledTask;
 use Stewart\Contracts\Schedule\Scheduler;
 use Stewart\Contracts\State\StateChange;
@@ -16,10 +15,9 @@ class TimedLightComponent
     private ?ScheduledTask $timeoutTask = null;
 
     public function __construct(
-        private readonly Mqtt $mqtt,
         private readonly Scheduler $scheduler,
         private readonly LightEntity $lightEntity,
-        private readonly int $lightTimeoutSeconds,
+        private readonly float $lightTimeoutSeconds,
         private readonly ?CoverEntity $coverEntity = null,
     ) {}
 
@@ -31,6 +29,11 @@ class TimedLightComponent
     public function attachToMotionSensorStream(StateChangeStream $stateChangeStream): void
     {
         $stateChangeStream->distinctUntilChanged()->subscribe($this->whenSensorsChanges(...));
+    }
+
+    public function dispose(): void
+    {
+        $this->timeoutTask?->cancel();
     }
 
     private function whenSensorsChanges(StateChange $stateChange): void

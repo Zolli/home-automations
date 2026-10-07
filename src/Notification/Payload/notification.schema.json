@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stewart.local/schema/notification.json",
+  "type": "object",
+  "required": ["message", "destinations"],
+  "additionalProperties": false,
+  "properties": {
+    "message": {
+      "type": "object",
+      "required": ["body"],
+      "additionalProperties": false,
+      "properties": {
+        "body": {"type": "string", "pattern": "\\S"},
+        "title": {"type": "string"},
+        "additionalData": {
+          "$ref": "#/$defs/objectOrEmptyArray",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/objectOrEmptyArray",
+              "properties": {"actions": false}
+            }
+          }
+        },
+        "buttons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["action", "title"],
+            "properties": {
+              "action": {"type": "string"},
+              "title": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "destinations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["type", "target"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {"type": "string", "minLength": 1},
+          "target": {
+            "type": ["string", "array"],
+            "pattern": "\\S",
+            "minItems": 1,
+            "items": {"type": "string", "pattern": "\\S"}
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type"],
+              "properties": {"type": {"type": "string"}}
+            }
+          },
+          "options": {"$ref": "#/$defs/objectOrEmptyArray"}
+        }
+      }
+    },
+    "meta": {
+      "$ref": "#/$defs/objectOrEmptyArray",
+      "additionalProperties": false,
+      "properties": {
+        "importance": {"type": "string"},
+        "debug": {"type": "boolean"},
+        "id": {"type": "string"},
+        "replyTopic": {"type": "string"}
+      }
+    }
+  },
+  "$defs": {
+    "objectOrEmptyArray": {"type": ["object", "array"], "maxItems": 0}
+  }
+}
