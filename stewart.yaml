@@ -13,12 +13,6 @@ apps:
           lightEntityId: 'light.led_controller_pantry_channel_2'
           coverEntityId: ''
           timeoutSeconds: 60
-  hallway-mirror-light-controller:
-    enabled: false
-  master-bathroom-mirror-controller:
-    enabled: false
-  cover-event-handlers:
-    enabled: false
   notification-mqtt-bridge:
     options:
       topic: 'stewart/notify'
