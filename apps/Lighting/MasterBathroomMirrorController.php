@@ -81,7 +81,7 @@ class MasterBathroomMirrorController implements App
     {
         $mirrorLight = $this->entities->light->getEntity('light.master_bathroom_mirror_led_ch1');
 
-        if ($mirrorLight->getState()->isOff()) {
+        if ($mirrorLight->getState()?->isOff()) {
             return;
         }
 
