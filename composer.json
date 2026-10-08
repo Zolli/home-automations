@@ -7,11 +7,11 @@
         "php": ">=8.5",
         "opis/json-schema": "^2",
         "psr/log": "^3.0",
-        "stewart-php/codegen": "^0.7",
-        "stewart-php/contracts": "^0.7",
-        "stewart-php/mqtt": "^0.7",
-        "stewart-php/runtime": "^0.7",
-        "stewart-php/store-redis": "^0.7",
+        "stewart-php/codegen": "^0.8",
+        "stewart-php/contracts": "^0.8",
+        "stewart-php/mqtt": "^0.8",
+        "stewart-php/runtime": "^0.8",
+        "stewart-php/store-redis": "^0.8",
         "symfony/dependency-injection": "^7.4 || ^8.0"
     },
     "require-dev": {

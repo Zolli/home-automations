@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b776abcbb80c6841689790aec2c6bc7e",
+    "content-hash": "76b44e81f1879f9b621678924766ee54",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2578,7 +2578,7 @@
         },
         {
             "name": "stewart-php/client",
-            "version": "v0.7.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/client.git",
@@ -2634,13 +2634,13 @@
             ],
             "description": "Home Assistant WebSocket client. Usable on its own",
             "support": {
-                "source": "https://github.com/stewart-php/client/tree/v0.7.0"
+                "source": "https://github.com/stewart-php/client/tree/v0.8.0"
             },
             "time": "2026-10-06T12:37:11+00:00"
         },
         {
             "name": "stewart-php/codegen",
-            "version": "v0.7.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/codegen.git",
@@ -2687,13 +2687,13 @@
             ],
             "description": "Generates typed entity and service classes from a Home Assistant instance",
             "support": {
-                "source": "https://github.com/stewart-php/codegen/tree/v0.7.0"
+                "source": "https://github.com/stewart-php/codegen/tree/v0.8.0"
             },
             "time": "2026-10-06T12:37:21+00:00"
         },
         {
             "name": "stewart-php/contracts",
-            "version": "v0.7.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/contracts.git",
@@ -2730,13 +2730,13 @@
             ],
             "description": "Stewart core abstractions. Pure PHP and one cron parser",
             "support": {
-                "source": "https://github.com/stewart-php/contracts/tree/v0.7.0"
+                "source": "https://github.com/stewart-php/contracts/tree/v0.8.0"
             },
             "time": "2026-10-07T09:36:36+00:00"
         },
         {
             "name": "stewart-php/mqtt",
-            "version": "v0.7.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/mqtt.git",
@@ -2780,22 +2780,22 @@
             ],
             "description": "MQTT 3.1.1 client that connects Stewart apps to an MQTT server. Non-blocking, over amphp",
             "support": {
-                "source": "https://github.com/stewart-php/mqtt/tree/v0.7.0"
+                "source": "https://github.com/stewart-php/mqtt/tree/v0.8.0"
             },
             "time": "2026-10-04T12:16:44+00:00"
         },
         {
             "name": "stewart-php/runtime",
-            "version": "v0.7.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/runtime.git",
-                "reference": "df62587c4610617d70dd52bc1287f8b3bf7bd39b"
+                "reference": "527e3df891a4cb6a24406330c315dc87fd73a080"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/runtime/zipball/df62587c4610617d70dd52bc1287f8b3bf7bd39b",
-                "reference": "df62587c4610617d70dd52bc1287f8b3bf7bd39b",
+                "url": "https://api.github.com/repos/stewart-php/runtime/zipball/527e3df891a4cb6a24406330c315dc87fd73a080",
+                "reference": "527e3df891a4cb6a24406330c315dc87fd73a080",
                 "shasum": ""
             },
             "require": {
@@ -2804,6 +2804,7 @@
                 "amphp/http": "^2.1",
                 "amphp/http-server": "^3.4",
                 "amphp/parallel": "^2.4",
+                "amphp/process": "^2.0.3",
                 "amphp/socket": "^2.4",
                 "amphp/sync": "^2.3",
                 "composer-runtime-api": "^2.2",
@@ -2827,9 +2828,6 @@
                 "symfony/finder": "^7.4 || ^8.0",
                 "symfony/process": "^7.4 || ^8.0",
                 "symfony/yaml": "^7.4 || ^8.0"
-            },
-            "conflict": {
-                "amphp/process": "<2.0.3"
             },
             "require-dev": {
                 "phpunit/phpunit": "^13.3",
@@ -2860,13 +2858,13 @@
             ],
             "description": "Stewart broker, workers and the channel protocol between them.",
             "support": {
-                "source": "https://github.com/stewart-php/runtime/tree/v0.7.0"
+                "source": "https://github.com/stewart-php/runtime/tree/v0.8.0"
             },
-            "time": "2026-10-07T09:36:39+00:00"
+            "time": "2026-10-08T17:52:18+00:00"
         },
         {
             "name": "stewart-php/store",
-            "version": "v0.7.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/store.git",
@@ -2908,13 +2906,13 @@
             ],
             "description": "Scoping, encoding and hydration for Stewart's key-value storage. Backend-agnostic",
             "support": {
-                "source": "https://github.com/stewart-php/store/tree/v0.7.0"
+                "source": "https://github.com/stewart-php/store/tree/v0.8.0"
             },
             "time": "2026-10-06T18:30:11+00:00"
         },
         {
             "name": "stewart-php/store-redis",
-            "version": "v0.7.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/store-redis.git",
@@ -2963,13 +2961,13 @@
             ],
             "description": "Redis backend for Stewart's key-value storage. Non-blocking, over amphp",
             "support": {
-                "source": "https://github.com/stewart-php/store-redis/tree/v0.7.0"
+                "source": "https://github.com/stewart-php/store-redis/tree/v0.8.0"
             },
             "time": "2026-10-04T12:16:43+00:00"
         },
         {
             "name": "stewart-php/sun",
-            "version": "v0.7.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/sun.git",
@@ -3007,13 +3005,13 @@
             "description": "Sunrise, sunset, twilight, golden hour and sun position for a location, computed locally",
             "support": {
                 "issues": "https://github.com/stewart-php/sun/issues",
-                "source": "https://github.com/stewart-php/sun/tree/v0.7.0"
+                "source": "https://github.com/stewart-php/sun/tree/v0.8.0"
             },
             "time": "2026-10-05T21:43:40+00:00"
         },
         {
             "name": "stewart-php/support",
-            "version": "v0.7.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/support.git",
@@ -3052,7 +3050,7 @@
             ],
             "description": "Framework-internal helpers shared by the Stewart packages. Not part of the app-facing API",
             "support": {
-                "source": "https://github.com/stewart-php/support/tree/v0.7.0"
+                "source": "https://github.com/stewart-php/support/tree/v0.8.0"
             },
             "time": "2026-10-04T12:16:45+00:00"
         },
