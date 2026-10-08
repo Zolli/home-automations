@@ -4,7 +4,6 @@ log_level: debug
 
 apps:
   timed-light:
-    enabled: false
     options:
       configuration:
         - name: 'pantry-cabinet-1'
@@ -17,3 +16,63 @@ apps:
     options:
       topic: 'stewart/notify'
       actionTopic: 'stewart/notify/action'
+  home-alert:
+    enabled: false
+    options:
+      policies:
+        critical:
+          steps:
+            - destinations: [{type: notify_service, target: notify.mobile_app_zoli_phone}]
+            - afterSeconds: 120
+              destinations: [{type: tts, target: media_player.home}]
+              repeat: {everySeconds: 300}
+        smoke-leak:
+          steps:
+            - destinations: [{type: notify_service, target: notify.mobile_app_zoli_phone}]
+            - destinations:
+                - type: phone_tts
+                  target: notify.mobile_app_zoli_phone
+                  conditions: [{type: eq, field: input_boolean.alarm_theater_mode, value: 'off'}]
+              repeat: {everySeconds: 30, times: 5, while: [{type: eq, field: input_boolean.alarm_test_mode, value: 'off'}]}
+            - afterSeconds: 2
+              signal: {type: light-effect, effect: okay}
+              repeat: {everySeconds: 4, times: 84, while: [{type: eq, field: input_boolean.alarm_test_mode, value: 'off'}]}
+      alerts:
+        - id: smoke
+          title: 'SMOKE ALARM'
+          message: 'Smoke alarm in the {area}'
+          policy: smoke-leak
+          rule:
+            type: state
+            entities:
+              - binary_sensor.smoke_detector_kitchen_smoke
+              - binary_sensor.smoke_detector_mechanical_room_smoke
+              - binary_sensor.smoke_detector_master_wardrobe_smoke
+              - binary_sensor.smoke_detector_hallway_smoke
+        - id: water-leak
+          title: 'WATER LEAK DETECTED'
+          message: 'Water leak detected in the {area}'
+          policy: smoke-leak
+          rule:
+            type: state
+            entities:
+              - binary_sensor.leak_bathtub_water_leak
+              - binary_sensor.leak_laundry_room_water_leak
+              - binary_sensor.leak_master_bathroom_sink_water_leak
+              - binary_sensor.leak_kitchen_cabinet_water_leak
+        - id: phase-loss
+          title: 'Phase down'
+          policy: critical
+          rule:
+            type: below
+            topics: [dsmr/reading/phase_voltage_l1, dsmr/reading/phase_voltage_l2, dsmr/reading/phase_voltage_l3]
+            threshold: 50
+            unavailableIsFault: true
+            forSeconds: 10
+        - id: dsmr-silent
+          title: 'Smart meter silent'
+          policy: critical
+          rule:
+            type: silent
+            topics: [dsmr/reading/phase_voltage_l1, dsmr/reading/phase_voltage_l2, dsmr/reading/phase_voltage_l3]
+            maxSilenceSeconds: 600

@@ -58,7 +58,7 @@ final class HaRecorder
                 return EventContext::unknown();
             },
         );
-        $ha->method('watchEvents')->willReturnCallback(fn(string $type): EventStream => $this->eventStream());
+        $ha->method('watchEvents')->willReturnCallback(fn(): EventStream => $this->eventStream());
         $this->ha = $ha;
 
         $scheduler = $this->stub(Scheduler::class);
@@ -83,7 +83,17 @@ final class HaRecorder
     /** @param array<string, mixed> $data */
     public function pressAction(string $key, array $data = [], ?string $userId = null): void
     {
-        $event = new HaEvent(ActionRouter::EVENT, ['action' => $key] + $data, context: new EventContext('ctx', userId: $userId));
+        $event = new HaEvent(ActionRouter::ACTION_EVENT, ['action' => $key] + $data, context: new EventContext('ctx', userId: $userId));
+
+        foreach ($this->eventHandlers as $handler) {
+            $handler($event);
+        }
+    }
+
+    /** @param array<string, mixed> $data */
+    public function dismissNotification(array $data, ?string $userId = null): void
+    {
+        $event = new HaEvent(ActionRouter::CLEARED_EVENT, $data, context: new EventContext('ctx', userId: $userId));
 
         foreach ($this->eventHandlers as $handler) {
             $handler($event);

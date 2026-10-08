@@ -13,10 +13,9 @@ use Shared\Condition\Operator;
 use Shared\Notification\Action\NotificationButton;
 use Shared\Notification\Condition\ImportanceCondition;
 use Shared\Notification\DestinationType;
+use Shared\Notification\Exception\InvalidNotificationPayload;
 use Shared\Notification\Importance;
-use Shared\Notification\Payload\InvalidNotificationPayload;
 use Shared\Notification\Payload\NotificationPayloadMapper;
-use Shared\Notification\Sender\NotifyServiceSender;
 use Stewart\Contracts\Entity\EntityId;
 
 final class NotificationPayloadMapperTest extends TestCase
@@ -151,7 +150,7 @@ final class NotificationPayloadMapperTest extends TestCase
         yield 'destination without target' => [['message' => ['body' => 'Hi'], 'destinations' => [['type' => 'tts']]], 'destinations[0].target is required'];
         yield 'unknown destination type' => [
             ['message' => ['body' => 'Hi'], 'destinations' => [['type' => 'telegram', 'target' => 'chat']]],
-            'destinations[0].type Destination type "telegram" is unknown, expected one of: notify_service, tts.',
+            'destinations[0].type Destination type "telegram" is unknown, expected one of: notify_service, tts, phone_tts.',
         ];
         yield 'target list with a number' => [['message' => ['body' => 'Hi'], 'destinations' => [['type' => 'tts', 'target' => [1]]]], 'destinations[0].target[0] must be of type string'];
         yield 'non-numeric ordering condition' => [

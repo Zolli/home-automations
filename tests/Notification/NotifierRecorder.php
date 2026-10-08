@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Notification;
 
 use Shared\Notification\Action\ActionRouter;
-use Shared\Notification\InvalidDestination;
+use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\Notification;
 use Shared\Notification\Notifier;
 use Shared\Notification\SentNotification;

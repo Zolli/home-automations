@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Shared\Notification;
+namespace Shared\Notification\Exception;
 
 use InvalidArgumentException;
 

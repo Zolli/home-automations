@@ -7,7 +7,7 @@ namespace App\Tests\Shared\Notification\Payload;
 use App\Tests\ServiceContainer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Shared\Notification\Payload\InvalidNotificationPayload;
+use Shared\Notification\Exception\InvalidNotificationPayload;
 use Shared\Notification\Payload\NotificationPayloadSchema;
 
 final class NotificationPayloadSchemaTest extends TestCase

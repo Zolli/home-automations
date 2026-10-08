@@ -32,9 +32,7 @@ class TimedLightComponent
     }
 
     public function dispose(): void
-    {
-        $this->timeoutTask?->cancel();
-    }
+    {}
 
     private function whenSensorsChanges(StateChange $stateChange): void
     {

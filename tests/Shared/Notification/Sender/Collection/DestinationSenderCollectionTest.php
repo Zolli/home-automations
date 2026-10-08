@@ -6,8 +6,8 @@ namespace App\Tests\Shared\Notification\Sender\Collection;
 
 use PHPUnit\Framework\TestCase;
 use Shared\Notification\DestinationType;
+use Shared\Notification\Exception\InvalidDestinationSenders;
 use Shared\Notification\Sender\Collection\DestinationSenderCollection;
-use Shared\Notification\Sender\Collection\InvalidDestinationSenders;
 use Shared\Notification\Sender\NotifyServiceSender;
 
 final class DestinationSenderCollectionTest extends TestCase

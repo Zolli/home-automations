@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shared\Notification;
 
 use Shared\Notification\Action\Collection\NotificationButtonCollection;
+use Shared\Notification\Exception\InvalidMessage;
 
 final readonly class Message
 {

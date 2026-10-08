@@ -6,6 +6,12 @@ namespace App\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Shared\Alert\AlertMonitor;
+use Shared\Alert\Config\AlertConfigMapper;
+use Shared\Alert\Escalation\EscalationPolicyMapper;
+use Shared\Alert\Mitigation\MitigationFactory;
+use Shared\Alert\Rule\AlertRuleFactory;
+use Shared\Alert\Rule\ThresholdRule;
 use Shared\Condition\ConditionFactory;
 use Shared\Notification\Condition\ImportanceCondition;
 use Shared\Notification\NotificationBuilder;
@@ -45,5 +51,25 @@ final class ServicesTest extends TestCase
         $container->getService(NotificationActionPayloadMapper::class);
 
         $container->getService(Notifier::class)->send(NotificationBuilder::create()->withBody('Hi')->withAppendedDestinations(ChimeTtsSender::createDestination('media_player.kitchen'))->buildNotification());
+    }
+
+    public function testWiresAlertConfigServices(): void
+    {
+        $container = new ServiceContainer(AlertRuleFactory::class, EscalationPolicyMapper::class, MitigationFactory::class, AlertConfigMapper::class, AlertMonitor::class);
+        $container->replaceSynthetic(HaContext::class, $this->createStub(HaContext::class));
+        $container->replaceSynthetic(Scheduler::class, $this->createStub(Scheduler::class));
+        $container->replaceSynthetic(LoggerInterface::class, $this->createStub(LoggerInterface::class));
+        $policies = $container->getService(EscalationPolicyMapper::class)->mapToPolicies([
+            'critical' => ['steps' => [
+                ['destinations' => [['type' => 'tts', 'target' => 'media_player.home']]],
+                ['signal' => ['type' => 'light-effect', 'effect' => 'okay']],
+            ]],
+        ]);
+
+        self::assertInstanceOf(ThresholdRule::class, $container->getService(AlertRuleFactory::class)->mapToRule(['type' => 'below', 'entity' => 'sensor.l1_voltage', 'threshold' => 180]));
+        self::assertNotNull($policies->find('critical'));
+        self::assertTrue($container->getService(AlertConfigMapper::class)->mapToDefinitions([], [])->isEmpty());
+        self::assertInstanceOf(AlertMonitor::class, $container->getService(AlertMonitor::class));
+        self::assertCount(1, $container->getService(MitigationFactory::class)->mapToMitigations([['type' => 'turn-off', 'entity' => 'valve.main_water']]));
     }
 }

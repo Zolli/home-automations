@@ -8,7 +8,7 @@ use Shared\Notification\Action\ActionKey;
 use Shared\Notification\Action\NotificationButton;
 use Shared\Notification\Destination;
 use Shared\Notification\DestinationType;
-use Shared\Notification\InvalidDestination;
+use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\Notification;
 use Shared\Notification\NotificationId;
 use Shared\Notification\Sender\Collection\ServiceCallCollection;

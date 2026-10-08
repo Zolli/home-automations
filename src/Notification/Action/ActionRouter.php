@@ -9,12 +9,15 @@ use Shared\Notification\NotificationId;
 use Stewart\Contracts\Event\HaEvent;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Schedule\Scheduler;
+use Stewart\Contracts\Selector\Selector;
 use Stewart\Contracts\Subscription;
 use Stewart\Contracts\Time\Duration;
 
 final class ActionRouter
 {
-    public const string EVENT = 'mobile_app_notification_action';
+    public const string ACTION_EVENT = 'mobile_app_notification_action';
+
+    public const string CLEARED_EVENT = 'mobile_app_notification_cleared';
 
     private const int LISTENING_TTL_HOURS = 2;
 
@@ -34,9 +37,9 @@ final class ActionRouter
         ($this->listening[$id->value] ?? null)?->listener->stopListening();
 
         $listener = new ActionListener($id, $this->logger, $this->release(...));
-        $this->subscriptionsByAppContext[spl_object_id($appContext)] ??= $appContext->watchEvents(self::EVENT)->subscribe(
-            fn(HaEvent $event) => $this->whenActionPressed($appContext, $event),
-        );
+        $this->subscriptionsByAppContext[spl_object_id($appContext)] ??= $appContext
+            ->watchEvents(Selector::anyOf(self::ACTION_EVENT, self::CLEARED_EVENT))
+            ->subscribe(fn(HaEvent $event) => $this->whenEventReceived($appContext, $event));
         $this->listening[$id->value] = new ListeningNotification(
             $listener,
             $appContext,
@@ -76,6 +79,15 @@ final class ActionRouter
         unset($this->subscriptionsByAppContext[spl_object_id($appContext)]);
     }
 
+    private function whenEventReceived(HaContext $appContext, HaEvent $event): void
+    {
+        match ($event->type) {
+            self::ACTION_EVENT => $this->whenActionPressed($appContext, $event),
+            self::CLEARED_EVENT => $this->whenNotificationCleared($appContext, $event),
+            default => null,
+        };
+    }
+
     private function whenActionPressed(HaContext $appContext, HaEvent $event): void
     {
         $value = $event->getValue('action');
@@ -85,14 +97,30 @@ final class ActionRouter
             return;
         }
 
-        $listening = $this->listening[$key->notificationId->value] ?? null;
+        $this->findOwnedListener($key->notificationId, $appContext)?->dispatchAction(
+            new NotificationAction($key->notificationId, $key->action, $event->data, $event->context?->userId),
+        );
+    }
 
-        if ($listening === null || !$listening->isOwnedBy($appContext)) {
+    private function whenNotificationCleared(HaContext $appContext, HaEvent $event): void
+    {
+        $nestedData = $event->getValue('data');
+        $tag = $event->getValue('tag') ?? (\is_array($nestedData) ? $nestedData['tag'] ?? null : null);
+        $notificationId = \is_string($tag) ? NotificationId::tryFromString($tag) : null;
+
+        if ($notificationId === null) {
             return;
         }
 
-        $listening->listener->dispatchAction(
-            new NotificationAction($key->notificationId, $key->action, $event->data, $event->context?->userId),
+        $this->findOwnedListener($notificationId, $appContext)?->dispatchDismissal(
+            new NotificationDismissal($notificationId, $event->data, $event->context?->userId),
         );
+    }
+
+    private function findOwnedListener(NotificationId $id, HaContext $appContext): ?ActionListener
+    {
+        $listening = $this->listening[$id->value] ?? null;
+
+        return $listening?->isOwnedBy($appContext) ? $listening->listener : null;
     }
 }

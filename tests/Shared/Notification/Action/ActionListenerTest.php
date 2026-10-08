@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Shared\Notification\Action\ActionListener;
 use Shared\Notification\Action\NotificationAction;
+use Shared\Notification\Action\NotificationDismissal;
 use Shared\Notification\NotificationId;
 
 final class ActionListenerTest extends TestCase
@@ -19,10 +20,12 @@ final class ActionListenerTest extends TestCase
             $released++;
         });
         $listener->onAnyAction(fn() => self::fail('Callbacks were dropped'));
+        $listener->onDismissed(fn() => self::fail('Callbacks were dropped'));
 
         $listener->stopListening();
         $listener->stopListening();
         $listener->dispatchAction(new NotificationAction(NotificationId::fromString('vacuum-bin'), 'DONE'));
+        $listener->dispatchDismissal(new NotificationDismissal(NotificationId::fromString('vacuum-bin')));
 
         self::assertSame(1, $released);
         self::assertFalse($listener->isListening());

@@ -50,9 +50,11 @@ final class BatteryNotesBatteryLowNotifierApp implements App
                     ->withTitle('Battery alert')
                     ->withBody($body)
                     ->withImportance(Importance::High)
-                    ->withAdditionalData('visibility', 'public')
-                    ->withAdditionalData('notification_icon', 'mdi:battery-arrow-down-outline')
-                    ->withAdditionalData('color', '#D32F2F')
+                    ->withServiceData([
+                        'visibility' => 'public',
+                        'notification_icon' => 'mdi:battery-arrow-down-outline',
+                        'color' => '#D32F2F',
+                    ])
                     ->withAppendedDestinations(
                         NotifyServiceSender::createDestination('notify.mobile_app_zoli_phone')
                     )

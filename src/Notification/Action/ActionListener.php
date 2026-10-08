@@ -17,6 +17,9 @@ final class ActionListener
     /** @var list<Closure(NotificationAction): void> */
     private array $callbacksForAnyAction = [];
 
+    /** @var list<Closure(NotificationDismissal): void> */
+    private array $callbacksForDismissal = [];
+
     /** @param Closure(self): void $release */
     public function __construct(
         public readonly NotificationId $notificationId,
@@ -45,6 +48,16 @@ final class ActionListener
         return $this;
     }
 
+    /** @param Closure(NotificationDismissal): void $callback */
+    public function onDismissed(Closure $callback): self
+    {
+        if ($this->listening) {
+            $this->callbacksForDismissal[] = $callback;
+        }
+
+        return $this;
+    }
+
     public function isListening(): bool
     {
         return $this->listening;
@@ -59,21 +72,31 @@ final class ActionListener
         $this->listening = false;
         $this->callbacks = [];
         $this->callbacksForAnyAction = [];
+        $this->callbacksForDismissal = [];
         ($this->release)($this);
     }
 
     public function dispatchAction(NotificationAction $action): void
     {
         foreach ([...$this->callbacks[$action->action] ?? [], ...$this->callbacksForAnyAction] as $callback) {
-            try {
-                $callback($action);
-            } catch (Throwable $e) {
-                $this->logger->error('[NOTIFICATION] Action callback failed', [
-                    'id' => $action->notificationId->value,
-                    'action' => $action->action,
-                    'exception' => $e,
-                ]);
-            }
+            $this->runCallback(static fn() => $callback($action), ['action' => $action->action]);
+        }
+    }
+
+    public function dispatchDismissal(NotificationDismissal $dismissal): void
+    {
+        foreach ($this->callbacksForDismissal as $callback) {
+            $this->runCallback(static fn() => $callback($dismissal), ['action' => 'dismissed']);
+        }
+    }
+
+    /** @param array<string, mixed> $context */
+    private function runCallback(Closure $callback, array $context): void
+    {
+        try {
+            $callback();
+        } catch (Throwable $e) {
+            $this->logger->error('[NOTIFICATION] Action callback failed', ['id' => $this->notificationId->value, ...$context, 'exception' => $e]);
         }
     }
 }

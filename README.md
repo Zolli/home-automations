@@ -53,7 +53,8 @@ make run ONLY=hello DRY_RUN=1  # service calls are logged and answered as succee
 
 Code that several apps use lives in `src/` under the `Shared\` namespace and is registered in `services.php`, so apps
 receive it by type. `Shared\Condition` evaluates conditions against Home Assistant state; `Shared\Notification` sends
-notifications.
+notifications; `Shared\Alert` watches for serious faults and escalates them; `Shared\Template` renders `{name}`
+placeholders from a `TemplateVariableCollection`.
 
 ## Notifications
 
@@ -81,6 +82,7 @@ $this->notifier->send(
 |---|---|
 | `notify_service` | `notify.<service>` per target, with `message`, `title`, then `additionalData` and `options` merged in. Phones, the TV (`notify.lg_webos_*`) and `notify.persistent_notification` are all this type |
 | `tts` | One `chime_tts.say` for all target `media_player` entities, with `message` and `options` (`chime_path`, `volume_level`, `announce`, …) |
+| `phone_tts` | `notify.<service>` per target with `message: TTS`; the Companion app speaks the body (`data.tts_text`) on `alarm_stream_max` unless `options.media_stream` says otherwise. Other `options` go under `data` |
 
 | Condition | Satisfied when |
 |---|---|
@@ -99,6 +101,10 @@ is disposed and wait while it is paused. Button keys are sent as `<id>:<action>`
 memory: they expire after 2 hours, `stopListening()` removes them sooner, a newer listener for the same id replaces
 them, and a restart drops them. When no destination was sent to, `wasDelivered()` is false and `listenForActions()`
 returns a stopped listener that ignores callbacks.
+
+`onDismissed(…)` receives a `NotificationDismissal` when the notification is swiped away on Android
+(`mobile_app_notification_cleared`, matched by `tag`). iOS sends no such event, and tapping a notification is not a
+dismissal. The `tag` is only set on notifications with buttons.
 
 ### Over MQTT
 
@@ -137,6 +143,53 @@ A new destination type is a case on `Shared\Notification\DestinationType` plus a
 destination, with a static `createDestination()` shortcut for apps; a new condition type implements
 `Shared\Condition\ConditionType`. Register either in `services.php` with `$services->set(…)` and it is picked up by
 its interface.
+
+## Alerts
+
+The `home-alert` app watches for serious faults (flood, smoke, phase loss, overheating, a dead safety sensor), runs
+mitigations and escalates notifications until someone presses Acknowledge. Each entry in `alerts` has an `id`, a
+`title`, a `rule`, a `policy`, optional `mitigations` and an optional `message`; `policies` are shared by name. See
+`stewart.yaml`. `title` and `message` are templates filled with `{reason}` (the rule's own text, the default message),
+`{label}` (the faulting sensor's name) and `{area}` (its Home Assistant area, or its name when it has none).
+
+| Rule | Fault when |
+|---|---|
+| `state` | Any of `entities` is in `state` (default `on`) |
+| `above`, `below` | Any source (or its `attribute`) is beyond `threshold`, or unavailable with `unavailableIsFault: true`; clears once every source with a number is back past `threshold` ± `hysteresis`; sources without a reading are skipped, unavailable ones too unless `unavailableIsFault` |
+| `unavailable` | Any of `entities` is `unavailable` or `unknown` |
+| `silent` | Any of `topics` has sent no message for over `maxSilenceSeconds`, counted from start when none arrived yet; checked ten times per window |
+
+Rules read Home Assistant states from `entities` (or `entity`) and MQTT payloads from `topics` (or `topic`), in any
+mix; a payload is used as the state, so `dsmr/reading/phase_voltage_l1` works with `below` directly. A topic has
+no reading until its first message after start, and a topic that goes silent keeps its last value; pair it with a
+`silent` rule. `silent` takes topics only: Home Assistant does not move `last_updated` when a sensor repeats its value.
+
+Every rule takes `forSeconds`: the fault must hold that long before it is raised. Rules are re-evaluated when the app
+starts, so a fault that is still present after a restart is raised again.
+
+A policy lists `steps`, each sent `afterSeconds` from the raise (default 0) to its `destinations` (the notification
+destination format) with an `importance` (default `critical`). A step with `repeat: {everySeconds, times, while}` is
+sent again every `everySeconds`, at most `times` more times (unlimited when left out), and only while all `while`
+conditions hold (the condition format of destinations), e.g. stop repeating in an alarm test mode.
+
+`acknowledgeOnDismiss: true` also treats swiping a notification away on Android as acknowledging it; it is off by
+default because one accidental swipe would silence the alert. Acknowledging any step stops the escalation; clearing
+stops it too, and both send a short follow-up to the destinations already notified, except spoken ones (`tts`,
+`phone_tts`).
+
+A step can carry a `signal` instead of `destinations`; it is timed, repeated and stopped like any other step and gets
+the fault that raised the alert.
+
+| Signal | Effect |
+|---|---|
+| `light-effect` | `light.turn_on` with `effect` on the lights in the faulting sensor's area whose `effect_list` has that effect; nothing when the sensor has no area. Home Assistant then reports those lights as on |
+
+| Mitigation | Effect |
+|---|---|
+| `turn-off` | `valve.close_valve` for a `valve` entity, otherwise `homeassistant.turn_off` |
+
+A new rule implements `Shared\Alert\Rule\AlertRuleType`, a new mitigation `Shared\Alert\Mitigation\MitigationType`
+and a new signal `Shared\Alert\Signal\SignalType`; register it in `services.php` and it is picked up by its interface.
 
 ## Configuration
 

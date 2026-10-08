@@ -6,7 +6,7 @@ namespace Shared\Notification\Sender;
 
 use Shared\Notification\Destination;
 use Shared\Notification\DestinationType;
-use Shared\Notification\InvalidDestination;
+use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\Notification;
 use Shared\Notification\Sender\Collection\ServiceCallCollection;
 

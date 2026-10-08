@@ -9,7 +9,7 @@ use Shared\Condition\AllOf;
 use Shared\Condition\CompareCondition;
 use Shared\Notification\Destination;
 use Shared\Notification\DestinationType;
-use Shared\Notification\InvalidDestination;
+use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\Sender\ChimeTtsSender;
 use Shared\Notification\Sender\NotifyServiceSender;
 

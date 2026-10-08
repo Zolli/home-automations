@@ -9,6 +9,7 @@ use Shared\Condition\Collection\FactCollection;
 use Shared\Condition\ConditionContext;
 use Shared\Notification\Action\ActionRouter;
 use Shared\Notification\Collection\DestinationCollection;
+use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\Sender\Collection\DestinationSenderCollection;
 use Shared\Notification\Sender\DestinationSender;
 use Stewart\Contracts\HaContext;

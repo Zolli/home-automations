@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Shared\Notification\Sender;
 
 use PHPUnit\Framework\TestCase;
-use Shared\Notification\InvalidDestination;
+use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\NotificationBuilder;
 use Shared\Notification\Sender\ChimeTtsSender;
 

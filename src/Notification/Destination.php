@@ -6,6 +6,7 @@ namespace Shared\Notification;
 
 use Shared\Condition\AllOf;
 use Shared\Condition\Condition;
+use Shared\Notification\Exception\InvalidDestination;
 
 final readonly class Destination
 {

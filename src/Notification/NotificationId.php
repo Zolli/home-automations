@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Shared\Notification;
 
+use Shared\Notification\Exception\InvalidNotification;
+
 final readonly class NotificationId
 {
     private const string ALLOWED_PATTERN = '/^[A-Za-z0-9_-]+$/';

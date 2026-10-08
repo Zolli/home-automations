@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Shared\Notification;
 
 use PHPUnit\Framework\TestCase;
-use Shared\Notification\InvalidNotification;
+use Shared\Notification\Exception\InvalidNotification;
 use Shared\Notification\NotificationId;
 
 final class NotificationIdTest extends TestCase

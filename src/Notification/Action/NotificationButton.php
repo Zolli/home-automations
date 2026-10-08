@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Shared\Notification\Action;
 
+use Shared\Notification\Exception\InvalidNotificationButton;
+
 final readonly class NotificationButton
 {
     public const string URI_ACTION = 'URI';

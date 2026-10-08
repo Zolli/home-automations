@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Shared\Notification\Action\NotificationButton;
 use Shared\Notification\Destination;
 use Shared\Notification\DestinationType;
-use Shared\Notification\InvalidDestination;
+use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\NotificationBuilder;
 use Shared\Notification\NotificationId;
 use Shared\Notification\Sender\NotifyServiceSender;

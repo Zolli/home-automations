@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shared\Notification;
 
 use Shared\Notification\Collection\DestinationCollection;
+use Shared\Notification\Exception\InvalidNotification;
 
 final readonly class Notification
 {

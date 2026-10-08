@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shared\Notification\Sender\Collection;
 
 use Shared\Notification\DestinationType;
+use Shared\Notification\Exception\InvalidDestinationSenders;
 use Shared\Notification\Sender\DestinationSender;
 use Stewart\Contracts\Collection\KeyedCollection;
 

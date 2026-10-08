@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Shared\Notification\Payload;
+namespace Shared\Notification\Exception;
 
 use Shared\Notification\Payload\Collection\PayloadViolationCollection;
+use Shared\Notification\Payload\PayloadViolation;
 use UnexpectedValueException;
 
 final class InvalidNotificationPayload extends UnexpectedValueException

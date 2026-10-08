@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Shared\Notification\Action;
 
 use PHPUnit\Framework\TestCase;
-use Shared\Notification\Action\InvalidNotificationButton;
 use Shared\Notification\Action\NotificationButton;
+use Shared\Notification\Exception\InvalidNotificationButton;
 
 final class NotificationButtonTest extends TestCase
 {

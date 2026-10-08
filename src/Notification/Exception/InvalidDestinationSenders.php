@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Shared\Notification\Sender\Collection;
+namespace Shared\Notification\Exception;
 
 use LogicException;
 use Shared\Notification\DestinationType;

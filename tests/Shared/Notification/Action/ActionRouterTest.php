@@ -12,6 +12,7 @@ use Shared\Condition\CompareCondition;
 use Shared\Notification\Action\ActionListener;
 use Shared\Notification\Action\NotificationAction;
 use Shared\Notification\Action\NotificationButton;
+use Shared\Notification\Action\NotificationDismissal;
 use Shared\Notification\NotificationBuilder;
 use Shared\Notification\NotificationDispatcher;
 use Shared\Notification\NotificationId;
@@ -66,6 +67,26 @@ final class ActionRouterTest extends TestCase
         $this->recorder->pressAction('vacuum-bin:NEXT');
 
         self::assertSame(['DONE', 'NEXT'], $pressed);
+    }
+
+    public function testRoutesDismissalByTag(): void
+    {
+        $dismissed = [];
+        $this->listen('vacuum-bin')
+            ->onDismissed(function (NotificationDismissal $dismissal) use (&$dismissed): void {
+                $dismissed[] = $dismissal;
+            })
+            ->onAnyAction(fn() => self::fail('Dismissal is not an action'));
+
+        $this->recorder->dismissNotification(['tag' => 'vacuum-bin', 'message' => 'Empty me'], 'user-1');
+        $this->recorder->dismissNotification(['data' => ['tag' => 'vacuum-bin']]);
+        $this->recorder->dismissNotification(['tag' => 'laundry']);
+        $this->recorder->dismissNotification(['message' => 'No tag']);
+
+        self::assertCount(2, $dismissed);
+        self::assertSame('vacuum-bin', $dismissed[0]->notificationId->value);
+        self::assertSame('user-1', $dismissed[0]->userId);
+        self::assertSame('Empty me', $dismissed[0]->eventData['message']);
     }
 
     public function testIgnoresOtherNotificationsAndForeignActions(): void
