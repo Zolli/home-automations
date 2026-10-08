@@ -17,7 +17,6 @@ apps:
       topic: 'stewart/notify'
       actionTopic: 'stewart/notify/action'
   home-alert:
-    enabled: false
     options:
       policies:
         critical:
