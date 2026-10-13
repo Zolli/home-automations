@@ -17,7 +17,7 @@ use Stewart\Contracts\Generated\Manifest as ManifestContract;
  */
 final class Manifest implements ManifestContract
 {
-    public const int FORMAT_VERSION = 5;
+    public const int FORMAT_VERSION = 6;
 
     private function __construct()
     {
@@ -1385,12 +1385,7 @@ final class Manifest implements ManifestContract
             'number.everything_presence_lite_209ab0_illuminance_offset',
             'number.everything_presence_lite_209ab0_installation_angle',
             'number.everything_presence_lite_209ab0_max_distance',
-            'number.everything_presence_lite_209ab0_occupancy_mask_1_begin_x',
-            'number.everything_presence_lite_209ab0_occupancy_mask_1_begin_y',
-            'number.everything_presence_lite_209ab0_occupancy_mask_1_end_x',
-            'number.everything_presence_lite_209ab0_occupancy_mask_1_end_y',
             'number.everything_presence_lite_209ab0_occupancy_off_delay',
-            'number.everything_presence_lite_209ab0_stale_target_reset_timeout',
             'number.everything_presence_lite_209ab0_zone_1_begin_x',
             'number.everything_presence_lite_209ab0_zone_1_begin_y',
             'number.everything_presence_lite_209ab0_zone_1_end_x',

@@ -16,12 +16,14 @@ use Stewart\Contracts\Entity\TypedEntity;
 use Stewart\Contracts\Exception\HistoryException;
 use Stewart\Contracts\Exception\IdentifierException;
 use Stewart\Contracts\Exception\StateException;
+use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
 use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
+use Stewart\Contracts\Time\Duration;
 
 /**
  * One `number` entity.
@@ -69,12 +71,7 @@ final readonly class NumberEntity implements TypedEntity
         'number.everything_presence_lite_209ab0_illuminance_offset' => true,
         'number.everything_presence_lite_209ab0_installation_angle' => true,
         'number.everything_presence_lite_209ab0_max_distance' => true,
-        'number.everything_presence_lite_209ab0_occupancy_mask_1_begin_x' => true,
-        'number.everything_presence_lite_209ab0_occupancy_mask_1_begin_y' => true,
-        'number.everything_presence_lite_209ab0_occupancy_mask_1_end_x' => true,
-        'number.everything_presence_lite_209ab0_occupancy_mask_1_end_y' => true,
         'number.everything_presence_lite_209ab0_occupancy_off_delay' => true,
-        'number.everything_presence_lite_209ab0_stale_target_reset_timeout' => true,
         'number.everything_presence_lite_209ab0_zone_1_begin_x' => true,
         'number.everything_presence_lite_209ab0_zone_1_begin_y' => true,
         'number.everything_presence_lite_209ab0_zone_1_end_x' => true,
@@ -324,6 +321,14 @@ final readonly class NumberEntity implements TypedEntity
     public function getHistory(HistoryQuery $query): EntityStateHistory
     {
         return $this->entity->getHistory($query);
+    }
+
+    /**
+     * @throws WaitException
+     */
+    public function waitForState(string $state, ?Duration $timeout = null): ?NumberState
+    {
+        return NumberState::fromNullableState($this->entity->waitForState($state, $timeout));
     }
 
     /**

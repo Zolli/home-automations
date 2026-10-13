@@ -16,7 +16,7 @@ final class CompareConditionTest extends TestCase
 {
     public function testComparesState(): void
     {
-        $context = StateStub::context($this, ['input_boolean.guest_mode' => ['off']]);
+        $context = ConditionContextFixture::createWithStates(['input_boolean.guest_mode' => ['off']]);
 
         self::assertTrue(CompareCondition::equals('input_boolean.guest_mode', 'off')->isSatisfied($context));
         self::assertFalse(CompareCondition::notEquals('input_boolean.guest_mode', 'off')->isSatisfied($context));
@@ -24,7 +24,7 @@ final class CompareConditionTest extends TestCase
 
     public function testComparesAttribute(): void
     {
-        $context = StateStub::context($this, ['sun.sun' => ['above_horizon', ['elevation' => 4.2]]]);
+        $context = ConditionContextFixture::createWithStates(['sun.sun' => ['above_horizon', ['elevation' => 4.2]]]);
 
         self::assertTrue(CompareCondition::lessThan('sun.sun', 10, 'elevation')->isSatisfied($context));
         self::assertFalse(CompareCondition::atLeast('sun.sun', 10, 'elevation')->isSatisfied($context));
@@ -32,7 +32,7 @@ final class CompareConditionTest extends TestCase
 
     public function testMissingEntityIsNeverSatisfied(): void
     {
-        $context = StateStub::context($this, []);
+        $context = ConditionContextFixture::createWithStates([]);
 
         self::assertFalse(CompareCondition::notEquals('sensor.missing', 'on')->isSatisfied($context));
     }
@@ -53,14 +53,14 @@ final class CompareConditionTest extends TestCase
 
     public function testAcceptsNumericStringForOrdering(): void
     {
-        $context = StateStub::context($this, ['sensor.temperature' => ['18.5']]);
+        $context = ConditionContextFixture::createWithStates(['sensor.temperature' => ['18.5']]);
 
         self::assertTrue(new CompareCondition(new EntityId('sensor.temperature'), Operator::Lt, '20')->isSatisfied($context));
     }
 
     public function testAllOfNeedsEveryCondition(): void
     {
-        $context = StateStub::context($this, ['input_boolean.guest_mode' => ['off'], 'sensor.temperature' => ['18.5']]);
+        $context = ConditionContextFixture::createWithStates(['input_boolean.guest_mode' => ['off'], 'sensor.temperature' => ['18.5']]);
 
         self::assertTrue(new AllOf()->isSatisfied($context));
         self::assertTrue(new AllOf(

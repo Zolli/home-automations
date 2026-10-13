@@ -54,11 +54,6 @@ final readonly class CalendarState
         return $this->raw->getStringAttribute('end_time');
     }
 
-    public function getIcon(): ?string
-    {
-        return $this->raw->getStringAttribute('icon');
-    }
-
     public function getLocation(): ?string
     {
         return $this->raw->getStringAttribute('location');

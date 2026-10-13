@@ -6,90 +6,46 @@ namespace App\Tests\Notification;
 
 use App\Notification\NotificationMqttBridgeApp;
 use App\Tests\ServiceContainer;
-use App\Tests\Shared\Notification\HaRecorder;
-use Closure;
+use App\Tests\Shared\Notification\NotificationFixture;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\AbstractLogger;
 use Shared\Notification\DestinationType;
 use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\Importance;
+use Shared\Notification\Notifier;
 use Shared\Notification\Payload\NotificationActionPayloadMapper;
 use Shared\Notification\Payload\NotificationPayloadMapper;
-use Stewart\Contracts\EventStream;
-use Stewart\Contracts\Mqtt\Mqtt;
 use Stewart\Contracts\Mqtt\MqttMessage;
-use Stewart\Contracts\Subscription;
-use Stringable;
+use Stewart\Testing\Logging\RecordingLogger;
 
 final class NotificationMqttBridgeAppTest extends TestCase
 {
-    private HaRecorder $ha;
+    private const string NOTIFY_TOPIC = 'stewart/notify';
+
+    private NotificationFixture $fixture;
 
     private NotifierRecorder $notifier;
 
-    /** @var ?Closure(MqttMessage): void */
-    private ?Closure $onMessage = null;
-
-    private ?string $watchedTopic = null;
-
-    /** @var list<array{string, array<array-key, mixed>|string}> */
-    private array $published = [];
-
-    /** @var object{warnings: list<string>} */
-    private object $logger;
-
-    private NotificationMqttBridgeApp $app;
+    private RecordingLogger $logger;
 
     protected function setUp(): void
     {
-        $this->ha = new HaRecorder($this);
-        $this->notifier = new NotifierRecorder($this->ha->actionRouter());
-
-        $subscription = $this->createStub(Subscription::class);
-        $stream = $this->createStub(EventStream::class);
-        $stream->method('subscribe')->willReturnCallback(function (Closure $handler) use ($subscription): Subscription {
-            $this->onMessage = $handler;
-
-            return $subscription;
-        });
-
-        $mqtt = $this->createStub(Mqtt::class);
-        $mqtt->method('watchMessages')->willReturnCallback(function (string $topic) use ($stream): EventStream {
-            $this->watchedTopic = $topic;
-
-            return $stream;
-        });
-        $mqtt->method('publish')->willReturnCallback(function (string $topic, string|array $payload): void {
-            $this->published[] = [$topic, $payload];
-        });
-
-        $logger = new class extends AbstractLogger {
-            /** @var list<string> */
-            public array $warnings = [];
-
-            public function log($level, string|Stringable $message, array $context = []): void
-            {
-                if ($level === 'warning') {
-                    $this->warnings[] = (string) $message;
-                }
-            }
-        };
-
-        $this->logger = $logger;
-        $this->app = new NotificationMqttBridgeApp(
-            $mqtt,
-            $this->ha->ha,
-            $this->notifier,
-            new ServiceContainer(NotificationPayloadMapper::class)->getService(NotificationPayloadMapper::class),
-            new NotificationActionPayloadMapper(),
-            $logger,
-        );
-        $this->app->initialize();
+        $this->fixture = new NotificationFixture();
+        $harness = $this->fixture->harness;
+        $this->notifier = new NotifierRecorder($this->fixture->createActionRouter());
+        $this->logger = $harness->logger;
+        $harness->provideService(Notifier::class, $this->notifier);
+        $harness->provideService(NotificationPayloadMapper::class, new ServiceContainer(NotificationPayloadMapper::class)->getService(NotificationPayloadMapper::class));
+        $harness->provideService(NotificationActionPayloadMapper::class, new NotificationActionPayloadMapper());
+        $harness->startApp(NotificationMqttBridgeApp::class);
     }
 
-    public function testListensOnDefaultTopic(): void
+    public function testListensOnDefaultTopicOnly(): void
     {
-        self::assertSame('stewart/notify', $this->watchedTopic);
+        $this->receive($this->withButtons([]), 'other/notify');
+        self::assertSame([], $this->notifier->sent);
+
+        $this->receive($this->withButtons([]));
+        self::assertCount(1, $this->notifier->sent);
     }
 
     public function testSendsMappedNotification(): void
@@ -108,10 +64,10 @@ final class NotificationMqttBridgeAppTest extends TestCase
 
     public function testDropsInvalidJson(): void
     {
-        $this->onMessage(new MqttMessage('stewart/notify', '{not json'));
+        $this->fixture->harness->mqtt->pushMessage(new MqttMessage(self::NOTIFY_TOPIC, '{not json'));
 
         self::assertSame([], $this->notifier->sent);
-        self::assertCount(1, $this->logger->warnings);
+        self::assertCount(1, $this->logger->listMessagesAt('warning'));
     }
 
     public function testDropsInvalidPayload(): void
@@ -119,8 +75,8 @@ final class NotificationMqttBridgeAppTest extends TestCase
         $this->receive(['message' => ['body' => 'Hi'], 'destinations' => []]);
 
         self::assertSame([], $this->notifier->sent);
-        self::assertCount(1, $this->logger->warnings);
-        self::assertStringContainsString('destinations must have at least 1 items', $this->logger->warnings[0]);
+        self::assertCount(1, $this->logger->listMessagesAt('warning'));
+        self::assertStringContainsString('destinations must have at least 1 items', $this->logger->listMessagesAt('warning')[0]);
     }
 
     public function testDropsPayloadWithRejectedDestination(): void
@@ -130,18 +86,18 @@ final class NotificationMqttBridgeAppTest extends TestCase
         $this->receive(['message' => ['body' => 'Hi'], 'destinations' => [['type' => 'tts', 'target' => 'kitchen']]]);
 
         self::assertSame([], $this->notifier->sent);
-        self::assertCount(1, $this->logger->warnings);
+        self::assertCount(1, $this->logger->listMessagesAt('warning'));
     }
 
     public function testPublishesButtonPressesToReplyTopic(): void
     {
         $this->receive($this->withButtons(['id' => 'vacuum-bin', 'replyTopic' => 'nodered/vacuum/action']));
 
-        $this->ha->pressAction('vacuum-bin:DONE', ['reply_text' => 'emptied'], 'user-1');
+        $this->fixture->pressAction('vacuum-bin:DONE', ['reply_text' => 'emptied'], 'user-1');
 
         self::assertSame(
             [['nodered/vacuum/action', ['id' => 'vacuum-bin', 'action' => 'DONE', 'replyText' => 'emptied', 'userId' => 'user-1']]],
-            $this->published,
+            $this->listPublished(),
         );
     }
 
@@ -149,9 +105,9 @@ final class NotificationMqttBridgeAppTest extends TestCase
     {
         $this->receive($this->withButtons(['id' => 'vacuum-bin']));
 
-        $this->ha->pressAction('vacuum-bin:NEXT');
+        $this->fixture->pressAction('vacuum-bin:NEXT');
 
-        self::assertSame([['stewart/notify/action', ['id' => 'vacuum-bin', 'action' => 'NEXT']]], $this->published);
+        self::assertSame([['stewart/notify/action', ['id' => 'vacuum-bin', 'action' => 'NEXT']]], $this->listPublished());
     }
 
     public function testResendingSameIdPublishesOnce(): void
@@ -159,16 +115,16 @@ final class NotificationMqttBridgeAppTest extends TestCase
         $this->receive($this->withButtons(['id' => 'vacuum-bin']));
         $this->receive($this->withButtons(['id' => 'vacuum-bin']));
 
-        $this->ha->pressAction('vacuum-bin:DONE');
+        $this->fixture->pressAction('vacuum-bin:DONE');
 
-        self::assertCount(1, $this->published);
+        self::assertCount(1, $this->listPublished());
     }
 
     public function testDoesNotListenWithoutButtons(): void
     {
         $this->receive(['message' => ['body' => 'Hi'], 'destinations' => [['type' => 'notify_service', 'target' => 'notify.notify']]]);
 
-        self::assertSame([], $this->ha->eventHandlers);
+        self::assertSame(0, $this->fixture->harness->timers->countPendingTimers());
     }
 
     public function testDoesNotListenWhenNothingDelivered(): void
@@ -177,17 +133,17 @@ final class NotificationMqttBridgeAppTest extends TestCase
 
         $this->receive($this->withButtons(['id' => 'vacuum-bin']));
 
-        self::assertSame([], $this->ha->eventHandlers);
+        self::assertSame(0, $this->fixture->harness->timers->countPendingTimers());
     }
 
     public function testDisposeStopsListeningForButtons(): void
     {
         $this->receive($this->withButtons(['id' => 'vacuum-bin']));
 
-        $this->app->dispose();
-        $this->ha->pressAction('vacuum-bin:DONE');
+        $this->fixture->harness->stopApp();
+        $this->fixture->pressAction('vacuum-bin:DONE');
 
-        self::assertSame([], $this->published);
+        self::assertSame([], $this->listPublished());
     }
 
     /**
@@ -207,14 +163,14 @@ final class NotificationMqttBridgeAppTest extends TestCase
     }
 
     /** @param array<string, mixed> $payload */
-    private function receive(array $payload): void
+    private function receive(array $payload, string $topic = self::NOTIFY_TOPIC): void
     {
-        $this->onMessage(new MqttMessage('stewart/notify', json_encode($payload, \JSON_THROW_ON_ERROR)));
+        $this->fixture->harness->mqtt->pushMessage(new MqttMessage($topic, json_encode($payload, \JSON_THROW_ON_ERROR)));
     }
 
-    private function onMessage(MqttMessage $message): void
+    /** @return list<array{string, mixed}> */
+    private function listPublished(): array
     {
-        self::assertNotNull($this->onMessage);
-        ($this->onMessage)($message);
+        return $this->fixture->harness->mqtt->published->mapToList(static fn(MqttMessage $message): array => [$message->topic, $message->decodeJsonPayload()]);
     }
 }

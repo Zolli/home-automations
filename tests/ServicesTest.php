@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 use Shared\Alert\AlertMonitor;
 use Shared\Alert\Config\AlertConfigMapper;
 use Shared\Alert\Escalation\EscalationPolicyMapper;
@@ -20,8 +19,7 @@ use Shared\Notification\Payload\NotificationActionPayloadMapper;
 use Shared\Notification\Payload\NotificationPayloadMapper;
 use Shared\Notification\Payload\NotificationPayloadSchema;
 use Shared\Notification\Sender\ChimeTtsSender;
-use Stewart\Contracts\HaContext;
-use Stewart\Contracts\Schedule\Scheduler;
+use Stewart\Testing\App\AppHarness;
 
 final class ServicesTest extends TestCase
 {
@@ -35,11 +33,8 @@ final class ServicesTest extends TestCase
             NotificationActionPayloadMapper::class,
         );
 
-        $ha = $this->createMock(HaContext::class);
-        $ha->expects($this->once())->method('callService')->with('chime_tts', 'say');
-        $container->replaceSynthetic(HaContext::class, $ha);
-        $container->replaceSynthetic(Scheduler::class, $this->createStub(Scheduler::class));
-        $container->replaceSynthetic(LoggerInterface::class, $this->createStub(LoggerInterface::class));
+        $harness = new AppHarness();
+        $container->replaceSyntheticWithFakes($harness);
 
         self::assertInstanceOf(
             ImportanceCondition::class,
@@ -51,14 +46,15 @@ final class ServicesTest extends TestCase
         $container->getService(NotificationActionPayloadMapper::class);
 
         $container->getService(Notifier::class)->send(NotificationBuilder::create()->withBody('Hi')->withAppendedDestinations(ChimeTtsSender::createDestination('media_player.kitchen'))->buildNotification());
+
+        self::assertCount(1, $harness->ha->calls);
+        self::assertSame('chime_tts.say', $harness->ha->getLastCall()->getServiceName());
     }
 
     public function testWiresAlertConfigServices(): void
     {
         $container = new ServiceContainer(AlertRuleFactory::class, EscalationPolicyMapper::class, MitigationFactory::class, AlertConfigMapper::class, AlertMonitor::class);
-        $container->replaceSynthetic(HaContext::class, $this->createStub(HaContext::class));
-        $container->replaceSynthetic(Scheduler::class, $this->createStub(Scheduler::class));
-        $container->replaceSynthetic(LoggerInterface::class, $this->createStub(LoggerInterface::class));
+        $container->replaceSyntheticWithFakes(new AppHarness());
         $policies = $container->getService(EscalationPolicyMapper::class)->mapToPolicies([
             'critical' => ['steps' => [
                 ['destinations' => [['type' => 'tts', 'target' => 'media_player.home']]],

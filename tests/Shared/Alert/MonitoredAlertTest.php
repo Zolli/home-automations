@@ -35,23 +35,23 @@ final class MonitoredAlertTest extends TestCase
 {
     private const string LEAK_SENSOR = 'binary_sensor.kitchen_leak';
 
-    private HaFake $fake;
+    private AlertFixture $fixture;
     private NotifierRecorder $notifier;
 
     protected function setUp(): void
     {
-        $this->fake = new HaFake($this);
-        $this->notifier = new NotifierRecorder(new ActionRouter($this->fake->scheduler, new NullLogger()));
-        $this->fake->setState(self::LEAK_SENSOR, 'off');
+        $this->fixture = new AlertFixture();
+        $this->notifier = new NotifierRecorder(new ActionRouter($this->fixture->harness->scheduler, new NullLogger()));
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'off');
     }
 
     public function testRaiseMitigatesAndNotifies(): void
     {
         $this->startMonitoring(new TurnOffMitigation(new EntityId('valve.main_water')));
 
-        $this->fake->setState(self::LEAK_SENSOR, 'on');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
 
-        self::assertSame(['valve.close_valve'], array_column($this->fake->calls, 'service'));
+        self::assertSame(['valve.close_valve'], $this->fixture->listCalledServices());
         self::assertSame(["binary_sensor.kitchen_leak is on\nClosed valve.main_water"], $this->listBodies());
         self::assertSame('Kitchen flood', $this->notifier->sent[0]->message->title);
     }
@@ -70,7 +70,7 @@ final class MonitoredAlertTest extends TestCase
             }
         });
 
-        $this->fake->setState(self::LEAK_SENSOR, 'on');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
 
         self::assertSame(AlertState::Raised, $alert->getState());
         self::assertSame(["binary_sensor.kitchen_leak is on\nFailed: Close valve.main_water"], $this->listBodies());
@@ -79,10 +79,10 @@ final class MonitoredAlertTest extends TestCase
     public function testAcknowledgeStopsRepeatsAndConfirms(): void
     {
         $alert = $this->startMonitoring();
-        $this->fake->setState(self::LEAK_SENSOR, 'on');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
 
-        $this->fake->pressAction($this->notifier->sent[0]->meta->id->value . ':' . Escalation::ACKNOWLEDGE_ACTION);
-        $this->fake->advanceBy(Duration::hours(1));
+        $this->fixture->pressAction($this->notifier->sent[0]->meta->id->value . ':' . Escalation::ACKNOWLEDGE_ACTION);
+        $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertSame(AlertState::Acknowledged, $alert->getState());
         self::assertSame(['binary_sensor.kitchen_leak is on', 'Acknowledged.'], $this->listBodies());
@@ -91,9 +91,9 @@ final class MonitoredAlertTest extends TestCase
     public function testDismissalConfirmsAsDismissed(): void
     {
         $alert = $this->startMonitoringWithPolicy(true);
-        $this->fake->setState(self::LEAK_SENSOR, 'on');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
 
-        $this->fake->dismissNotification($this->notifier->sent[0]->meta->id->value);
+        $this->fixture->dismissNotification($this->notifier->sent[0]->meta->id->value);
 
         self::assertSame(AlertState::Acknowledged, $alert->getState());
         self::assertSame(['binary_sensor.kitchen_leak is on', 'Dismissed.'], $this->listBodies());
@@ -102,10 +102,10 @@ final class MonitoredAlertTest extends TestCase
     public function testClearStopsEscalationAndConfirms(): void
     {
         $alert = $this->startMonitoring();
-        $this->fake->setState(self::LEAK_SENSOR, 'on');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
 
-        $this->fake->setState(self::LEAK_SENSOR, 'off');
-        $this->fake->advanceBy(Duration::hours(1));
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'off');
+        $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertSame(AlertState::Idle, $alert->getState());
         self::assertSame(['binary_sensor.kitchen_leak is on', 'Cleared.'], $this->listBodies());
@@ -116,34 +116,36 @@ final class MonitoredAlertTest extends TestCase
     {
         $this->startMonitoring();
 
-        $this->fake->setState(self::LEAK_SENSOR, 'on');
-        $this->fake->setState(self::LEAK_SENSOR, 'off');
-        $this->fake->setState(self::LEAK_SENSOR, 'on');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'off');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
 
         self::assertSame(['binary_sensor.kitchen_leak is on', 'Cleared.', 'binary_sensor.kitchen_leak is on'], $this->listBodies());
     }
 
     public function testClearsAfterMitigationRecoversAndRaisesAgain(): void
     {
-        $this->fake->changeStateOnCall('homeassistant.turn_off', self::LEAK_SENSOR, 'off');
         $alert = $this->startMonitoring(new TurnOffMitigation(new EntityId(self::LEAK_SENSOR)));
 
-        $this->fake->setState(self::LEAK_SENSOR, 'on');
-        $this->fake->setState(self::LEAK_SENSOR, 'on');
-        $this->fake->advanceBy(Duration::hours(1));
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'off');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'off');
+        $this->fixture->advanceTime(Duration::hours(1));
 
         $raised = "binary_sensor.kitchen_leak is on\nTurned off binary_sensor.kitchen_leak";
         self::assertSame([$raised, 'Cleared.', $raised, 'Cleared.'], $this->listBodies());
+        self::assertSame(['homeassistant.turn_off', 'homeassistant.turn_off'], $this->fixture->listCalledServices());
         self::assertSame(AlertState::Idle, $alert->getState());
-        self::assertSame(0, $this->fake->countPendingTasks());
+        self::assertSame(0, $this->fixture->countPendingTimers());
     }
 
     public function testRendersMessageWithFaultArea(): void
     {
-        $this->fake->placeInArea(self::LEAK_SENSOR, 'kitchen', 'Kitchen');
+        $this->fixture->placeInArea(self::LEAK_SENSOR, 'kitchen', 'Kitchen');
         $this->startAlert(false, new TextTemplate('Water leak detected in the {area}'));
 
-        $this->fake->setState(self::LEAK_SENSOR, 'on');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
 
         self::assertSame(['Water leak detected in the Kitchen'], $this->listBodies());
         self::assertSame('Kitchen flood', $this->notifier->sent[0]->message->title);
@@ -153,7 +155,7 @@ final class MonitoredAlertTest extends TestCase
     {
         $this->startAlert(false, new TextTemplate('Water leak detected in the {area}'));
 
-        $this->fake->setState(self::LEAK_SENSOR, 'on', ['friendly_name' => 'Kitchen leak sensor']);
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on', ['friendly_name' => 'Kitchen leak sensor']);
 
         self::assertSame(['Water leak detected in the Kitchen leak sensor'], $this->listBodies());
     }
@@ -161,14 +163,15 @@ final class MonitoredAlertTest extends TestCase
     public function testStopMonitoringSilencesAlert(): void
     {
         $alert = $this->startMonitoring();
-        $this->fake->setState(self::LEAK_SENSOR, 'on');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
 
         $alert->stopMonitoring();
-        $this->fake->advanceBy(Duration::hours(1));
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'off');
+        $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
+        $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertCount(1, $this->notifier->sent);
-        self::assertSame(0, $this->fake->countPendingTasks());
-        self::assertFalse($this->fake->isWatchingStates());
+        self::assertSame(0, $this->fixture->countPendingTimers());
     }
 
     private function startMonitoring(Mitigation ...$mitigations): MonitoredAlert
@@ -203,7 +206,7 @@ final class MonitoredAlertTest extends TestCase
             $policy,
             MitigationCollection::fromMitigations($mitigations),
         );
-        $alert = new MonitoredAlert($definition, $this->fake->createMonitoringContext(), $this->notifier, new FaultLocator(), new NullLogger());
+        $alert = new MonitoredAlert($definition, $this->fixture->createMonitoringContext(), $this->notifier, new FaultLocator(), new NullLogger());
         $alert->startMonitoring();
 
         return $alert;

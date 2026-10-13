@@ -74,11 +74,6 @@ final readonly class UpdateState
         return $this->raw->getStringAttribute('entity_picture');
     }
 
-    public function getIcon(): ?string
-    {
-        return $this->raw->getStringAttribute('icon');
-    }
-
     public function getInProgress(): ?bool
     {
         return $this->raw->getBoolAttribute('in_progress');

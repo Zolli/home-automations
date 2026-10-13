@@ -7,6 +7,7 @@ namespace App\Tests;
 use Psr\Log\LoggerInterface;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Schedule\Scheduler;
+use Stewart\Testing\App\AppHarness;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
@@ -41,6 +42,13 @@ final readonly class ServiceContainer
     public function replaceSynthetic(string $id, object $service): void
     {
         $this->container->set($id, $service);
+    }
+
+    public function replaceSyntheticWithFakes(AppHarness $harness): void
+    {
+        $this->replaceSynthetic(HaContext::class, $harness->ha);
+        $this->replaceSynthetic(Scheduler::class, $harness->scheduler);
+        $this->replaceSynthetic(LoggerInterface::class, $harness->logger);
     }
 
     /**

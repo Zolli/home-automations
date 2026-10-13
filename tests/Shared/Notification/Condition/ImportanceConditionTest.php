@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Shared\Notification\Condition;
 
-use App\Tests\Shared\Condition\StateStub;
+use App\Tests\Shared\Condition\ConditionContextFixture;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Shared\Condition\Collection\ConditionTypeCollection;
@@ -32,25 +32,21 @@ final class ImportanceConditionTest extends TestCase
     #[DataProvider('levels')]
     public function testComparesImportanceWithLevel(Importance $importance, string $level, bool $satisfied): void
     {
-        $context = StateStub::context(
-            $this,
-            ['input_select.zoli_notification_level' => [$level]],
-            [$importance],
-        );
+        $context = ConditionContextFixture::createWithStates(['input_select.zoli_notification_level' => [$level]], [$importance]);
 
         self::assertSame($satisfied, new ImportanceCondition(new EntityId('input_select.zoli_notification_level'))->isSatisfied($context));
     }
 
     public function testMissingHelperSends(): void
     {
-        $context = StateStub::context($this, [], [Importance::Low]);
+        $context = ConditionContextFixture::createWithStates([], [Importance::Low]);
 
         self::assertTrue(new ImportanceCondition(new EntityId('input_select.missing'))->isSatisfied($context));
     }
 
     public function testDefaultsToNormalImportanceWithoutFact(): void
     {
-        $context = StateStub::context($this, ['input_select.level' => ['high']]);
+        $context = ConditionContextFixture::createWithStates(['input_select.level' => ['high']]);
 
         self::assertFalse(new ImportanceCondition(new EntityId('input_select.level'))->isSatisfied($context));
     }

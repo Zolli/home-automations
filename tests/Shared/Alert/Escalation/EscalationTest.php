@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Shared\Alert\Escalation;
 
 use App\Tests\Notification\NotifierRecorder;
-use App\Tests\Shared\Alert\HaFake;
+use App\Tests\Shared\Alert\AlertFixture;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Shared\Alert\Escalation\AcknowledgeMethod;
@@ -31,7 +31,7 @@ use Stewart\Contracts\Time\Duration;
 
 final class EscalationTest extends TestCase
 {
-    private HaFake $fake;
+    private AlertFixture $fixture;
     private NotifierRecorder $notifier;
 
     /** @var list<Acknowledgement> */
@@ -39,18 +39,18 @@ final class EscalationTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->fake = new HaFake($this);
-        $this->notifier = new NotifierRecorder(new ActionRouter($this->fake->scheduler, new NullLogger()));
+        $this->fixture = new AlertFixture();
+        $this->notifier = new NotifierRecorder(new ActionRouter($this->fixture->harness->scheduler, new NullLogger()));
     }
 
     public function testSendsStepsOnSchedule(): void
     {
         $this->startEscalation();
 
-        $this->fake->advanceBy(Duration::seconds(119));
+        $this->fixture->advanceTime(Duration::seconds(119));
         self::assertSame(['notify.phone'], $this->listSentTargets());
 
-        $this->fake->advanceBy(Duration::seconds(1));
+        $this->fixture->advanceTime(Duration::seconds(1));
         self::assertSame(['notify.phone', 'media_player.home'], $this->listSentTargets());
 
         $first = $this->notifier->sent[0];
@@ -62,11 +62,11 @@ final class EscalationTest extends TestCase
     public function testRepeatsLastStepUntilAcknowledged(): void
     {
         $this->startEscalation();
-        $this->fake->advanceBy(Duration::seconds(420));
+        $this->fixture->advanceTime(Duration::seconds(420));
         self::assertCount(3, $this->notifier->sent);
 
         $this->pressAcknowledgeOn($this->notifier->sent[2]);
-        $this->fake->advanceBy(Duration::hours(1));
+        $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertCount(3, $this->notifier->sent);
         self::assertCount(1, $this->acknowledged);
@@ -79,18 +79,18 @@ final class EscalationTest extends TestCase
         $this->startEscalation();
 
         $this->pressAcknowledgeOn($this->notifier->sent[0]);
-        $this->fake->advanceBy(Duration::hours(1));
+        $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertSame(['notify.phone'], $this->listSentTargets());
-        self::assertSame(0, $this->fake->countPendingTasks());
+        self::assertSame(0, $this->fixture->countPendingTimers());
     }
 
     public function testDismissalAcknowledgesWhenPolicyAllows(): void
     {
         $this->startEscalation(acknowledgeOnDismiss: true);
 
-        $this->fake->dismissNotification($this->notifier->sent[0]->meta->id->value);
-        $this->fake->advanceBy(Duration::hours(1));
+        $this->fixture->dismissNotification($this->notifier->sent[0]->meta->id->value);
+        $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertSame(['notify.phone'], $this->listSentTargets());
         self::assertSame(AcknowledgeMethod::Dismissal, $this->acknowledged[0]->method ?? null);
@@ -100,8 +100,8 @@ final class EscalationTest extends TestCase
     {
         $this->startEscalation();
 
-        $this->fake->dismissNotification($this->notifier->sent[0]->meta->id->value);
-        $this->fake->advanceBy(Duration::seconds(120));
+        $this->fixture->dismissNotification($this->notifier->sent[0]->meta->id->value);
+        $this->fixture->advanceTime(Duration::seconds(120));
 
         self::assertSame(['notify.phone', 'media_player.home'], $this->listSentTargets());
         self::assertSame([], $this->acknowledged);
@@ -112,10 +112,10 @@ final class EscalationTest extends TestCase
         $escalation = $this->startEscalation();
 
         $escalation->stopEscalating();
-        $this->fake->advanceBy(Duration::hours(1));
+        $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertSame(['notify.phone'], $this->listSentTargets());
-        self::assertSame(0, $this->fake->countPendingTasks());
+        self::assertSame(0, $this->fixture->countPendingTimers());
         self::assertSame([], $this->acknowledged);
     }
 
@@ -138,20 +138,20 @@ final class EscalationTest extends TestCase
     {
         $this->createEscalation($this->createRepeatingPolicy(new StepRepetition(Duration::seconds(30), maxTimes: 5)))->startEscalating();
 
-        $this->fake->advanceBy(Duration::hours(1));
+        $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertCount(6, $this->notifier->sent);
     }
 
     public function testStopsRepeatingOnceConditionFails(): void
     {
-        $this->fake->setState('input_boolean.alarm_test_mode', 'off');
+        $this->fixture->ha->pushState('input_boolean.alarm_test_mode', 'off');
         $repetition = new StepRepetition(Duration::seconds(30), while: CompareCondition::equals('input_boolean.alarm_test_mode', 'off'));
         $this->createEscalation($this->createRepeatingPolicy($repetition))->startEscalating();
-        $this->fake->advanceBy(Duration::seconds(60));
+        $this->fixture->advanceTime(Duration::seconds(60));
 
-        $this->fake->setState('input_boolean.alarm_test_mode', 'on');
-        $this->fake->advanceBy(Duration::hours(1));
+        $this->fixture->ha->pushState('input_boolean.alarm_test_mode', 'on');
+        $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertCount(3, $this->notifier->sent);
     }
@@ -159,7 +159,7 @@ final class EscalationTest extends TestCase
     public function testFollowUpSkipsSpokenDestinations(): void
     {
         $escalation = $this->startEscalation();
-        $this->fake->advanceBy(Duration::seconds(120));
+        $this->fixture->advanceTime(Duration::seconds(120));
 
         $escalation->sendFollowUp('Cleared');
 
@@ -173,10 +173,10 @@ final class EscalationTest extends TestCase
             new EscalationStep(Duration::zero(), DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')])),
             EscalationStep::forSignal(Duration::seconds(2), $signal, new StepRepetition(Duration::seconds(4), maxTimes: 84)),
         ])))->startEscalating();
-        $this->fake->advanceBy(Duration::seconds(10));
+        $this->fixture->advanceTime(Duration::seconds(10));
 
         $this->pressAcknowledgeOn($this->notifier->sent[0]);
-        $this->fake->advanceBy(Duration::minutes(10));
+        $this->fixture->advanceTime(Duration::minutes(10));
 
         self::assertSame(['binary_sensor.kitchen_leak', 'binary_sensor.kitchen_leak', 'binary_sensor.kitchen_leak'], $signal->emittedFor);
     }
@@ -189,7 +189,7 @@ final class EscalationTest extends TestCase
             new EscalationStep(Duration::seconds(5), DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')])),
         ])))->startEscalating();
 
-        $this->fake->advanceBy(Duration::seconds(5));
+        $this->fixture->advanceTime(Duration::seconds(5));
 
         self::assertCount(1, $this->notifier->sent);
     }
@@ -247,15 +247,15 @@ final class EscalationTest extends TestCase
                 $this->acknowledged[] = $acknowledgement;
             },
             $this->notifier,
-            $this->fake->scheduler,
-            $this->fake->ha,
+            $this->fixture->harness->scheduler,
+            $this->fixture->ha,
             new NullLogger(),
         );
     }
 
     private function pressAcknowledgeOn(Notification $notification): void
     {
-        $this->fake->pressAction($notification->meta->id->value . ':' . Escalation::ACKNOWLEDGE_ACTION);
+        $this->fixture->pressAction($notification->meta->id->value . ':' . Escalation::ACKNOWLEDGE_ACTION);
     }
 
     /** @return list<?string> */
