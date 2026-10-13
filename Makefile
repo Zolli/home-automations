@@ -26,7 +26,7 @@ pull: ## Pull the runtime images
 	$(DEV) pull
 
 .PHONY: upgrade
-upgrade: ## Move to another Stewart release line, then pull its images and install it [VERSION=0.11]
+upgrade: ## Move to another Stewart release line, then pull its images and install it [VERSION=2.0]
 	$(RUN) sh bin/upgrade-stewart.sh $(VERSION)
 	$(DEV) pull
 	$(RUN) composer update 'stewart-php/*' --with-all-dependencies --no-interaction
