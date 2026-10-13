@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Shared\Alert\Reading;
 
-use App\Tests\Shared\Alert\HaFake;
+use App\Tests\Shared\Alert\AlertFixture;
 use PHPUnit\Framework\TestCase;
 use Shared\Alert\Reading\Collection\ReadingSourceCollection;
 use Shared\Alert\Reading\ReadingFeed;
@@ -15,26 +15,26 @@ final class ReadingFeedTest extends TestCase
 {
     private const string TOPIC = 'dsmr/reading/phase_voltage_l1';
 
-    private HaFake $fake;
+    private AlertFixture $fixture;
     private ReadingFeed $feed;
     private int $changes = 0;
 
     protected function setUp(): void
     {
-        $this->fake = new HaFake($this);
+        $this->fixture = new AlertFixture();
         $this->feed = new ReadingFeed(
             ReadingSourceCollection::fromSources([ReadingSource::forEntity(new EntityId('sensor.l1_voltage')), ReadingSource::forTopic(self::TOPIC)]),
-            $this->fake->createMonitoringContext(),
+            $this->fixture->createMonitoringContext(),
         );
     }
 
     public function testReadsEntityStatesAndLatestPayloads(): void
     {
-        $this->fake->setState('sensor.l1_voltage', '231', ['friendly_name' => 'L1']);
+        $this->fixture->ha->pushState('sensor.l1_voltage', '231', ['friendly_name' => 'L1']);
         $this->startWatching();
 
-        $this->fake->publishMqtt(self::TOPIC, '230.5');
-        $this->fake->publishMqtt(self::TOPIC, " 12.0\n");
+        $this->fixture->publishMqtt(self::TOPIC, '230.5');
+        $this->fixture->publishMqtt(self::TOPIC, " 12.0\n");
 
         $snapshot = $this->feed->readSnapshot();
         self::assertSame('L1', $snapshot->find(ReadingSource::forEntity(new EntityId('sensor.l1_voltage')))?->label);
@@ -52,12 +52,13 @@ final class ReadingFeedTest extends TestCase
     public function testStopWatchingUnsubscribesAndForgetsPayloads(): void
     {
         $this->startWatching();
-        $this->fake->publishMqtt(self::TOPIC, '230');
+        $this->fixture->publishMqtt(self::TOPIC, '230');
 
         $this->feed->stopWatching();
+        $this->fixture->publishMqtt(self::TOPIC, '231');
+        $this->fixture->ha->pushState('sensor.l1_voltage', '231');
 
-        self::assertFalse($this->fake->isWatchingTopic(self::TOPIC));
-        self::assertFalse($this->fake->isWatchingStates());
+        self::assertSame(1, $this->changes);
         self::assertNull($this->feed->readSnapshot()->find(ReadingSource::forTopic(self::TOPIC)));
     }
 

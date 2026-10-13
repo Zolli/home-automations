@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "22cb6b15d0c98c9d0a67e7c9c61ff8c4",
+    "content-hash": "c8bdac0cbd0bcbc7445857434524b40c",
     "packages": [
         {
             "name": "amphp/amp",
@@ -6437,6 +6437,60 @@
                 }
             ],
             "time": "2024-10-20T05:08:20+00:00"
+        },
+        {
+            "name": "stewart-php/testing",
+            "version": "v0.11.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stewart-php/testing.git",
+                "reference": "dd2c1ee6299fd054880440d2d4afcf528e81bd6b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stewart-php/testing/zipball/dd2c1ee6299fd054880440d2d4afcf528e81bd6b",
+                "reference": "dd2c1ee6299fd054880440d2d4afcf528e81bd6b",
+                "shasum": ""
+            },
+            "require": {
+                "amphp/amp": "^3.1.1",
+                "amphp/byte-stream": "^2.1",
+                "amphp/http-client": "^5.3",
+                "amphp/socket": "^2.4",
+                "amphp/websocket": "^2.0.4",
+                "amphp/websocket-client": "^2.0.2",
+                "php": ">=8.5",
+                "phpunit/phpunit": "^13.3",
+                "psr/log": "^3.0",
+                "stewart-php/contracts": "self.version",
+                "stewart-php/store": "self.version",
+                "stewart-php/support": "self.version"
+            },
+            "conflict": {
+                "amphp/cache": "<2.0.1",
+                "amphp/dns": "<2.2",
+                "daverandom/libdns": "<2.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stewart\\Testing\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Test Stewart apps without Home Assistant: an app harness, recording fakes and virtual time",
+            "support": {
+                "source": "https://github.com/stewart-php/testing/tree/v0.11.1"
+            },
+            "time": "2026-10-13T11:08:36+00:00"
         },
         {
             "name": "theseer/tokenizer",

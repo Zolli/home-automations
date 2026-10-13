@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Shared\Notification\Action;
 
-use App\Tests\Shared\Notification\HaRecorder;
+use App\Tests\Shared\Notification\NotificationFixture;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use RuntimeException;
@@ -19,19 +19,22 @@ use Shared\Notification\NotificationId;
 use Shared\Notification\Sender\Collection\DestinationSenderCollection;
 use Shared\Notification\Sender\NotifyServiceSender;
 use Shared\Notification\SentNotification;
+use Stewart\Contracts\Time\Duration;
 
 final class ActionRouterTest extends TestCase
 {
-    private HaRecorder $recorder;
+    private const int LISTENING_TTL_HOURS = 2;
+
+    private NotificationFixture $fixture;
     private NotificationDispatcher $notifier;
 
     protected function setUp(): void
     {
-        $this->recorder = new HaRecorder($this);
+        $this->fixture = new NotificationFixture();
         $this->notifier = new NotificationDispatcher(
             DestinationSenderCollection::keyedByDestinationType([new NotifyServiceSender()]),
-            $this->recorder->ha,
-            $this->recorder->actionRouter(),
+            $this->fixture->ha,
+            $this->fixture->createActionRouter(),
             new NullLogger(),
         );
     }
@@ -46,7 +49,7 @@ final class ActionRouterTest extends TestCase
             })
             ->onAction('NEXT', fn() => self::fail('NEXT was not pressed'));
 
-        $this->recorder->pressAction('vacuum-bin:DONE', ['reply_text' => 'emptied'], 'user-1');
+        $this->fixture->pressAction('vacuum-bin:DONE', ['reply_text' => 'emptied'], 'user-1');
 
         self::assertCount(1, $pressed);
         self::assertSame('vacuum-bin', $pressed[0]->notificationId->value);
@@ -63,8 +66,8 @@ final class ActionRouterTest extends TestCase
             $pressed[] = $action->action;
         });
 
-        $this->recorder->pressAction('vacuum-bin:DONE');
-        $this->recorder->pressAction('vacuum-bin:NEXT');
+        $this->fixture->pressAction('vacuum-bin:DONE');
+        $this->fixture->pressAction('vacuum-bin:NEXT');
 
         self::assertSame(['DONE', 'NEXT'], $pressed);
     }
@@ -78,10 +81,10 @@ final class ActionRouterTest extends TestCase
             })
             ->onAnyAction(fn() => self::fail('Dismissal is not an action'));
 
-        $this->recorder->dismissNotification(['tag' => 'vacuum-bin', 'message' => 'Empty me'], 'user-1');
-        $this->recorder->dismissNotification(['data' => ['tag' => 'vacuum-bin']]);
-        $this->recorder->dismissNotification(['tag' => 'laundry']);
-        $this->recorder->dismissNotification(['message' => 'No tag']);
+        $this->fixture->dismissNotification(['tag' => 'vacuum-bin', 'message' => 'Empty me'], 'user-1');
+        $this->fixture->dismissNotification(['data' => ['tag' => 'vacuum-bin']]);
+        $this->fixture->dismissNotification(['tag' => 'laundry']);
+        $this->fixture->dismissNotification(['message' => 'No tag']);
 
         self::assertCount(2, $dismissed);
         self::assertSame('vacuum-bin', $dismissed[0]->notificationId->value);
@@ -93,23 +96,28 @@ final class ActionRouterTest extends TestCase
     {
         $this->listen('vacuum-bin')->onAnyAction(fn() => self::fail('Should not be called'));
 
-        $this->recorder->pressAction('laundry:DONE');
-        $this->recorder->pressAction('DONE');
+        $this->fixture->pressAction('laundry:DONE');
+        $this->fixture->pressAction('DONE');
 
         $this->expectNotToPerformAssertions();
     }
 
-    public function testSharesOneSubscriptionPerAppContext(): void
+    public function testRoutesEachPressOnceWithSharedContext(): void
     {
-        $vacuum = $this->listen('vacuum-bin');
-        $this->listen('laundry');
-        self::assertCount(1, $this->recorder->eventHandlers);
+        $pressed = [];
+        $vacuum = $this->listen('vacuum-bin')->onAnyAction(function (NotificationAction $action) use (&$pressed): void {
+            $pressed[] = $action->notificationId->value;
+        });
+        $this->listen('laundry')->onAnyAction(function (NotificationAction $action) use (&$pressed): void {
+            $pressed[] = $action->notificationId->value;
+        });
 
+        $this->fixture->pressAction('vacuum-bin:DONE');
         $vacuum->stopListening();
-        self::assertCount(1, $this->recorder->eventHandlers);
+        $this->fixture->pressAction('vacuum-bin:DONE');
+        $this->fixture->pressAction('laundry:DONE');
 
-        $this->recorder->runScheduled();
-        self::assertCount(0, $this->recorder->eventHandlers);
+        self::assertSame(['vacuum-bin', 'laundry'], $pressed);
     }
 
     public function testStoppingOlderListenerKeepsNewerWithSameId(): void
@@ -121,7 +129,7 @@ final class ActionRouterTest extends TestCase
         });
 
         $older->stopListening();
-        $this->recorder->pressAction('vacuum-bin:DONE');
+        $this->fixture->pressAction('vacuum-bin:DONE');
 
         self::assertSame(1, $pressed);
         self::assertFalse($older->isListening());
@@ -132,8 +140,8 @@ final class ActionRouterTest extends TestCase
     {
         $listener = $this->listen('vacuum-bin')->onAction('DONE', fn() => self::fail('Should have expired'));
 
-        $this->recorder->runScheduled();
-        $this->recorder->pressAction('vacuum-bin:DONE');
+        $this->fixture->advanceTime(Duration::hours(self::LISTENING_TTL_HOURS));
+        $this->fixture->pressAction('vacuum-bin:DONE');
 
         self::assertFalse($listener->isListening());
     }
@@ -148,28 +156,28 @@ final class ActionRouterTest extends TestCase
                 $pressed[] = $action->action;
             });
 
-        $this->recorder->pressAction('vacuum-bin:DONE');
+        $this->fixture->pressAction('vacuum-bin:DONE');
 
         self::assertSame(['DONE'], $pressed);
     }
 
     public function testSubscribesThroughGivenAppContext(): void
     {
-        $app = new HaRecorder($this);
+        $app = new NotificationFixture();
         $pressed = 0;
 
         $this->send('vacuum-bin')->listenForActions($app->ha)->onAction('DONE', function () use (&$pressed): void {
             $pressed++;
         });
         $app->pressAction('vacuum-bin:DONE');
+        $this->fixture->pressAction('vacuum-bin:DONE');
 
         self::assertSame(1, $pressed);
-        self::assertSame([], $this->recorder->eventHandlers);
     }
 
     public function testIgnoresPressesFromOtherAppContext(): void
     {
-        $other = new HaRecorder($this);
+        $other = new NotificationFixture();
         $this->listen('vacuum-bin')->onAnyAction(fn() => self::fail('Pressed through another app'));
         $this->send('laundry')->listenForActions($other->ha);
 
@@ -187,13 +195,13 @@ final class ActionRouterTest extends TestCase
             ->buildNotification());
 
         self::assertFalse($sent->wasDelivered());
-        self::assertFalse($sent->listenForActions($this->recorder->ha)->onAnyAction(fn() => null)->isListening());
-        self::assertSame([], $this->recorder->eventHandlers);
+        self::assertFalse($sent->listenForActions($this->fixture->ha)->onAnyAction(fn() => self::fail('Stopped listener was called'))->isListening());
+        $this->fixture->pressAction($sent->notification->meta->id->value . ':DONE');
     }
 
     private function listen(string $id): ActionListener
     {
-        return $this->send($id)->listenForActions($this->recorder->ha);
+        return $this->send($id)->listenForActions($this->fixture->ha);
     }
 
     private function send(string $id): SentNotification

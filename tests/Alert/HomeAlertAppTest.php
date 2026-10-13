@@ -6,15 +6,11 @@ namespace App\Tests\Alert;
 
 use App\Alert\HomeAlertApp;
 use App\Tests\ServiceContainer;
-use App\Tests\Shared\Alert\HaFake;
+use App\Tests\Shared\Alert\AlertFixture;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use Shared\Alert\AlertMonitor;
 use Shared\Alert\Config\AlertConfigMapper;
 use Shared\Alert\Config\InvalidAlertConfig;
-use Stewart\Contracts\HaContext;
-use Stewart\Contracts\Schedule\Scheduler;
 use Stewart\Contracts\Time\Duration;
 
 final class HomeAlertAppTest extends TestCase
@@ -65,36 +61,36 @@ final class HomeAlertAppTest extends TestCase
         'mitigations' => [['type' => 'turn-off', 'entity' => 'valve.main_water']],
     ];
 
-    private HaFake $fake;
-    private ServiceContainer $container;
+    private AlertFixture $fixture;
 
     protected function setUp(): void
     {
-        $this->fake = new HaFake($this);
-        $this->container = new ServiceContainer(AlertConfigMapper::class, AlertMonitor::class);
-        $this->container->replaceSynthetic(HaContext::class, $this->fake->ha);
-        $this->container->replaceSynthetic(Scheduler::class, $this->fake->scheduler);
-        $this->container->replaceSynthetic(LoggerInterface::class, new NullLogger());
+        $this->fixture = new AlertFixture();
+        $harness = $this->fixture->harness;
+        $container = new ServiceContainer(AlertConfigMapper::class, AlertMonitor::class);
+        $container->replaceSyntheticWithFakes($harness);
+        $harness->provideService(AlertConfigMapper::class, $container->getService(AlertConfigMapper::class));
+        $harness->provideService(AlertMonitor::class, $container->getService(AlertMonitor::class));
     }
 
     public function testFloodClosesValveAndEscalates(): void
     {
-        $this->fake->setState('binary_sensor.kitchen_leak', 'off');
-        $this->createApp([self::FLOOD_ALERT])->initialize();
+        $this->fixture->ha->pushState('binary_sensor.kitchen_leak', 'off');
+        $this->startApp([self::FLOOD_ALERT]);
 
-        $this->fake->setState('binary_sensor.kitchen_leak', 'on');
-        $this->fake->advanceBy(Duration::seconds(5));
-        $this->fake->advanceBy(Duration::seconds(120));
+        $this->fixture->ha->pushState('binary_sensor.kitchen_leak', 'on');
+        $this->fixture->advanceTime(Duration::seconds(5));
+        $this->fixture->advanceTime(Duration::seconds(120));
 
         self::assertSame(
             ['valve.close_valve', 'notify.mobile_app_phone', 'chime_tts.say'],
-            array_column($this->fake->calls, 'service'),
+            $this->fixture->listCalledServices(),
         );
     }
 
     public function testDsmrPhaseLossOverMqttNotifies(): void
     {
-        $this->createApp([[
+        $this->startApp([[
             'id' => 'phase-loss',
             'title' => 'Phase down',
             'policy' => 'critical',
@@ -105,30 +101,30 @@ final class HomeAlertAppTest extends TestCase
                 'unavailableIsFault' => true,
                 'forSeconds' => 10,
             ],
-        ]])->initialize();
+        ]]);
 
-        $this->fake->publishMqtt('dsmr/reading/phase_voltage_l1', '231.0');
-        $this->fake->publishMqtt('dsmr/reading/phase_voltage_l2', '0.0');
-        $this->fake->advanceBy(Duration::seconds(10));
+        $this->fixture->publishMqtt('dsmr/reading/phase_voltage_l1', '231.0');
+        $this->fixture->publishMqtt('dsmr/reading/phase_voltage_l2', '0.0');
+        $this->fixture->advanceTime(Duration::seconds(10));
 
-        self::assertSame(['notify.mobile_app_phone'], array_column($this->fake->calls, 'service'));
-        self::assertSame('dsmr/reading/phase_voltage_l2 is 0, below 50', $this->fake->calls[0]['data']['message'] ?? null);
+        self::assertSame(['notify.mobile_app_phone'], $this->fixture->listCalledServices());
+        self::assertSame('dsmr/reading/phase_voltage_l2 is 0, below 50', $this->fixture->ha->getLastCall()->data['message'] ?? null);
     }
 
     public function testSmokeNotifiesSpeaksAndBlinksUntilAcknowledged(): void
     {
         $this->prepareSmokeScenario(theaterMode: 'off', testMode: 'off');
 
-        $this->fake->setState('binary_sensor.smoke_detector_kitchen_smoke', 'on');
-        $this->fake->advanceBy(Duration::seconds(10));
+        $this->fixture->ha->pushState('binary_sensor.smoke_detector_kitchen_smoke', 'on');
+        $this->fixture->advanceTime(Duration::seconds(10));
 
-        $alert = $this->fake->calls[0];
-        self::assertSame('SMOKE ALARM', $alert['data']['title'] ?? null);
-        self::assertSame('Smoke alarm in the Kitchen', $alert['data']['message'] ?? null);
+        $alert = $this->fixture->ha->calls->getFirst()->data ?? [];
+        self::assertSame('SMOKE ALARM', $alert['title'] ?? null);
+        self::assertSame('Smoke alarm in the Kitchen', $alert['message'] ?? null);
         self::assertSame(['text' => 1, 'tts' => 1, 'light' => 3], $this->countSmokeCalls());
 
-        $this->fake->pressAction(($alert['data']['data']['tag'] ?? '') . ':ALERT_ACK');
-        $this->fake->advanceBy(Duration::minutes(10));
+        $this->fixture->pressAction(($alert['data']['tag'] ?? '') . ':ALERT_ACK');
+        $this->fixture->advanceTime(Duration::minutes(10));
 
         self::assertSame(['text' => 2, 'tts' => 1, 'light' => 3], $this->countSmokeCalls());
     }
@@ -137,8 +133,8 @@ final class HomeAlertAppTest extends TestCase
     {
         $this->prepareSmokeScenario(theaterMode: 'off', testMode: 'off');
 
-        $this->fake->setState('binary_sensor.smoke_detector_kitchen_smoke', 'on');
-        $this->fake->advanceBy(Duration::minutes(10));
+        $this->fixture->ha->pushState('binary_sensor.smoke_detector_kitchen_smoke', 'on');
+        $this->fixture->advanceTime(Duration::minutes(10));
 
         self::assertSame(['text' => 1, 'tts' => 6, 'light' => 85], $this->countSmokeCalls());
     }
@@ -147,8 +143,8 @@ final class HomeAlertAppTest extends TestCase
     {
         $this->prepareSmokeScenario(theaterMode: 'on', testMode: 'off');
 
-        $this->fake->setState('binary_sensor.smoke_detector_kitchen_smoke', 'on');
-        $this->fake->advanceBy(Duration::seconds(10));
+        $this->fixture->ha->pushState('binary_sensor.smoke_detector_kitchen_smoke', 'on');
+        $this->fixture->advanceTime(Duration::seconds(10));
 
         self::assertSame(['text' => 1, 'tts' => 0, 'light' => 3], $this->countSmokeCalls());
     }
@@ -157,41 +153,40 @@ final class HomeAlertAppTest extends TestCase
     {
         $this->prepareSmokeScenario(theaterMode: 'off', testMode: 'on');
 
-        $this->fake->setState('binary_sensor.smoke_detector_kitchen_smoke', 'on');
-        $this->fake->advanceBy(Duration::minutes(10));
+        $this->fixture->ha->pushState('binary_sensor.smoke_detector_kitchen_smoke', 'on');
+        $this->fixture->advanceTime(Duration::minutes(10));
 
         self::assertSame(['text' => 1, 'tts' => 1, 'light' => 1], $this->countSmokeCalls());
     }
 
     public function testDisposeStopsMonitoring(): void
     {
-        $this->fake->setState('binary_sensor.kitchen_leak', 'off');
-        $app = $this->createApp([self::FLOOD_ALERT]);
-        $app->initialize();
+        $this->fixture->ha->pushState('binary_sensor.kitchen_leak', 'off');
+        $this->startApp([self::FLOOD_ALERT]);
 
-        $app->dispose();
-        $this->fake->setState('binary_sensor.kitchen_leak', 'on');
-        $this->fake->advanceBy(Duration::minutes(5));
+        $this->fixture->harness->stopApp();
+        $this->fixture->ha->pushState('binary_sensor.kitchen_leak', 'on');
+        $this->fixture->advanceTime(Duration::minutes(5));
 
-        self::assertSame([], $this->fake->calls);
+        self::assertTrue($this->fixture->ha->calls->isEmpty());
     }
 
     public function testRejectsInvalidConfigAtConstruction(): void
     {
         $this->expectException(InvalidAlertConfig::class);
 
-        $this->createApp([['id' => 'kitchen-flood', 'policy' => 'missing', 'rule' => self::FLOOD_ALERT['rule']]]);
+        $this->startApp([['id' => 'kitchen-flood', 'policy' => 'missing', 'rule' => self::FLOOD_ALERT['rule']]]);
     }
 
     private function prepareSmokeScenario(string $theaterMode, string $testMode): void
     {
-        $this->fake->setState('input_boolean.alarm_theater_mode', $theaterMode);
-        $this->fake->setState('input_boolean.alarm_test_mode', $testMode);
-        $this->fake->placeInArea('binary_sensor.smoke_detector_kitchen_smoke', 'kitchen', 'Kitchen');
-        $this->fake->placeInArea('light.kitchen_all', 'kitchen', 'Kitchen');
-        $this->fake->setState('light.kitchen_all', 'off', ['effect_list' => ['okay']]);
-        $this->fake->setState('binary_sensor.smoke_detector_kitchen_smoke', 'off');
-        $this->createApp([self::SMOKE_ALERT])->initialize();
+        $this->fixture->ha->pushState('input_boolean.alarm_theater_mode', $theaterMode);
+        $this->fixture->ha->pushState('input_boolean.alarm_test_mode', $testMode);
+        $this->fixture->placeInArea('binary_sensor.smoke_detector_kitchen_smoke', 'kitchen', 'Kitchen');
+        $this->fixture->placeInArea('light.kitchen_all', 'kitchen', 'Kitchen');
+        $this->fixture->ha->pushState('light.kitchen_all', 'off', ['effect_list' => ['okay']]);
+        $this->fixture->ha->pushState('binary_sensor.smoke_detector_kitchen_smoke', 'off');
+        $this->startApp([self::SMOKE_ALERT]);
     }
 
     /** @return array{text: int, tts: int, light: int} */
@@ -199,10 +194,10 @@ final class HomeAlertAppTest extends TestCase
     {
         $counts = ['text' => 0, 'tts' => 0, 'light' => 0];
 
-        foreach ($this->fake->calls as $call) {
+        foreach ($this->fixture->ha->calls as $call) {
             $kind = match (true) {
-                $call['service'] === 'light.turn_on' => 'light',
-                ($call['data']['message'] ?? null) === 'TTS' => 'tts',
+                $call->getServiceName() === 'light.turn_on' => 'light',
+                ($call->data['message'] ?? null) === 'TTS' => 'tts',
                 default => 'text',
             };
             $counts[$kind]++;
@@ -212,18 +207,11 @@ final class HomeAlertAppTest extends TestCase
     }
 
     /** @param list<array<string, mixed>> $alerts */
-    private function createApp(array $alerts): HomeAlertApp
+    private function startApp(array $alerts): void
     {
-        return new HomeAlertApp(
-            $this->container->getService(AlertConfigMapper::class),
-            $this->container->getService(AlertMonitor::class),
-            $this->fake->ha,
-            $this->fake->scheduler,
-            $this->fake->mqtt,
-            $this->fake->clock,
-            new NullLogger(),
-            [...self::POLICIES, 'smoke-leak' => self::SMOKE_LEAK_POLICY],
-            $alerts,
-        );
+        $this->fixture->harness->startApp(HomeAlertApp::class, [
+            'policies' => [...self::POLICIES, 'smoke-leak' => self::SMOKE_LEAK_POLICY],
+            'alerts' => $alerts,
+        ]);
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Shared\Alert\Signal;
 
-use App\Tests\Shared\Alert\HaFake;
+use App\Tests\Shared\Alert\AlertFixture;
 use PHPUnit\Framework\TestCase;
 use Shared\Alert\FaultLocator;
 use Shared\Alert\Reading\ReadingSource;
@@ -16,14 +16,14 @@ final class LightEffectSignalTest extends TestCase
 {
     private const string SMOKE_SENSOR = 'binary_sensor.smoke_detector_kitchen_smoke';
 
-    private HaFake $fake;
+    private AlertFixture $fixture;
     private LightEffectSignal $signal;
 
     protected function setUp(): void
     {
-        $this->fake = new HaFake($this);
+        $this->fixture = new AlertFixture();
         $this->signal = new LightEffectSignal('okay', new FaultLocator());
-        $this->fake->placeInArea(self::SMOKE_SENSOR, 'kitchen', 'Kitchen');
+        $this->fixture->placeInArea(self::SMOKE_SENSOR, 'kitchen', 'Kitchen');
     }
 
     public function testRunsEffectOnLightsInFaultAreaSupportingIt(): void
@@ -33,37 +33,37 @@ final class LightEffectSignalTest extends TestCase
         $this->placeLight('light.kitchen_plain', 'kitchen', null);
         $this->placeLight('light.hallway_ceiling', 'hallway', ['okay']);
 
-        $this->signal->emit($this->createFault(self::SMOKE_SENSOR), $this->fake->ha);
+        $this->signal->emit($this->createFault(self::SMOKE_SENSOR), $this->fixture->ha);
 
-        self::assertSame(
-            [['service' => 'light.turn_on', 'data' => ['effect' => 'okay'], 'target' => ['entity_id' => ['light.kitchen_all']]]],
-            $this->fake->calls,
-        );
+        $call = $this->fixture->ha->getLastCall();
+        self::assertSame(['light.turn_on'], $this->fixture->listCalledServices());
+        self::assertSame(['effect' => 'okay'], $call->data);
+        self::assertSame(['light.kitchen_all'], $call->listTargetedEntityIds());
     }
 
     public function testSkipsAreaWithoutSupportingLights(): void
     {
         $this->placeLight('light.kitchen_strip', 'kitchen', ['colorloop']);
 
-        $this->signal->emit($this->createFault(self::SMOKE_SENSOR), $this->fake->ha);
+        $this->signal->emit($this->createFault(self::SMOKE_SENSOR), $this->fixture->ha);
 
-        self::assertSame([], $this->fake->calls);
+        self::assertTrue($this->fixture->ha->calls->isEmpty());
     }
 
     public function testSkipsFaultWithoutArea(): void
     {
         $this->placeLight('light.kitchen_all', 'kitchen', ['okay']);
 
-        $this->signal->emit($this->createFault('binary_sensor.leak_garage'), $this->fake->ha);
+        $this->signal->emit($this->createFault('binary_sensor.leak_garage'), $this->fixture->ha);
 
-        self::assertSame([], $this->fake->calls);
+        self::assertTrue($this->fixture->ha->calls->isEmpty());
     }
 
     /** @param ?list<string> $effects */
     private function placeLight(string $entityId, string $areaId, ?array $effects): void
     {
-        $this->fake->placeInArea($entityId, $areaId, ucfirst($areaId));
-        $this->fake->setState($entityId, 'off', $effects === null ? [] : ['effect_list' => $effects]);
+        $this->fixture->placeInArea($entityId, $areaId, ucfirst($areaId));
+        $this->fixture->ha->pushState($entityId, 'off', $effects === null ? [] : ['effect_list' => $effects]);
     }
 
     private function createFault(string $entityId): Fault
