@@ -10,8 +10,8 @@ use Shared\Condition\Collection\ConditionTypeCollection;
 use Shared\Condition\CompareCondition;
 use Shared\Condition\CompareConditionType;
 use Shared\Condition\ConditionFactory;
-use Shared\Condition\InvalidCondition;
 use Shared\Condition\Operator;
+use Shared\Config\InvalidTypedOptions;
 use Stewart\Contracts\Entity\EntityId;
 
 final class ConditionFactoryTest extends TestCase
@@ -38,7 +38,7 @@ final class ConditionFactoryTest extends TestCase
     #[DataProvider('invalidDefinitions')]
     public function testRejectsInvalidDefinitions(array $definition): void
     {
-        $this->expectException(InvalidCondition::class);
+        $this->expectException(InvalidTypedOptions::class);
 
         new ConditionFactory(ConditionTypeCollection::keyedByName([new AlwaysConditionType()]))->mapToCondition($definition);
     }

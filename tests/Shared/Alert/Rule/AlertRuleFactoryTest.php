@@ -7,12 +7,12 @@ namespace App\Tests\Shared\Alert\Rule;
 use App\Tests\ServiceContainer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Shared\Alert\Config\InvalidAlertConfig;
 use Shared\Alert\Rule\AlertRuleFactory;
 use Shared\Alert\Rule\SilenceRule;
 use Shared\Alert\Rule\StateMatchRule;
 use Shared\Alert\Rule\ThresholdRule;
 use Shared\Alert\Rule\UnavailableRule;
+use Shared\Config\InvalidTypedOptions;
 
 final class AlertRuleFactoryTest extends TestCase
 {
@@ -96,7 +96,7 @@ final class AlertRuleFactoryTest extends TestCase
     #[DataProvider('invalidRules')]
     public function testRejectsInvalidRule(array $fields): void
     {
-        $this->expectException(InvalidAlertConfig::class);
+        $this->expectException(InvalidTypedOptions::class);
 
         $this->factory->mapToRule($fields);
     }

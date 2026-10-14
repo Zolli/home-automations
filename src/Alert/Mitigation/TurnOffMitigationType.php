@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Shared\Alert\Mitigation;
 
-use Shared\Alert\Config\TypedOptions;
+use Shared\Config\TypedOptions;
 
 final readonly class TurnOffMitigationType implements MitigationType
 {
@@ -15,6 +15,6 @@ final readonly class TurnOffMitigationType implements MitigationType
 
     public function mapToMitigation(TypedOptions $options): Mitigation
     {
-        return new TurnOffMitigation($options->requireEntityId());
+        return new TurnOffMitigation($options->requireEntityId('entity'));
     }
 }

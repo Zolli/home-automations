@@ -7,9 +7,9 @@ namespace App\Tests\Shared\Alert\Mitigation;
 use App\Tests\ServiceContainer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Shared\Alert\Config\InvalidAlertConfig;
 use Shared\Alert\Mitigation\Mitigation;
 use Shared\Alert\Mitigation\MitigationFactory;
+use Shared\Config\InvalidTypedOptions;
 
 final class MitigationFactoryTest extends TestCase
 {
@@ -45,7 +45,7 @@ final class MitigationFactoryTest extends TestCase
     #[DataProvider('invalidMitigations')]
     public function testRejectsInvalidMitigation(array $mitigations): void
     {
-        $this->expectException(InvalidAlertConfig::class);
+        $this->expectException(InvalidTypedOptions::class);
 
         $this->factory->mapToMitigations($mitigations);
     }

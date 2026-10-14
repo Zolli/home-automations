@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Shared\Notification\Condition;
 
 use Shared\Condition\Condition;
-use Shared\Condition\ConditionDefinition;
 use Shared\Condition\ConditionType;
+use Shared\Config\TypedOptions;
 
 final readonly class ImportanceConditionType implements ConditionType
 {
@@ -15,8 +15,8 @@ final readonly class ImportanceConditionType implements ConditionType
         return 'importance';
     }
 
-    public function mapToCondition(ConditionDefinition $definition): Condition
+    public function mapToCondition(TypedOptions $options): Condition
     {
-        return new ImportanceCondition($definition->requireEntityId());
+        return new ImportanceCondition($options->requireEntityId('field'));
     }
 }

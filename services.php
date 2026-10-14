@@ -7,6 +7,7 @@ use Opis\JsonSchema\Validator;
 use Shared\Alert\AlertMonitor;
 use Shared\Alert\FaultLocator;
 use Shared\Alert\Config\AlertConfigMapper;
+use Shared\Alert\Config\ReadingSourceMapper;
 use Shared\Alert\Escalation\EscalationPolicyMapper;
 use Shared\Alert\Mitigation\Collection\MitigationTypeCollection;
 use Shared\Alert\Mitigation\MitigationFactory;
@@ -85,6 +86,7 @@ return static function (ContainerConfigurator $container): void {
     $services->set(NotificationPayloadMapper::class);
     $services->set(NotificationActionPayloadMapper::class);
 
+    $services->set(ReadingSourceMapper::class);
     $services->set(StateMatchRuleType::class);
     $services->set(UnavailableRuleType::class);
     $services->set(SilenceRuleType::class);

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Shared\Condition;
 
+use Shared\Config\TypedOptions;
+
 final readonly class CompareConditionType implements ConditionType
 {
     public function __construct(private Operator $operator) {}
@@ -13,13 +15,13 @@ final readonly class CompareConditionType implements ConditionType
         return $this->operator->value;
     }
 
-    public function mapToCondition(ConditionDefinition $definition): Condition
+    public function mapToCondition(TypedOptions $options): Condition
     {
         return new CompareCondition(
-            $definition->requireEntityId(),
+            $options->requireEntityId('field'),
             $this->operator,
-            $definition->requireValue(),
-            $definition->findAttribute(),
+            $options->requireValue('value'),
+            $options->findString('attribute'),
         );
     }
 }

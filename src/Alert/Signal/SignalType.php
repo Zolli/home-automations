@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Shared\Alert\Signal;
 
-use Shared\Alert\Config\InvalidAlertConfig;
-use Shared\Alert\Config\TypedOptions;
+use Shared\Config\InvalidTypedOptions;
+use Shared\Config\NamedType;
+use Shared\Config\TypedOptions;
 
-interface SignalType
+interface SignalType extends NamedType
 {
     public const string KIND = 'Signal';
 
-    public function getName(): string;
-
-    /** @throws InvalidAlertConfig */
+    /** @throws InvalidTypedOptions */
     public function mapToSignal(TypedOptions $options): Signal;
 }
