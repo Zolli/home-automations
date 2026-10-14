@@ -50,6 +50,16 @@ final class TypedOptionsTest extends TestCase
         self::assertSame(0, $this->createOptions([])->findDuration('forSeconds')->toMilliseconds());
     }
 
+    public function testReadsZeroPositiveDurationAsNull(): void
+    {
+        self::assertNull($this->createOptions(['forSeconds' => 0])->findPositiveDuration('forSeconds'));
+        self::assertNull($this->createOptions([])->findPositiveDuration('forSeconds'));
+        self::assertSame(
+            2_000,
+            $this->createOptions(['forSeconds' => 2])->findPositiveDuration('forSeconds')?->toMilliseconds(),
+        );
+    }
+
     public function testRejectsNegativeDuration(): void
     {
         $this->expectException(InvalidTypedOptions::class);

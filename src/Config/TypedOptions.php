@@ -105,6 +105,14 @@ final readonly class TypedOptions
     }
 
     /** @throws InvalidTypedOptions */
+    public function findPositiveDuration(string $secondsKey): ?Duration
+    {
+        $duration = $this->findDuration($secondsKey);
+
+        return $duration->isLongerThan(Duration::zero()) ? $duration : null;
+    }
+
+    /** @throws InvalidTypedOptions */
     public function requireTimeOfDay(string $key): TimeOfDay
     {
         try {
