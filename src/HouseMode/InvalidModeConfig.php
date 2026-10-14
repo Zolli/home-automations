@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Shared\HouseMode\Config;
+namespace Shared\HouseMode;
 
 use InvalidArgumentException;
 use Throwable;
@@ -17,6 +17,11 @@ final class InvalidModeConfig extends InvalidArgumentException
     public static function forMissingStrategies(string $name): self
     {
         return new self("Mode transition \"{$name}\" needs at least one strategy.");
+    }
+
+    public static function forDuplicateStrategy(string $strategyName): self
+    {
+        return new self("Strategy \"{$strategyName}\" is defined more than once in a transition.");
     }
 
     public static function forUnknownDefaultStrategy(string $name, string $strategyName): self

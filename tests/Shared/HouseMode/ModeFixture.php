@@ -15,10 +15,12 @@ use Stewart\Contracts\Exposure\Command\TimeCommand;
 use Stewart\Contracts\Exposure\DeviceInfo;
 use Stewart\Contracts\Exposure\ExposedEntitySnapshot;
 use Stewart\Contracts\Exposure\ExposedState;
+use Stewart\Contracts\Mqtt\MqttMessage;
 use Stewart\Contracts\Schedule\TimeOfDay;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\Time\Duration;
 use Stewart\Testing\App\AppHarness;
+use Stewart\Testing\HaContext\RecordedServiceCall;
 
 final readonly class ModeFixture
 {
@@ -37,6 +39,7 @@ final readonly class ModeFixture
             $this->harness->clock,
             $this->harness->entities,
             new DeviceInfo('house_mode', 'House mode'),
+            $this->harness->logger,
         );
     }
 
@@ -68,6 +71,22 @@ final readonly class ModeFixture
     public function changeNumber(string $key, float $value): void
     {
         $this->harness->entities->requireNumber($key)->pushCommand(new NumberCommand($value, $this->createContext()));
+    }
+
+    /** @return list<string> */
+    public function listCalledServices(): array
+    {
+        return $this->harness->ha->calls->mapToList(
+            static fn(RecordedServiceCall $call): string => $call->getServiceName(),
+        );
+    }
+
+    /** @return list<array{string, mixed}> */
+    public function listPublishedMessages(): array
+    {
+        return $this->harness->mqtt->published->mapToList(
+            static fn(MqttMessage $message): array => [$message->topic, $message->decodeJsonPayload()],
+        );
     }
 
     public function advanceTime(Duration $duration): void

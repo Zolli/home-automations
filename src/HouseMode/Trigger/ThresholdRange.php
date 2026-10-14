@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Shared\HouseMode\Strategy;
+namespace Shared\HouseMode\Trigger;
 
 use Stewart\Contracts\Exception\ExposureException;
 use Stewart\Contracts\Exposure\EntityCategory;

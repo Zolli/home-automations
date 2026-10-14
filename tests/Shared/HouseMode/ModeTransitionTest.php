@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Shared\HouseMode;
 
-use App\Tests\ServiceContainer;
 use PHPUnit\Framework\TestCase;
-use Shared\HouseMode\Config\ModeTransitionMapper;
-use Shared\HouseMode\TransitionMonitor;
-use Shared\HouseMode\WatchedTransition;
+use Shared\HouseMode\ModeTransition;
+use Shared\HouseMode\ModeTransitionMapper;
 use Stewart\Contracts\Exception\CommandException;
 use Stewart\Contracts\Exposure\SelectConfig;
 use Stewart\Contracts\Time\Duration;
 
-final class WatchedTransitionTest extends TestCase
+final class ModeTransitionTest extends TestCase
 {
     private const string BED_SENSOR   = 'binary_sensor.bed_occupied';
     private const string ROOM_SENSOR  = 'binary_sensor.room_occupied';
@@ -29,14 +27,10 @@ final class WatchedTransitionTest extends TestCase
 
     private FiringRecorder $recorder;
 
-    private ServiceContainer $container;
-
     protected function setUp(): void
     {
-        $this->fixture   = new ModeFixture('2026-10-14 12:00');
-        $this->recorder  = new FiringRecorder();
-        $this->container = new ServiceContainer(ModeTransitionMapper::class, TransitionMonitor::class);
-        $this->container->replaceSyntheticWithFakes($this->fixture->harness);
+        $this->fixture  = new ModeFixture('2026-10-14 12:00');
+        $this->recorder = new FiringRecorder();
         $this->fixture->harness->ha->pushState(self::BED_SENSOR, 'off');
         $this->fixture->harness->ha->pushState(self::ROOM_SENSOR, 'off');
     }
@@ -61,7 +55,7 @@ final class WatchedTransitionTest extends TestCase
         $this->fixture->harness->ha->pushState(self::ROOM_SENSOR, 'on');
         $this->fixture->harness->ha->pushState(self::BED_SENSOR, 'on');
 
-        self::assertSame(['activation:bed_presence'], $this->recorder->firedStrategies);
+        self::assertSame(['bed_presence'], $this->recorder->firedStrategies);
         self::assertTrue($this->fixture->harness->entities->requireSelect(self::STRATEGY_KEY)->changes->isEmpty());
     }
 
@@ -73,7 +67,7 @@ final class WatchedTransitionTest extends TestCase
         $this->fixture->harness->ha->pushState(self::BED_SENSOR, 'on');
         $this->fixture->harness->ha->pushState(self::ROOM_SENSOR, 'on');
 
-        self::assertSame(['activation:room_presence'], $this->recorder->firedStrategies);
+        self::assertSame(['room_presence'], $this->recorder->firedStrategies);
     }
 
     public function testReplacesUnknownRestoredStrategyWithDefault(): void
@@ -87,7 +81,7 @@ final class WatchedTransitionTest extends TestCase
             'bed_presence',
             $this->fixture->harness->entities->requireSelect(self::STRATEGY_KEY)->getOption(),
         );
-        self::assertSame(['activation:bed_presence'], $this->recorder->firedStrategies);
+        self::assertSame(['bed_presence'], $this->recorder->firedStrategies);
     }
 
     public function testSwitchesStrategyOnSelectCommand(): void
@@ -98,7 +92,7 @@ final class WatchedTransitionTest extends TestCase
         $this->fixture->harness->ha->pushState(self::BED_SENSOR, 'on');
         $this->fixture->harness->ha->pushState(self::ROOM_SENSOR, 'on');
 
-        self::assertSame(['activation:room_presence'], $this->recorder->firedStrategies);
+        self::assertSame(['room_presence'], $this->recorder->firedStrategies);
     }
 
     public function testRejectsUnknownSelectCommand(): void
@@ -117,10 +111,7 @@ final class WatchedTransitionTest extends TestCase
         $this->fixture->harness->ha->pushState(self::BED_SENSOR, 'on');
         $this->fixture->advanceTime(Duration::hours(1));
 
-        self::assertSame(
-            ['activation:bed_presence', 'activation:forced_activation'],
-            $this->recorder->firedStrategies,
-        );
+        self::assertSame(['bed_presence', 'forced_activation'], $this->recorder->firedStrategies);
     }
 
     public function testSkipsFiringOutsideWindow(): void
@@ -132,7 +123,7 @@ final class WatchedTransitionTest extends TestCase
         $this->fixture->harness->ha->pushState(self::BED_SENSOR, 'off');
         $this->fixture->harness->ha->pushState(self::BED_SENSOR, 'on');
 
-        self::assertSame(['activation:bed_presence'], $this->recorder->firedStrategies);
+        self::assertSame(['bed_presence'], $this->recorder->firedStrategies);
     }
 
     public function testStopsFiringAfterStopWatching(): void
@@ -146,18 +137,15 @@ final class WatchedTransitionTest extends TestCase
     }
 
     /** @param array<string, string>|null $window */
-    private function startWatching(?array $window = null): WatchedTransition
+    private function startWatching(?array $window = null): ModeTransition
     {
-        $transition = $this->container->getService(ModeTransitionMapper::class)->mapToTransition('activation', [
+        $transition = new ModeTransitionMapper()->mapToTransition('activation', [
             'strategies'   => self::STRATEGIES,
             'alwaysActive' => self::ALWAYS_ACTIVE,
             'window'       => $window,
         ]);
+        $transition->startWatching($this->fixture->createModeContext(), $this->recorder->recordFiring(...));
 
-        return $this->container->getService(TransitionMonitor::class)->startWatching(
-            $transition,
-            $this->fixture->createModeContext(),
-            $this->recorder->recordTransitionFiring(...),
-        );
+        return $transition;
     }
 }

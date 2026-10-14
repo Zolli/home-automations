@@ -12,9 +12,8 @@ use Shared\Alert\Mitigation\MitigationFactory;
 use Shared\Alert\Rule\AlertRuleFactory;
 use Shared\Alert\Rule\ThresholdRule;
 use Shared\Condition\ConditionFactory;
-use Shared\HouseMode\Config\ModeTransitionMapper;
+use Shared\HouseMode\ModeTransitionMapper;
 use Shared\HouseMode\Payload\ModeEventPayloadMapper;
-use Shared\HouseMode\TransitionMonitor;
 use Shared\Notification\Condition\ImportanceCondition;
 use Shared\Notification\NotificationBuilder;
 use Shared\Notification\Notifier;
@@ -102,25 +101,13 @@ final class ServicesTest extends TestCase
 
     public function testWiresHouseModeServices(): void
     {
-        $container = new ServiceContainer(
-            ModeTransitionMapper::class,
-            TransitionMonitor::class,
-            ModeEventPayloadMapper::class,
-        );
-        $container->replaceSyntheticWithFakes(new AppHarness());
+        $container = new ServiceContainer(ModeTransitionMapper::class, ModeEventPayloadMapper::class);
 
         $transition = $container->getService(ModeTransitionMapper::class)->mapToTransition('day', [
-            'strategies' => [
-                ['name' => 'fixed_time', 'type' => 'fixed_time', 'time' => '07:00'],
-                ['name' => 'covers_opened', 'type' => 'state', 'entity' => 'binary_sensor.covers'],
-                ['name' => 'bright', 'type' => 'above', 'entity' => 'sensor.lux', 'threshold' => 800, 'max' => 1_000],
-                ['name' => 'dark', 'type' => 'below', 'entity' => 'sensor.lux', 'threshold' => 50, 'max' => 1_000],
-                ['name' => 'sunrise', 'type' => 'sun', 'event' => 'sunrise'],
-            ],
+            'strategies' => [['name' => 'sunrise', 'type' => 'sun', 'event' => 'sunrise']],
         ]);
 
-        self::assertCount(5, $transition->strategies);
-        self::assertInstanceOf(TransitionMonitor::class, $container->getService(TransitionMonitor::class));
+        self::assertSame(['sunrise'], $transition->strategies->listNames());
         self::assertInstanceOf(ModeEventPayloadMapper::class, $container->getService(ModeEventPayloadMapper::class));
     }
 }

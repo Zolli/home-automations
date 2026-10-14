@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Shared\HouseMode;
 
-use Shared\HouseMode\Strategy\ThresholdRange;
+use Shared\HouseMode\Trigger\ThresholdRange;
 use Stewart\Contracts\Exception\ExposureException;
 use Stewart\Contracts\Exposure\EntityCategory;
 use Stewart\Contracts\Exposure\ExposedEntity;

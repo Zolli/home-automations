@@ -190,6 +190,27 @@ the fault that raised the alert.
 A new rule implements `Shared\Alert\Rule\AlertRuleType`, a new mitigation `Shared\Alert\Mitigation\MitigationType`
 and a new signal `Shared\Alert\Signal\SignalType`; each is registered from `src/` and picked up by its interface.
 
+## House modes
+
+`day-night-mode` selects `day`/`night` on `input_select.house_day_night_mode` and `sleep-mode` turns
+`input_boolean.sleep_mode` on and off. Each publishes `{event, data: {cause}, meta: {producer}}` to its `topic`, the
+cause being the strategy that fired. Day/night always switches; sleep mode skips when it is already in that state.
+
+Each transition (`day`, `night`, `activation`, `deactivation`) lists named `strategies`; one is active at a time,
+picked in Home Assistant with a select Stewart exposes (`<transition> strategy`), starting from `defaultStrategy`
+(the first one when left out). `alwaysActive` strategies fire regardless of the selection. A `window` of `from` and
+`until` times drops firings outside it. Strategy names become entity keys: lowercase, digits and `_`, at most 40.
+
+| Strategy | Fires when |
+|---|---|
+| `fixed_time` | Daily at `time`; exposed as a time entity |
+| `state` | `entity` changes to `state` (default `on`) and holds it `forSeconds` |
+| `above`, `below` | `entity` crosses `threshold` and stays past it `forSeconds`; once per crossing, re-armed past `hysteresis`; the threshold is exposed as a number between `min` and `max` in `step`s with `unit` |
+| `sun` | At `event` (`sunrise`, `sunset`, `civil_dusk`, …) shifted by `offsetSeconds`, negative for before |
+
+Values in `stewart.yaml` seed the exposed entities only while Home Assistant has none; after that the values set in
+Home Assistant win. A new strategy type is a `Shared\HouseMode\Trigger\ModeTrigger` mapped in `ModeTransitionMapper`.
+
 ## Configuration
 
 `stewart.yaml` holds what differs from the defaults; `make config-reference` lists every setting and `make config`

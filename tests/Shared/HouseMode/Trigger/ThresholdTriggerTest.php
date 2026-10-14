@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Shared\HouseMode\Strategy;
+namespace App\Tests\Shared\HouseMode\Trigger;
 
 use App\Tests\Shared\HouseMode\FiringRecorder;
 use App\Tests\Shared\HouseMode\ModeFixture;
 use PHPUnit\Framework\TestCase;
-use Shared\HouseMode\Strategy\StrategyTrigger;
-use Shared\HouseMode\Strategy\ThresholdRange;
-use Shared\HouseMode\Strategy\ThresholdStrategy;
+use Shared\HouseMode\TransitionContext;
+use Shared\HouseMode\Trigger\ThresholdRange;
+use Shared\HouseMode\Trigger\ThresholdTrigger;
 use Shared\Threshold\ThresholdDirection;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Time\Duration;
 
-final class ThresholdStrategyTest extends TestCase
+final class ThresholdTriggerTest extends TestCase
 {
     private const string LUX_SENSOR    = 'sensor.outdoor_lux';
     private const string THRESHOLD_KEY = 'day_light_level_threshold';
@@ -23,17 +23,19 @@ final class ThresholdStrategyTest extends TestCase
 
     private FiringRecorder $recorder;
 
+    private TransitionContext $context;
+
     protected function setUp(): void
     {
         $this->fixture  = new ModeFixture();
         $this->recorder = new FiringRecorder();
+        $this->context  = $this->fixture->createTransitionContext('day');
         $this->fixture->harness->ha->pushState(self::LUX_SENSOR, '100');
     }
 
     public function testAboveFiresAfterHeldAboveThreshold(): void
     {
-        $this->attachLightLevel(ThresholdDirection::Above, Duration::minutes(5))
-            ->arm($this->recorder->recordStrategyFiring(...));
+        $this->attachAndArm($this->createLightLevel(ThresholdDirection::Above, Duration::minutes(5)));
 
         $this->fixture->harness->ha->pushState(self::LUX_SENSOR, '900');
         $this->fixture->advanceTime(Duration::minutes(4));
@@ -47,7 +49,7 @@ final class ThresholdStrategyTest extends TestCase
     public function testBelowFiresWhenFallingBelowThreshold(): void
     {
         $this->fixture->harness->ha->pushState(self::LUX_SENSOR, '1000');
-        $this->attachLightLevel(ThresholdDirection::Below)->arm($this->recorder->recordStrategyFiring(...));
+        $this->attachAndArm($this->createLightLevel(ThresholdDirection::Below));
 
         $this->fixture->harness->ha->pushState(self::LUX_SENSOR, '900');
         $this->fixture->harness->ha->pushState(self::LUX_SENSOR, '700');
@@ -58,8 +60,8 @@ final class ThresholdStrategyTest extends TestCase
 
     public function testRewatchesWhenThresholdChanged(): void
     {
-        $trigger = $this->attachLightLevel(ThresholdDirection::Above);
-        $trigger->arm($this->recorder->recordStrategyFiring(...));
+        $trigger = $this->createLightLevel(ThresholdDirection::Above);
+        $this->attachAndArm($trigger);
 
         $this->fixture->changeNumber(self::THRESHOLD_KEY, 300.0);
         $this->fixture->harness->ha->pushState(self::LUX_SENSOR, '400');
@@ -72,7 +74,7 @@ final class ThresholdStrategyTest extends TestCase
     {
         $this->fixture->restoreExposedValue(self::THRESHOLD_KEY, null);
 
-        $this->attachLightLevel(ThresholdDirection::Above);
+        $this->createLightLevel(ThresholdDirection::Above)->attach($this->context);
 
         self::assertSame(800.0, $this->fixture->harness->entities->requireNumber(self::THRESHOLD_KEY)->getValue());
     }
@@ -80,22 +82,28 @@ final class ThresholdStrategyTest extends TestCase
     public function testUsesRestoredThreshold(): void
     {
         $this->fixture->restoreExposedValue(self::THRESHOLD_KEY, 2000);
+        $trigger = $this->createLightLevel(ThresholdDirection::Above);
 
-        self::assertSame(
-            'sensor.outdoor_lux above 2000',
-            $this->attachLightLevel(ThresholdDirection::Above)->describe(),
-        );
+        $trigger->attach($this->context);
+
+        self::assertSame('sensor.outdoor_lux above 2000', $trigger->describe());
     }
 
-    private function attachLightLevel(ThresholdDirection $direction, ?Duration $holdDuration = null): StrategyTrigger
+    private function createLightLevel(ThresholdDirection $direction, ?Duration $holdDuration = null): ThresholdTrigger
     {
-        return new ThresholdStrategy(
+        return new ThresholdTrigger(
             'light_level',
             new EntityId(self::LUX_SENSOR),
             $direction,
             800.0,
             new ThresholdRange(0.0, 100_000.0, unit: 'lx'),
             holdDuration: $holdDuration,
-        )->attach($this->fixture->createTransitionContext('day'));
+        );
+    }
+
+    private function attachAndArm(ThresholdTrigger $trigger): void
+    {
+        $trigger->attach($this->context);
+        $trigger->arm($this->context, $this->recorder->recordFiring(...));
     }
 }

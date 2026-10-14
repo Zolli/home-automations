@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Shared\HouseMode;
 
+use Psr\Log\LoggerInterface;
 use Stewart\Contracts\Exposure\DeviceInfo;
 use Stewart\Contracts\Exposure\EntityExposure;
 use Stewart\Contracts\HaContext;
@@ -18,5 +19,6 @@ final readonly class ModeContext
         public Clock $clock,
         public EntityExposure $exposure,
         public DeviceInfo $device,
+        public LoggerInterface $logger,
     ) {}
 }

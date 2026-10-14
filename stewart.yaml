@@ -16,6 +16,70 @@ apps:
     options:
       topic: 'stewart/notify'
       actionTopic: 'stewart/notify/action'
+  day-night-mode:
+    enabled: false
+    options:
+      day:
+        defaultStrategy: sun_above_horizon
+        strategies:
+          - {name: sun_above_horizon, type: sun, event: sunrise}
+          - {name: covers_opened, type: state, entity: binary_sensor.covers_opened_kitchen_and_living_room, state: 'on'}
+          - {name: fixed_time, type: fixed_time, time: '07:30'}
+          - name: light_level
+            type: above
+            entity: sensor.outdoor_illuminance_lux_average
+            threshold: 30
+            min: 10
+            max: 200
+            step: 10
+            unit: lx
+            forSeconds: 300
+      night:
+        defaultStrategy: covers_closed
+        strategies:
+          - {name: covers_closed, type: state, entity: binary_sensor.covers_closed_all, state: 'on'}
+          - {name: sun_below_horizon, type: sun, event: sunset}
+          - {name: fixed_time, type: fixed_time, time: '20:30'}
+          - name: light_level
+            type: below
+            entity: sensor.outdoor_illuminance_lux_average
+            threshold: 20
+            min: 10
+            max: 200
+            step: 10
+            unit: lx
+            forSeconds: 300
+  sleep-mode:
+    enabled: false
+    options:
+      activation:
+        window: {from: '18:00', until: '03:00'}
+        defaultStrategy: bed_presence_double
+        strategies:
+          - name: room_presence
+            type: state
+            entity: binary_sensor.athom_presence_1_f9a3ab_occupancy
+            forSeconds: 1800
+          - name: bed_presence_single
+            type: state
+            entity: binary_sensor.master_bed_partially_occupied
+            forSeconds: 1800
+          - name: bed_presence_double
+            type: state
+            entity: binary_sensor.master_bed_fully_occupied
+            forSeconds: 1800
+        alwaysActive:
+          - {name: forced_activation, type: fixed_time, time: '02:00'}
+      deactivation:
+        window: {from: '04:00', until: '12:00'}
+        defaultStrategy: bed_presence
+        strategies:
+          - name: bed_presence
+            type: state
+            entity: binary_sensor.master_bed_partially_occupied
+            state: 'off'
+            forSeconds: 600
+          - {name: covers_opened, type: state, entity: cover.cover_group_master_bedroom, state: open, forSeconds: 120}
   home-alert:
     options:
       policies:
