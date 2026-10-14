@@ -8,7 +8,6 @@ use Shared\Alert\Mitigation\Collection\MitigationTypeCollection;
 use Shared\Alert\Mitigation\MitigationType;
 use Shared\Alert\Rule\AlertRuleType;
 use Shared\Alert\Rule\Collection\AlertRuleTypeCollection;
-use Shared\Alert\Rule\ThresholdDirection;
 use Shared\Alert\Rule\ThresholdRuleType;
 use Shared\Alert\Signal\Collection\SignalTypeCollection;
 use Shared\Alert\Signal\SignalType;
@@ -20,6 +19,7 @@ use Shared\Notification\NotificationDispatcher;
 use Shared\Notification\Notifier;
 use Shared\Notification\Sender\Collection\DestinationSenderCollection;
 use Shared\Notification\Sender\DestinationSender;
+use Shared\Threshold\ThresholdDirection;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
