@@ -51,8 +51,8 @@ make run ONLY=hello DRY_RUN=1  # service calls are logged and answered as succee
 
 ### Shared components
 
-Code that several apps use lives in `src/` under the `Shared\` namespace and is registered in `services.php`, so apps
-receive it by type. `Shared\Condition` evaluates conditions against Home Assistant state; `Shared\Notification` sends
+Code that several apps use lives in `src/` under the `Shared\` namespace; `services.php` registers every class there, so
+apps receive it by type. `Shared\Condition` evaluates conditions against Home Assistant state; `Shared\Notification` sends
 notifications; `Shared\Alert` watches for serious faults and escalates them; `Shared\Template` renders `{name}`
 placeholders from a `TemplateVariableCollection`.
 
@@ -141,8 +141,7 @@ destination type. Each entry in `message.buttons` needs `action` and `title`; ot
 A new destination type is a case on `Shared\Notification\DestinationType` plus a class implementing
 `Shared\Notification\Sender\DestinationSender` that returns that case from `getSupportedType()`, rejects bad targets in `validateDestination()` and builds a `ServiceCallCollection` for a
 destination, with a static `createDestination()` shortcut for apps; a new condition type implements
-`Shared\Condition\ConditionType`. Register either in `services.php` with `$services->set(…)` and it is picked up by
-its interface.
+`Shared\Condition\ConditionType`. Either is registered from `src/` and picked up by its interface.
 
 ## Alerts
 
@@ -189,7 +188,7 @@ the fault that raised the alert.
 | `turn-off` | `valve.close_valve` for a `valve` entity, otherwise `homeassistant.turn_off` |
 
 A new rule implements `Shared\Alert\Rule\AlertRuleType`, a new mitigation `Shared\Alert\Mitigation\MitigationType`
-and a new signal `Shared\Alert\Signal\SignalType`; register it in `services.php` and it is picked up by its interface.
+and a new signal `Shared\Alert\Signal\SignalType`; each is registered from `src/` and picked up by its interface.
 
 ## Configuration
 

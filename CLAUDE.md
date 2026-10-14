@@ -22,10 +22,10 @@
 - Static only for VO named constructors and pure formatting/lookups; everything else lives on its owner type or in an injected service.
 - Method names are verb phrases that say what happens, even when the class name already implies it; never bare `of()`, `in()`, `decode()`, `build()`, `create()`, except a builder's empty `create()` entry point. `with*` names only immutable copies; a method that changes the object says so.
 - Apps live in `apps/` (`App\`), implement `Stewart\Contracts\App` and carry `#[Automation(id: '…')]`; their options come from `stewart.yaml`. Code that several apps use lives in `src/` (`Shared\`).
-- Shared services are autowired from `services.php`; no `new` for services inside apps or `src/`. Implementations of an extension point are tagged via `instanceof()` and injected with `tagged_iterator()`.
+- `services.php` loads and autowires every class in `src/`; define a service explicitly only for factories, constructor arguments or vendor classes. No `new` for services inside apps or `src/`. Implementations of an extension point are tagged via `instanceof()` and injected with `tagged_iterator()`.
 - A new failure is a `final` exception class named `Invalid<Thing>` next to the code that throws it, with a one-line static factory named `for<Problem>` (`forMissingTargets`, `forUnknownType`); messages are one plain sentence. Tests assert the exception class, not message text, unless the message logic is conditional.
 - Tests live in `tests/` under `App\Tests\`, mirroring the source namespace (`Shared\X` → `tests/Shared/X`, `App\X` → `tests/X`). Stubs and recorders stay next to the tests that use them.
-- `tests/ServicesTest.php` boots `services.php`; register a new shared service there and cover its wiring rather than wiring object graphs by hand in tests.
+- `tests/ServicesTest.php` boots `services.php`; cover a new shared service's wiring there rather than wiring object graphs by hand in tests.
 
 ## Communication style
 
