@@ -72,6 +72,28 @@ final class TypedOptionsTest extends TestCase
         $this->createOptions(['entities' => ['sensor.a', 'kitchen']])->findEntityIds('entities');
     }
 
+    public function testReadsTimeOfDay(): void
+    {
+        self::assertSame('07:30:00', $this->createOptions(['time' => '07:30'])->requireTimeOfDay('time')->format());
+    }
+
+    /** @return iterable<string, array{mixed}> */
+    public static function malformedTimes(): iterable
+    {
+        yield 'absent' => [null];
+        yield 'not a string' => [730];
+        yield 'not a time' => ['7am'];
+        yield 'out of range' => ['25:00'];
+    }
+
+    #[DataProvider('malformedTimes')]
+    public function testRejectsMalformedTimeOfDay(mixed $time): void
+    {
+        $this->expectException(InvalidTypedOptions::class);
+
+        $this->createOptions(['time' => $time])->requireTimeOfDay('time');
+    }
+
     /** @param array<array-key, mixed> $fields */
     private function createOptions(array $fields): TypedOptions
     {
