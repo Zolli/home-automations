@@ -11,7 +11,9 @@ use Shared\Config\TypedOptions;
 
 final readonly class MitigationFactory
 {
-    public function __construct(private MitigationTypeCollection $types) {}
+    public function __construct(
+        private MitigationTypeCollection $types,
+    ) {}
 
     /**
      * @param array<array-key, mixed> $mitigations
@@ -22,7 +24,7 @@ final readonly class MitigationFactory
         $mapped = [];
 
         foreach ($mitigations as $fields) {
-            $options = TypedOptions::fromArray(MitigationType::KIND, \is_array($fields) ? $fields : []);
+            $options  = TypedOptions::fromArray(MitigationType::KIND, \is_array($fields) ? $fields : []);
             $mapped[] = $this->types->requireType($options)->mapToMitigation($options);
         }
 

@@ -20,20 +20,30 @@ final class FaultTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->fault = new Fault(ReadingSource::forEntity(new EntityId('binary_sensor.leak_kitchen')), 'Kitchen leak', 'Kitchen leak is on');
+        $this->fault = new Fault(
+            ReadingSource::forEntity(new EntityId('binary_sensor.leak_kitchen')),
+            'Kitchen leak',
+            'Kitchen leak is on',
+        );
     }
 
     public function testFillsReasonLabelAndArea(): void
     {
         $variables = $this->fault->listTemplateVariables(new Area(new AreaId('kitchen'), 'Kitchen'));
 
-        self::assertSame('Kitchen leak is on | Kitchen leak | Kitchen', new TextTemplate(self::TEMPLATE)->render($variables));
+        self::assertSame(
+            'Kitchen leak is on | Kitchen leak | Kitchen',
+            new TextTemplate(self::TEMPLATE)->render($variables),
+        );
     }
 
     public function testUsesLabelAsAreaWhenUnknown(): void
     {
         $variables = $this->fault->listTemplateVariables(null);
 
-        self::assertSame('Kitchen leak is on | Kitchen leak | Kitchen leak', new TextTemplate(self::TEMPLATE)->render($variables));
+        self::assertSame(
+            'Kitchen leak is on | Kitchen leak | Kitchen leak',
+            new TextTemplate(self::TEMPLATE)->render($variables),
+        );
     }
 }

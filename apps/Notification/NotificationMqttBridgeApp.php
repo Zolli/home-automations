@@ -60,18 +60,21 @@ final class NotificationMqttBridgeApp implements App
     {
         try {
             $request = $this->notificationMapper->mapToNotificationRequest($message->decodeJsonPayload());
-            $sent = $this->notifier->send($request->notification);
+            $sent    = $this->notifier->send($request->notification);
         } catch (MqttException|InvalidNotificationPayload|InvalidDestination $e) {
             $this->logger->warning("[NOTIFICATION-MQTT] Dropped message: {$e->getMessage()}", [
-                'topic' => $message->topic,
+                'topic'   => $message->topic,
                 'payload' => $message->payload,
             ]);
 
             return;
         }
 
-        $notification = $request->notification;
-        $this->awaitingActions = array_filter($this->awaitingActions, static fn(ActionListener $listener) => $listener->isListening());
+        $notification          = $request->notification;
+        $this->awaitingActions = array_filter(
+            $this->awaitingActions,
+            static fn(ActionListener $listener) => $listener->isListening(),
+        );
 
         if (!$notification->message->hasButtons()) {
             return;

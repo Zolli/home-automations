@@ -15,7 +15,7 @@ final class ServiceData
     {
         foreach ($overrides as $override) {
             foreach ($override as $key => $value) {
-                $current = $base[$key] ?? null;
+                $current    = $base[$key] ?? null;
                 $base[$key] = self::isMap($current) && self::isMap($value)
                     ? self::mergeReplacingLists($current, $value)
                     : $value;

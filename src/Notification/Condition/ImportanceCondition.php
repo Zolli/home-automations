@@ -11,13 +11,15 @@ use Stewart\Contracts\Entity\EntityId;
 
 final readonly class ImportanceCondition implements Condition
 {
-    public function __construct(public EntityId $entityId) {}
+    public function __construct(
+        public EntityId $entityId,
+    ) {}
 
     public function isSatisfied(ConditionContext $context): bool
     {
         $importance = $context->facts->find(Importance::class) ?? Importance::DEFAULT;
-        $state = $context->ha->getState($this->entityId)?->state;
-        $threshold = $state === null ? null : Importance::tryFrom(strtolower($state));
+        $state      = $context->ha->getState($this->entityId)?->state;
+        $threshold  = $state === null ? null : Importance::tryFrom(strtolower($state));
 
         return $threshold === null || $importance->isAtLeast($threshold);
     }

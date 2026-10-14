@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\TimedLight\Component;
 
 use App\Generated\CoverEntity;
@@ -31,8 +33,7 @@ class TimedLightComponent
         $stateChangeStream->distinctUntilChanged()->subscribe($this->whenSensorsChanges(...));
     }
 
-    public function dispose(): void
-    {}
+    public function dispose(): void {}
 
     private function whenSensorsChanges(StateChange $stateChange): void
     {
@@ -49,9 +50,9 @@ class TimedLightComponent
 
                 $this->timeoutTask = $this->scheduler->runAfter(
                     Duration::seconds($this->lightTimeoutSeconds),
-                    function() {
+                    function (): void {
                         $this->turnOffLight();
-                    }
+                    },
                 );
 
                 break;
@@ -63,9 +64,12 @@ class TimedLightComponent
                 }
 
                 $this->timeoutTask?->cancel();
-                $this->timeoutTask = $this->scheduler->runAfter(Duration::seconds($this->lightTimeoutSeconds), function() {
-                    $this->turnOffLight();
-                });
+                $this->timeoutTask = $this->scheduler->runAfter(
+                    Duration::seconds($this->lightTimeoutSeconds),
+                    function (): void {
+                        $this->turnOffLight();
+                    },
+                );
 
                 break;
         }

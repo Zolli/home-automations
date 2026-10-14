@@ -6,9 +6,9 @@ namespace Shared\Notification;
 
 enum Importance: string
 {
-    case Low = 'low';
-    case Normal = 'normal';
-    case High = 'high';
+    case Low      = 'low';
+    case Normal   = 'normal';
+    case High     = 'high';
     case Critical = 'critical';
 
     public const self DEFAULT = self::Normal;
@@ -21,9 +21,9 @@ enum Importance: string
     private function getRank(): int
     {
         return match ($this) {
-            self::Low => 0,
-            self::Normal => 1,
-            self::High => 2,
+            self::Low      => 0,
+            self::Normal   => 1,
+            self::High     => 2,
             self::Critical => 3,
         };
     }

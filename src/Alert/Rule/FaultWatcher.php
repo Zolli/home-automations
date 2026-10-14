@@ -34,7 +34,10 @@ final class FaultWatcher
         $this->feed->startWatching($this->evaluateReadings(...));
 
         if ($this->rule instanceof RecheckedAlertRule) {
-            $this->recheck ??= $this->scheduler->runEvery($this->rule->getRecheckInterval(), fn() => $this->evaluateReadings());
+            $this->recheck ??= $this->scheduler->runEvery(
+                $this->rule->getRecheckInterval(),
+                fn() => $this->evaluateReadings(),
+            );
         }
 
         $this->evaluateReadings();
@@ -91,7 +94,7 @@ final class FaultWatcher
     private function raiseHeldFault(): void
     {
         $this->pendingFault = null;
-        $fault = $this->rule->findFault($this->feed->readSnapshot());
+        $fault              = $this->rule->findFault($this->feed->readSnapshot());
 
         if ($fault !== null) {
             $this->raiseFault($fault);

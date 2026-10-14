@@ -12,10 +12,10 @@ final readonly class NotificationActionPayloadMapper
     public function mapToPayload(NotificationAction $action): array
     {
         return array_filter([
-            'id' => $action->notificationId->value,
-            'action' => $action->action,
+            'id'        => $action->notificationId->value,
+            'action'    => $action->action,
             'replyText' => $action->getReplyText(),
-            'userId' => $action->userId,
+            'userId'    => $action->userId,
         ], static fn(?string $value) => $value !== null);
     }
 }

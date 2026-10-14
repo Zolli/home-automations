@@ -55,12 +55,17 @@ final class CompareConditionTest extends TestCase
     {
         $context = ConditionContextFixture::createWithStates(['sensor.temperature' => ['18.5']]);
 
-        self::assertTrue(new CompareCondition(new EntityId('sensor.temperature'), Operator::Lt, '20')->isSatisfied($context));
+        self::assertTrue(
+            new CompareCondition(new EntityId('sensor.temperature'), Operator::Lt, '20')->isSatisfied($context),
+        );
     }
 
     public function testAllOfNeedsEveryCondition(): void
     {
-        $context = ConditionContextFixture::createWithStates(['input_boolean.guest_mode' => ['off'], 'sensor.temperature' => ['18.5']]);
+        $context = ConditionContextFixture::createWithStates([
+            'input_boolean.guest_mode' => ['off'],
+            'sensor.temperature'       => ['18.5'],
+        ]);
 
         self::assertTrue(new AllOf()->isSatisfied($context));
         self::assertTrue(new AllOf(
@@ -77,7 +82,10 @@ final class CompareConditionTest extends TestCase
     {
         self::assertSame(
             'input_boolean.guest_mode eq "off" and sun.sun[elevation] lt 10',
-            new AllOf(CompareCondition::equals('input_boolean.guest_mode', 'off'), CompareCondition::lessThan('sun.sun', 10, 'elevation'))->describe(),
+            new AllOf(
+                CompareCondition::equals('input_boolean.guest_mode', 'off'),
+                CompareCondition::lessThan('sun.sun', 10, 'elevation'),
+            )->describe(),
         );
     }
 

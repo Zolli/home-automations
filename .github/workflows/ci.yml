@@ -21,6 +21,8 @@ jobs:
           persist-credentials: false
       - name: Install dependencies
         run: make install
+      - name: Coding style
+        run: make cs
       - name: Static analysis
         run: make stan
       - name: Tests

@@ -8,11 +8,13 @@ use Shared\Notification\Exception\InvalidNotification;
 
 final readonly class NotificationId
 {
-    private const string ALLOWED_PATTERN = '/^[A-Za-z0-9_-]+$/';
-    private const string GENERATED_PREFIX = 'n-';
+    private const string ALLOWED_PATTERN     = '/^[A-Za-z0-9_-]+$/';
+    private const string GENERATED_PREFIX    = 'n-';
     private const int GENERATED_RANDOM_BYTES = 6;
 
-    private function __construct(public string $value) {}
+    private function __construct(
+        public string $value,
+    ) {}
 
     public static function generate(): self
     {

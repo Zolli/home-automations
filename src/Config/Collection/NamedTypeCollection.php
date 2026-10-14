@@ -48,7 +48,8 @@ abstract readonly class NamedTypeCollection extends KeyedCollection
      */
     public function requireType(TypedOptions $options): NamedType
     {
-        return $this->find($options->type) ?? throw InvalidTypedOptions::forUnknownType($options->kind, $options->type, $this->listNames());
+        return $this->find($options->type)
+            ?? throw InvalidTypedOptions::forUnknownType($options->kind, $options->type, $this->listNames());
     }
 
     /** @return list<string> */

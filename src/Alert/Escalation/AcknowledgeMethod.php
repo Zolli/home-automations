@@ -6,6 +6,6 @@ namespace Shared\Alert\Escalation;
 
 enum AcknowledgeMethod: string
 {
-    case Button = 'button';
+    case Button    = 'button';
     case Dismissal = 'dismissal';
 }

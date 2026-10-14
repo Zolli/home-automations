@@ -22,7 +22,12 @@ final readonly class Reading
 
     public static function fromEntityState(EntityState $state): self
     {
-        return new self(ReadingSource::forEntity($state->entityId), $state->getFriendlyName(), $state->state, $state->attributes);
+        return new self(
+            ReadingSource::forEntity($state->entityId),
+            $state->getFriendlyName(),
+            $state->state,
+            $state->attributes,
+        );
     }
 
     public static function fromMqttPayload(string $topic, string $payload, Instant $receivedAt): self

@@ -11,13 +11,10 @@ use Shared\Config\TypedOptions;
 
 final readonly class ReadingSourceMapper
 {
-    private const string ENTITY_KEY = 'entity';
-
+    private const string ENTITY_KEY   = 'entity';
     private const string ENTITIES_KEY = 'entities';
-
-    private const string TOPIC_KEY = 'topic';
-
-    private const string TOPICS_KEY = 'topics';
+    private const string TOPIC_KEY    = 'topic';
+    private const string TOPICS_KEY   = 'topics';
 
     /** @throws InvalidTypedOptions */
     public function mapToSources(TypedOptions $options): ReadingSourceCollection
@@ -41,7 +38,14 @@ final readonly class ReadingSourceMapper
         }
 
         if ($sources === []) {
-            throw InvalidTypedOptions::forMissingOption($options->kind, $options->type, self::ENTITY_KEY, self::ENTITIES_KEY, self::TOPIC_KEY, self::TOPICS_KEY);
+            throw InvalidTypedOptions::forMissingOption(
+                $options->kind,
+                $options->type,
+                self::ENTITY_KEY,
+                self::ENTITIES_KEY,
+                self::TOPIC_KEY,
+                self::TOPICS_KEY,
+            );
         }
 
         return ReadingSourceCollection::fromSources($sources);
@@ -54,7 +58,10 @@ final readonly class ReadingSourceMapper
 
         return $topics === []
             ? throw InvalidTypedOptions::forMissingOption($options->kind, $options->type, self::TOPICS_KEY)
-            : ReadingSourceCollection::fromSources(array_map(fn(mixed $topic): ReadingSource => $this->mapToTopicSource($options, self::TOPICS_KEY, $topic), $topics));
+            : ReadingSourceCollection::fromSources(array_map(
+                fn(mixed $topic): ReadingSource => $this->mapToTopicSource($options, self::TOPICS_KEY, $topic),
+                $topics,
+            ));
     }
 
     /** @throws InvalidTypedOptions */
@@ -62,6 +69,11 @@ final readonly class ReadingSourceMapper
     {
         return \is_string($topic) && trim($topic) !== '' && strpbrk($topic, '+#') === false
             ? ReadingSource::forTopic($topic)
-            : throw InvalidTypedOptions::forInvalidOption($options->kind, $options->type, $key, 'MQTT topics without wildcards');
+            : throw InvalidTypedOptions::forInvalidOption(
+                $options->kind,
+                $options->type,
+                $key,
+                'MQTT topics without wildcards',
+            );
     }
 }

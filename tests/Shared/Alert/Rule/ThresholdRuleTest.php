@@ -46,8 +46,17 @@ final class ThresholdRuleTest extends TestCase
 
     public function testReadsAttributeWhenConfigured(): void
     {
-        $rule = new ThresholdRule(ReadingFixture::createEntitySources('sensor.main_voltage'), ThresholdDirection::Above, 30.0, 0.0, Duration::zero(), 'temperature');
-        $readings = ReadingFixture::collectReadings(ReadingFixture::createEntityReading('sensor.main_voltage', '230', ['temperature' => 31]));
+        $rule = new ThresholdRule(
+            ReadingFixture::createEntitySources('sensor.main_voltage'),
+            ThresholdDirection::Above,
+            30.0,
+            0.0,
+            Duration::zero(),
+            'temperature',
+        );
+        $readings = ReadingFixture::collectReadings(
+            ReadingFixture::createEntityReading('sensor.main_voltage', '230', ['temperature' => 31]),
+        );
 
         self::assertNotNull($rule->findFault($readings));
     }
@@ -121,9 +130,18 @@ final class ThresholdRuleTest extends TestCase
         );
     }
 
-    private function createVoltageRule(ThresholdDirection $direction, float $threshold, float $hysteresis = 0.0): ThresholdRule
-    {
-        return new ThresholdRule(ReadingFixture::createEntitySources('sensor.main_voltage'), $direction, $threshold, $hysteresis, Duration::zero());
+    private function createVoltageRule(
+        ThresholdDirection $direction,
+        float $threshold,
+        float $hysteresis = 0.0,
+    ): ThresholdRule {
+        return new ThresholdRule(
+            ReadingFixture::createEntitySources('sensor.main_voltage'),
+            $direction,
+            $threshold,
+            $hysteresis,
+            Duration::zero(),
+        );
     }
 
     private function createReadings(string $voltage): ReadingSnapshot

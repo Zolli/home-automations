@@ -10,7 +10,9 @@ use Shared\Config\TypedOptions;
 
 final readonly class ConditionFactory
 {
-    public function __construct(private ConditionTypeCollection $types) {}
+    public function __construct(
+        private ConditionTypeCollection $types,
+    ) {}
 
     /**
      * @param array<array-key, mixed> $fields

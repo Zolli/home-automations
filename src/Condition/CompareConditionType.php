@@ -8,7 +8,9 @@ use Shared\Config\TypedOptions;
 
 final readonly class CompareConditionType implements ConditionType
 {
-    public function __construct(private Operator $operator) {}
+    public function __construct(
+        private Operator $operator,
+    ) {}
 
     public function getName(): string
     {

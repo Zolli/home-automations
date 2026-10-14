@@ -28,21 +28,21 @@ final class AlertConfigMapperTest extends TestCase
     {
         $definitions = $this->mapper->mapToDefinitions(self::POLICIES, [
             [
-                'id' => 'kitchen-flood',
-                'title' => 'Kitchen flood',
-                'message' => 'Water leak in the {area}',
-                'policy' => 'critical',
-                'rule' => ['type' => 'state', 'entities' => ['binary_sensor.kitchen_leak']],
+                'id'          => 'kitchen-flood',
+                'title'       => 'Kitchen flood',
+                'message'     => 'Water leak in the {area}',
+                'policy'      => 'critical',
+                'rule'        => ['type' => 'state', 'entities' => ['binary_sensor.kitchen_leak']],
                 'mitigations' => [['type' => 'turn-off', 'entity' => 'valve.main_water']],
             ],
             [
-                'id' => 'phase-loss',
+                'id'     => 'phase-loss',
                 'policy' => 'critical',
-                'rule' => ['type' => 'below', 'entities' => ['sensor.l1_voltage'], 'threshold' => 180],
+                'rule'   => ['type' => 'below', 'entities' => ['sensor.l1_voltage'], 'threshold' => 180],
             ],
         ]);
 
-        $flood = $definitions->find('kitchen-flood');
+        $flood     = $definitions->find('kitchen-flood');
         $phaseLoss = $definitions->find('phase-loss');
 
         self::assertSame('Kitchen flood', $flood?->title->text);
@@ -63,9 +63,14 @@ final class AlertConfigMapperTest extends TestCase
         yield 'missing id' => [[['policy' => 'critical', 'rule' => $rule]]];
         yield 'unknown policy' => [[['id' => 'flood', 'policy' => 'warning', 'rule' => $rule]]];
         yield 'missing rule' => [[['id' => 'flood', 'policy' => 'critical']]];
-        yield 'invalid mitigation' => [[['id' => 'flood', 'policy' => 'critical', 'rule' => $rule, 'mitigations' => [['type' => 'siren']]]]];
+        yield 'invalid mitigation' => [[
+            ['id' => 'flood', 'policy' => 'critical', 'rule' => $rule, 'mitigations' => [['type' => 'siren']]],
+        ]];
         yield 'empty message' => [[['id' => 'flood', 'policy' => 'critical', 'rule' => $rule, 'message' => ' ']]];
-        yield 'duplicate id' => [[['id' => 'flood', 'policy' => 'critical', 'rule' => $rule], ['id' => 'flood', 'policy' => 'critical', 'rule' => $rule]]];
+        yield 'duplicate id' => [[
+            ['id' => 'flood', 'policy' => 'critical', 'rule' => $rule],
+            ['id' => 'flood', 'policy' => 'critical', 'rule' => $rule],
+        ]];
     }
 
     /** @param list<array<string, mixed>> $alerts */

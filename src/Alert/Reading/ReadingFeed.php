@@ -32,9 +32,9 @@ final class ReadingFeed
         ReadingSourceCollection $sources,
         private readonly MonitoringContext $context,
     ) {
-        $entityIds = $sources->listKeysOfType(ReadingSourceType::Entity);
+        $entityIds            = $sources->listKeysOfType(ReadingSourceType::Entity);
         $this->entitySelector = $entityIds === [] ? null : Selector::anyOf(...$entityIds);
-        $this->topics = $sources->listKeysOfType(ReadingSourceType::MqttTopic);
+        $this->topics         = $sources->listKeysOfType(ReadingSourceType::MqttTopic);
     }
 
     /** @param Closure(): void $whenChanged */
@@ -47,13 +47,19 @@ final class ReadingFeed
         $this->watchingSince = $this->context->clock->getNow();
 
         if ($this->entitySelector !== null) {
-            $this->subscriptions[] = $this->context->ha->watchStateChanges($this->entitySelector)->subscribe(static fn() => $whenChanged());
+            $this->subscriptions[] = $this->context->ha
+                ->watchStateChanges($this->entitySelector)
+                ->subscribe(static fn() => $whenChanged());
         }
 
         foreach ($this->topics as $topic) {
             $this->subscriptions[] = $this->context->mqtt->watchMessages($topic)->subscribe(
                 function (MqttMessage $message) use ($whenChanged): void {
-                    $this->latestMqttReadings[$message->topic] = Reading::fromMqttPayload($message->topic, $message->payload, $this->context->clock->getNow());
+                    $this->latestMqttReadings[$message->topic] = Reading::fromMqttPayload(
+                        $message->topic,
+                        $message->payload,
+                        $this->context->clock->getNow(),
+                    );
                     $whenChanged();
                 },
             );
@@ -66,14 +72,14 @@ final class ReadingFeed
             $subscription->unsubscribe();
         }
 
-        $this->subscriptions = [];
+        $this->subscriptions      = [];
         $this->latestMqttReadings = [];
-        $this->watchingSince = null;
+        $this->watchingSince      = null;
     }
 
     public function readSnapshot(): ReadingSnapshot
     {
-        $now = $this->context->clock->getNow();
+        $now            = $this->context->clock->getNow();
         $entityReadings = $this->entitySelector === null
             ? []
             : $this->context->ha->listStates($this->entitySelector)->mapToList(Reading::fromEntityState(...));

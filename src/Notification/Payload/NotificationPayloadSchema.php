@@ -14,8 +14,7 @@ use Shared\Notification\Payload\Collection\PayloadViolationCollection;
 
 final readonly class NotificationPayloadSchema
 {
-    public const string FILE = __DIR__ . '/notification.schema.json';
-
+    public const string FILE                  = __DIR__ . '/notification.schema.json';
     private const string DESTINATIONS_POINTER = '#/$defs/destinations';
 
     private Schema $schema;
@@ -26,8 +25,8 @@ final readonly class NotificationPayloadSchema
         private Validator $validator,
         private ErrorFormatter $errorFormatter,
     ) {
-        $document = json_decode((string) file_get_contents(self::FILE), flags: \JSON_THROW_ON_ERROR);
-        $this->schema = $validator->loader()->loadObjectSchema($document);
+        $document                    = json_decode((string) file_get_contents(self::FILE), flags: \JSON_THROW_ON_ERROR);
+        $this->schema                = $validator->loader()->loadObjectSchema($document);
         $this->destinationsSchemaUri = $document->{'$id'} . self::DESTINATIONS_POINTER;
     }
 
@@ -55,7 +54,9 @@ final readonly class NotificationPayloadSchema
         $error = $this->validator->validate(Helper::convertAssocArrayToObject($data), $schema)->error();
 
         if ($error !== null) {
-            throw InvalidNotificationPayload::forViolations(PayloadViolationCollection::fromViolations($this->mapToViolations($error, $path)));
+            throw InvalidNotificationPayload::forViolations(
+                PayloadViolationCollection::fromViolations($this->mapToViolations($error, $path)),
+            );
         }
     }
 
@@ -77,14 +78,14 @@ final readonly class NotificationPayloadSchema
         $args = $error->args();
 
         yield from match ($error->keyword()) {
-            'required' => $this->mapEachProperty($path, $args['missing'], 'is required'),
+            'required'             => $this->mapEachProperty($path, $args['missing'], 'is required'),
             'additionalProperties' => $this->mapEachProperty(
                 $path,
                 array_values(array_diff($args['properties'], $this->listDeclaredProperties($error))),
                 'is not allowed',
             ),
-            'properties' => [PayloadViolation::atPath([...$path, $args['property']], 'is not allowed')],
-            default => [PayloadViolation::atPath($path, $this->describeError($error))],
+            'properties'           => [PayloadViolation::atPath([...$path, $args['property']], 'is not allowed')],
+            default                => [PayloadViolation::atPath($path, $this->describeError($error))],
         };
     }
 
@@ -113,13 +114,16 @@ final readonly class NotificationPayloadSchema
         $args = $error->args();
 
         return match ($error->keyword()) {
-            'type' => 'must be of type ' . implode(' or ', (array) $args['expected']),
-            'enum' => 'must be one of: ' . implode(', ', array_map(strval(...), (array) ($error->schema()->info()->data()->enum ?? []))),
-            'minItems' => "must have at least {$args['min']} items",
-            'maxItems' => "must have at most {$args['max']} items",
+            'type'      => 'must be of type ' . implode(' or ', (array) $args['expected']),
+            'enum'      => 'must be one of: ' . implode(
+                ', ',
+                array_map(strval(...), (array) ($error->schema()->info()->data()->enum ?? [])),
+            ),
+            'minItems'  => "must have at least {$args['min']} items",
+            'maxItems'  => "must have at most {$args['max']} items",
             'minLength' => $args['min'] === 1 ? 'must not be empty' : "must have at least {$args['min']} characters",
-            'pattern' => 'has an invalid format',
-            default => lcfirst($this->errorFormatter->formatErrorMessage($error)),
+            'pattern'   => 'has an invalid format',
+            default     => lcfirst($this->errorFormatter->formatErrorMessage($error)),
         };
     }
 }

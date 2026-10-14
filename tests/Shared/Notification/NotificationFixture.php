@@ -21,7 +21,7 @@ final readonly class NotificationFixture
     public function __construct()
     {
         $this->harness = new AppHarness();
-        $this->ha = $this->harness->ha;
+        $this->ha      = $this->harness->ha;
     }
 
     public function createActionRouter(): ActionRouter
@@ -32,13 +32,21 @@ final readonly class NotificationFixture
     /** @param array<string, mixed> $data */
     public function pressAction(string $key, array $data = [], ?string $userId = null): void
     {
-        $this->ha->pushEvent(new HaEvent(ActionRouter::ACTION_EVENT, ['action' => $key] + $data, context: new EventContext('ctx', userId: $userId)));
+        $this->ha->pushEvent(new HaEvent(
+            ActionRouter::ACTION_EVENT,
+            ['action' => $key] + $data,
+            context: new EventContext('ctx', userId: $userId),
+        ));
     }
 
     /** @param array<string, mixed> $data */
     public function dismissNotification(array $data, ?string $userId = null): void
     {
-        $this->ha->pushEvent(new HaEvent(ActionRouter::CLEARED_EVENT, $data, context: new EventContext('ctx', userId: $userId)));
+        $this->ha->pushEvent(new HaEvent(
+            ActionRouter::CLEARED_EVENT,
+            $data,
+            context: new EventContext('ctx', userId: $userId),
+        ));
     }
 
     /** @return list<string> */

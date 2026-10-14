@@ -8,7 +8,9 @@ use Shared\Config\NamedType;
 
 final readonly class NamedTypeStub implements NamedType
 {
-    public function __construct(private string $name) {}
+    public function __construct(
+        private string $name,
+    ) {}
 
     public function getName(): string
     {

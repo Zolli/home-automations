@@ -37,7 +37,10 @@ final class StepRepeater
 
     private function repeatOnce(): void
     {
-        if (!$this->repetition->allowsAnotherRepeat($this->repeatsSent) || !$this->repetition->while->isSatisfied(new ConditionContext($this->ha))) {
+        if (
+            !$this->repetition->allowsAnotherRepeat($this->repeatsSent)
+            || !$this->repetition->while->isSatisfied(new ConditionContext($this->ha))
+        ) {
             $this->stopRepeating();
 
             return;

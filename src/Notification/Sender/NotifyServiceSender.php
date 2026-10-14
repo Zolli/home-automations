@@ -44,14 +44,14 @@ final readonly class NotifyServiceSender implements DestinationSender
         $data = ServiceData::mergeReplacingLists(
             array_filter([
                 'message' => $notification->message->body,
-                'title' => $notification->message->title,
+                'title'   => $notification->message->title,
             ], static fn(mixed $value) => $value !== null),
             $notification->message->additionalData,
             $destination->options,
         );
 
         if ($notification->message->hasButtons()) {
-            $platformData = \is_array($data['data'] ?? null) ? $data['data'] : [];
+            $platformData            = \is_array($data['data'] ?? null) ? $data['data'] : [];
             $platformData['actions'] = $notification->message->buttons->mapToList(
                 fn(NotificationButton $button) => $this->mapButton($button, $notification->meta->id),
             );

@@ -17,12 +17,13 @@ final class LightEffectSignalTest extends TestCase
     private const string SMOKE_SENSOR = 'binary_sensor.smoke_detector_kitchen_smoke';
 
     private AlertFixture $fixture;
+
     private LightEffectSignal $signal;
 
     protected function setUp(): void
     {
         $this->fixture = new AlertFixture();
-        $this->signal = new LightEffectSignal('okay', new FaultLocator());
+        $this->signal  = new LightEffectSignal('okay', new FaultLocator());
         $this->fixture->placeInArea(self::SMOKE_SENSOR, 'kitchen', 'Kitchen');
     }
 

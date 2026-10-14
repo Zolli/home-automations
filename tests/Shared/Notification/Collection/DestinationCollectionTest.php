@@ -14,9 +14,9 @@ final class DestinationCollectionTest extends TestCase
 {
     public function testAppendsDestinationsInOrder(): void
     {
-        $phone = NotifyServiceSender::createDestination('notify.mobile_app_phone');
+        $phone   = NotifyServiceSender::createDestination('notify.mobile_app_phone');
         $speaker = ChimeTtsSender::createDestination('media_player.kitchen');
-        $tablet = NotifyServiceSender::createDestination('notify.mobile_app_tablet');
+        $tablet  = NotifyServiceSender::createDestination('notify.mobile_app_tablet');
 
         $destinations = DestinationCollection::fromDestinations([$phone])->withAppendedDestinations($speaker, $tablet);
 
@@ -25,7 +25,9 @@ final class DestinationCollectionTest extends TestCase
 
     public function testAppendingKeepsOriginalUnchanged(): void
     {
-        $original = DestinationCollection::fromDestinations([ChimeTtsSender::createDestination('media_player.kitchen')]);
+        $original = DestinationCollection::fromDestinations(
+            [ChimeTtsSender::createDestination('media_player.kitchen')],
+        );
 
         $original->withAppendedDestinations(ChimeTtsSender::createDestination('media_player.office'));
 
@@ -34,7 +36,7 @@ final class DestinationCollectionTest extends TestCase
 
     public function testDropsSpokenDestinations(): void
     {
-        $phone = NotifyServiceSender::createDestination('notify.mobile_app_phone');
+        $phone        = NotifyServiceSender::createDestination('notify.mobile_app_phone');
         $destinations = DestinationCollection::fromDestinations([
             ChimeTtsSender::createDestination('media_player.kitchen'),
             $phone,

@@ -33,7 +33,12 @@ final class MonitoredAlert implements FaultListener
         private readonly FaultLocator $locator,
         private readonly LoggerInterface $logger,
     ) {
-        $this->watcher = new FaultWatcher($definition->rule, new ReadingFeed($definition->rule->listSources(), $context), $context->scheduler, $this);
+        $this->watcher = new FaultWatcher(
+            $definition->rule,
+            new ReadingFeed($definition->rule->listSources(), $context),
+            $context->scheduler,
+            $this,
+        );
     }
 
     public function startMonitoring(): void
@@ -46,7 +51,7 @@ final class MonitoredAlert implements FaultListener
         $this->watcher->stopWatching();
         $this->escalation?->stopEscalating();
         $this->escalation = null;
-        $this->state = AlertState::Idle;
+        $this->state      = AlertState::Idle;
     }
 
     public function getState(): AlertState
@@ -64,7 +69,7 @@ final class MonitoredAlert implements FaultListener
         $this->logger->warning("[ALERT] {$this->definition->id} raised", ['reason' => $fault->reason]);
 
         $variables = $fault->listTemplateVariables($this->findArea($fault));
-        $body = implode("\n", [$this->definition->message->render($variables), ...$this->runMitigations()]);
+        $body      = implode("\n", [$this->definition->message->render($variables), ...$this->runMitigations()]);
 
         $this->escalation = new Escalation(
             $this->definition->policy,
@@ -89,14 +94,19 @@ final class MonitoredAlert implements FaultListener
         $this->escalation?->stopEscalating();
         $this->escalation?->sendFollowUp('Cleared.');
         $this->escalation = null;
-        $this->state = AlertState::Idle;
+        $this->state      = AlertState::Idle;
     }
 
     private function acknowledge(Acknowledgement $acknowledgement): void
     {
         $this->state = AlertState::Acknowledged;
-        $this->logger->info("[ALERT] {$this->definition->id} acknowledged", ['method' => $acknowledgement->method->value, 'user' => $acknowledgement->userId]);
-        $this->escalation?->sendFollowUp($acknowledgement->method === AcknowledgeMethod::Dismissal ? 'Dismissed.' : 'Acknowledged.');
+        $this->logger->info("[ALERT] {$this->definition->id} acknowledged", [
+            'method' => $acknowledgement->method->value,
+            'user'   => $acknowledgement->userId,
+        ]);
+        $this->escalation?->sendFollowUp(
+            $acknowledgement->method === AcknowledgeMethod::Dismissal ? 'Dismissed.' : 'Acknowledged.',
+        );
     }
 
     /** @return list<string> */
@@ -108,7 +118,10 @@ final class MonitoredAlert implements FaultListener
 
                 return $mitigation->describe();
             } catch (Throwable $e) {
-                $this->logger->error("[ALERT] {$this->definition->id} mitigation failed", ['mitigation' => $mitigation->describe(), 'exception' => $e]);
+                $this->logger->error("[ALERT] {$this->definition->id} mitigation failed", [
+                    'mitigation' => $mitigation->describe(),
+                    'exception'  => $e,
+                ]);
 
                 return "Failed: {$mitigation->describe()}";
             }

@@ -6,6 +6,6 @@ namespace Shared\Alert\Reading;
 
 enum ReadingSourceType: string
 {
-    case Entity = 'entity';
+    case Entity    = 'entity';
     case MqttTopic = 'topic';
 }

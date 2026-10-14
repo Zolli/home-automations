@@ -43,7 +43,10 @@ final class TypedOptionsTest extends TestCase
 
     public function testReadsDurationFromSeconds(): void
     {
-        self::assertSame(1_500, $this->createOptions(['forSeconds' => 1.5])->findDuration('forSeconds')->toMilliseconds());
+        self::assertSame(
+            1_500,
+            $this->createOptions(['forSeconds' => 1.5])->findDuration('forSeconds')->toMilliseconds(),
+        );
         self::assertSame(0, $this->createOptions([])->findDuration('forSeconds')->toMilliseconds());
     }
 

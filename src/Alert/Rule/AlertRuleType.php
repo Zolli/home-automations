@@ -10,8 +10,7 @@ use Shared\Config\TypedOptions;
 
 interface AlertRuleType extends NamedType
 {
-    public const string KIND = 'Alert rule';
-
+    public const string KIND     = 'Alert rule';
     public const string HOLD_KEY = 'forSeconds';
 
     /** @throws InvalidTypedOptions */

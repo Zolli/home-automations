@@ -18,7 +18,8 @@ final class NotificationPayloadSchemaTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->schema = new ServiceContainer(NotificationPayloadSchema::class)->getService(NotificationPayloadSchema::class);
+        $this->schema = new ServiceContainer(NotificationPayloadSchema::class)
+            ->getService(NotificationPayloadSchema::class);
     }
 
     public function testAcceptsEmptyArraysAsOptionalObjects(): void
@@ -26,9 +27,9 @@ final class NotificationPayloadSchemaTest extends TestCase
         $this->expectNotToPerformAssertions();
 
         $this->schema->validatePayload([
-            'message' => ['body' => 'Hi', 'additionalData' => ['data' => []]],
+            'message'      => ['body' => 'Hi', 'additionalData' => ['data' => []]],
             'destinations' => [self::DESTINATION + ['options' => []]],
-            'meta' => [],
+            'meta'         => [],
         ]);
     }
 
@@ -40,11 +41,17 @@ final class NotificationPayloadSchemaTest extends TestCase
             'meta.replyTopc is not allowed',
         ];
         yield 'buttons in additional data' => [
-            ['message' => ['body' => 'Hi', 'additionalData' => ['data' => ['actions' => []]]], 'destinations' => [self::DESTINATION]],
+            [
+                'message'      => ['body' => 'Hi', 'additionalData' => ['data' => ['actions' => []]]],
+                'destinations' => [self::DESTINATION],
+            ],
             'message.additionalData.data.actions is not allowed',
         ];
         yield 'blank target in list' => [
-            ['message' => ['body' => 'Hi'], 'destinations' => [['type' => 'tts', 'target' => ['media_player.kitchen', ' ']]]],
+            [
+                'message'      => ['body' => 'Hi'],
+                'destinations' => [['type' => 'tts', 'target' => ['media_player.kitchen', ' ']]],
+            ],
             'destinations[0].target[1] has an invalid format',
         ];
         yield 'list as meta' => [

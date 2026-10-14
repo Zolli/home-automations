@@ -10,7 +10,9 @@ use Shared\Config\TypedOptions;
 
 final readonly class AlwaysConditionType implements ConditionType
 {
-    public function __construct(private string $name = 'always') {}
+    public function __construct(
+        private string $name = 'always',
+    ) {}
 
     public function getName(): string
     {
