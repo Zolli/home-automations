@@ -8,8 +8,7 @@ use Shared\Notification\Exception\InvalidNotificationButton;
 
 final readonly class NotificationButton
 {
-    public const string URI_ACTION = 'URI';
-
+    public const string URI_ACTION      = 'URI';
     public const array RESERVED_OPTIONS = ['action', 'title'];
 
     /**

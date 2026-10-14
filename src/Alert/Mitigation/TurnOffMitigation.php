@@ -12,7 +12,9 @@ final readonly class TurnOffMitigation implements Mitigation
 {
     private const string VALVE_DOMAIN = 'valve';
 
-    public function __construct(private EntityId $entityId) {}
+    public function __construct(
+        private EntityId $entityId,
+    ) {}
 
     public function mitigate(HaContext $ha): void
     {

@@ -16,7 +16,7 @@ final readonly class ChimeTtsSender implements DestinationSender
 {
     private const string SPEAKER_DOMAIN = 'media_player';
     private const string SERVICE_DOMAIN = 'chime_tts';
-    private const string SERVICE = 'say';
+    private const string SERVICE        = 'say';
 
     /**
      * @param string|list<string> $speakers

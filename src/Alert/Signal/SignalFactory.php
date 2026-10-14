@@ -10,7 +10,9 @@ use Shared\Config\TypedOptions;
 
 final readonly class SignalFactory
 {
-    public function __construct(private SignalTypeCollection $types) {}
+    public function __construct(
+        private SignalTypeCollection $types,
+    ) {}
 
     /**
      * @param array<array-key, mixed> $fields

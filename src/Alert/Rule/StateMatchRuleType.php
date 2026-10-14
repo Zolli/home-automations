@@ -9,7 +9,9 @@ use Shared\Config\TypedOptions;
 
 final readonly class StateMatchRuleType implements AlertRuleType
 {
-    public function __construct(private ReadingSourceMapper $sources) {}
+    public function __construct(
+        private ReadingSourceMapper $sources,
+    ) {}
 
     public function getName(): string
     {

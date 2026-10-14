@@ -13,7 +13,9 @@ final readonly class SilenceRuleType implements AlertRuleType
 {
     private const string MAX_SILENCE_KEY = 'maxSilenceSeconds';
 
-    public function __construct(private ReadingSourceMapper $sources) {}
+    public function __construct(
+        private ReadingSourceMapper $sources,
+    ) {}
 
     public function getName(): string
     {
@@ -25,9 +27,18 @@ final readonly class SilenceRuleType implements AlertRuleType
         $maxSilenceSeconds = $options->requireNumber(self::MAX_SILENCE_KEY);
 
         if ($maxSilenceSeconds <= 0) {
-            throw InvalidTypedOptions::forInvalidOption($options->kind, $options->type, self::MAX_SILENCE_KEY, 'a positive number');
+            throw InvalidTypedOptions::forInvalidOption(
+                $options->kind,
+                $options->type,
+                self::MAX_SILENCE_KEY,
+                'a positive number',
+            );
         }
 
-        return new SilenceRule($this->sources->mapToTopicSources($options), Duration::seconds($maxSilenceSeconds), $options->findDuration(self::HOLD_KEY));
+        return new SilenceRule(
+            $this->sources->mapToTopicSources($options),
+            Duration::seconds($maxSilenceSeconds),
+            $options->findDuration(self::HOLD_KEY),
+        );
     }
 }

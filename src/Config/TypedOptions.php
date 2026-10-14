@@ -39,7 +39,9 @@ final readonly class TypedOptions
     /** @throws InvalidTypedOptions */
     public function requireValue(string $key): mixed
     {
-        return $this->hasOption($key) ? $this->fields[$key] : throw InvalidTypedOptions::forMissingOption($this->kind, $this->type, $key);
+        return $this->hasOption($key)
+            ? $this->fields[$key]
+            : throw InvalidTypedOptions::forMissingOption($this->kind, $this->type, $key);
     }
 
     /** @throws InvalidTypedOptions */
@@ -54,7 +56,10 @@ final readonly class TypedOptions
      */
     public function findEntityIds(string $key): array
     {
-        return array_map(fn(mixed $value): EntityId => $this->mapToEntityId($value, $key, 'a list of entity ids'), $this->findList($key));
+        return array_map(
+            fn(mixed $value): EntityId => $this->mapToEntityId($value, $key, 'a list of entity ids'),
+            $this->findList($key),
+        );
     }
 
     /** @throws InvalidTypedOptions */
@@ -62,7 +67,9 @@ final readonly class TypedOptions
     {
         $value = $this->fields[$key] ?? null;
 
-        return \is_string($value) && $value !== '' ? $value : throw $this->createInvalidOption($key, 'a non-empty string');
+        return \is_string($value) && $value !== ''
+            ? $value
+            : throw $this->createInvalidOption($key, 'a non-empty string');
     }
 
     /** @throws InvalidTypedOptions */
@@ -76,7 +83,9 @@ final readonly class TypedOptions
     {
         $value = $this->fields[$key] ?? null;
 
-        return \is_int($value) || \is_float($value) ? (float) $value : throw $this->createInvalidOption($key, 'a number');
+        return \is_int($value) || \is_float($value)
+            ? (float) $value
+            : throw $this->createInvalidOption($key, 'a number');
     }
 
     /** @throws InvalidTypedOptions */
@@ -109,13 +118,16 @@ final readonly class TypedOptions
     {
         $values = $this->fields[$key] ?? [];
 
-        return \is_array($values) && array_is_list($values) ? $values : throw $this->createInvalidOption($key, 'a list');
+        return \is_array($values) && array_is_list($values)
+            ? $values
+            : throw $this->createInvalidOption($key, 'a list');
     }
 
     /** @throws InvalidTypedOptions */
     private function mapToEntityId(mixed $value, string $key, string $expectation): EntityId
     {
-        return (\is_string($value) ? EntityId::tryFromString($value) : null) ?? throw $this->createInvalidOption($key, $expectation);
+        return (\is_string($value) ? EntityId::tryFromString($value) : null)
+            ?? throw $this->createInvalidOption($key, $expectation);
     }
 
     private function createInvalidOption(string $key, string $expectation): InvalidTypedOptions

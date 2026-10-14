@@ -18,7 +18,10 @@ final class ConditionFactoryTest extends TestCase
 {
     public function testBuildsRegisteredTypes(): void
     {
-        $factory = new ConditionFactory(ConditionTypeCollection::keyedByName([new CompareConditionType(Operator::Gte), new AlwaysConditionType()]));
+        $factory = new ConditionFactory(ConditionTypeCollection::keyedByName([
+            new CompareConditionType(Operator::Gte),
+            new AlwaysConditionType(),
+        ]));
 
         self::assertInstanceOf(AlwaysCondition::class, $factory->mapToCondition(['type' => 'always']));
         self::assertEquals(
@@ -40,6 +43,7 @@ final class ConditionFactoryTest extends TestCase
     {
         $this->expectException(InvalidTypedOptions::class);
 
-        new ConditionFactory(ConditionTypeCollection::keyedByName([new AlwaysConditionType()]))->mapToCondition($definition);
+        new ConditionFactory(ConditionTypeCollection::keyedByName([new AlwaysConditionType()]))
+            ->mapToCondition($definition);
     }
 }

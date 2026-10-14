@@ -10,7 +10,9 @@ use Shared\Config\TypedOptions;
 
 final readonly class AlertRuleFactory
 {
-    public function __construct(private AlertRuleTypeCollection $types) {}
+    public function __construct(
+        private AlertRuleTypeCollection $types,
+    ) {}
 
     /**
      * @param array<array-key, mixed> $fields

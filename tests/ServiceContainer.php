@@ -60,6 +60,8 @@ final readonly class ServiceContainer
     {
         $service = $this->container->get($id);
 
-        return $service instanceof $id ? $service : throw new UnexpectedValueException("Service \"{$id}\" has an unexpected type.");
+        return $service instanceof $id
+            ? $service
+            : throw new UnexpectedValueException("Service \"{$id}\" has an unexpected type.");
     }
 }

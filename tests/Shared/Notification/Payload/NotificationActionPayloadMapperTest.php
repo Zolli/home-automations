@@ -13,7 +13,12 @@ final class NotificationActionPayloadMapperTest extends TestCase
 {
     public function testMapsAllFields(): void
     {
-        $action = new NotificationAction(NotificationId::fromString('vacuum-bin'), 'DONE', ['reply_text' => 'emptied'], 'user-1');
+        $action = new NotificationAction(
+            NotificationId::fromString('vacuum-bin'),
+            'DONE',
+            ['reply_text' => 'emptied'],
+            'user-1',
+        );
 
         self::assertSame(
             ['id' => 'vacuum-bin', 'action' => 'DONE', 'replyText' => 'emptied', 'userId' => 'user-1'],
@@ -25,6 +30,9 @@ final class NotificationActionPayloadMapperTest extends TestCase
     {
         $action = new NotificationAction(NotificationId::fromString('vacuum-bin'), 'NEXT');
 
-        self::assertSame(['id' => 'vacuum-bin', 'action' => 'NEXT'], new NotificationActionPayloadMapper()->mapToPayload($action));
+        self::assertSame(
+            ['id' => 'vacuum-bin', 'action' => 'NEXT'],
+            new NotificationActionPayloadMapper()->mapToPayload($action),
+        );
     }
 }

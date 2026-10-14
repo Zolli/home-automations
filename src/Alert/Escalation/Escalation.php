@@ -78,7 +78,7 @@ final class Escalation
             $listener->stopListening();
         }
 
-        $this->tasks = [];
+        $this->tasks     = [];
         $this->repeaters = [];
         $this->listeners = [];
     }
@@ -103,7 +103,12 @@ final class Escalation
         $this->rememberNotified($step->destinations);
 
         if ($step->repetition !== null) {
-            $repeater = new StepRepeater($step->repetition, fn() => $this->repeatStep($step), $this->scheduler, $this->ha);
+            $repeater = new StepRepeater(
+                $step->repetition,
+                fn() => $this->repeatStep($step),
+                $this->scheduler,
+                $this->ha,
+            );
             $repeater->startRepeating();
             $this->repeaters[] = $repeater;
         }
@@ -111,7 +116,10 @@ final class Escalation
 
     private function repeatStep(EscalationStep $step): void
     {
-        $this->listeners = array_values(array_filter($this->listeners, static fn(ActionListener $listener) => $listener->isListening()));
+        $this->listeners = array_values(array_filter(
+            $this->listeners,
+            static fn(ActionListener $listener) => $listener->isListening(),
+        ));
         $this->performStep($step);
     }
 
@@ -126,19 +134,25 @@ final class Escalation
         try {
             $step->signal->emit($this->fault, $this->ha);
         } catch (Throwable $e) {
-            $this->logger->error('[ALERT] Signal failed', ['policy' => $this->policy->name, 'signal' => $step->signal->describe(), 'exception' => $e]);
+            $this->logger->error('[ALERT] Signal failed', [
+                'policy'    => $this->policy->name,
+                'signal'    => $step->signal->describe(),
+                'exception' => $e,
+            ]);
         }
     }
 
     private function sendStepNotification(EscalationStep $step): void
     {
         $isAcknowledgeable = !$step->destinations->withoutSpokenDestinations()->isEmpty();
-        $message = $this->message
+        $message           = $this->message
             ->withId(NotificationId::generate())
             ->withImportance($step->importance)
             ->withAppendedDestinations(...$step->destinations);
         $sent = $this->sendNotification(
-            $isAcknowledgeable ? $message->withAppendedButtons(new NotificationButton(self::ACKNOWLEDGE_ACTION, 'Acknowledge')) : $message,
+            $isAcknowledgeable
+                ? $message->withAppendedButtons(new NotificationButton(self::ACKNOWLEDGE_ACTION, 'Acknowledge'))
+                : $message,
         );
 
         if ($sent !== null && $isAcknowledgeable) {
@@ -154,7 +168,9 @@ final class Escalation
         );
 
         if ($this->policy->acknowledgeOnDismiss) {
-            $listener->onDismissed(fn(NotificationDismissal $dismissal) => $this->acknowledge(Acknowledgement::fromDismissal($dismissal)));
+            $listener->onDismissed(
+                fn(NotificationDismissal $dismissal) => $this->acknowledge(Acknowledgement::fromDismissal($dismissal)),
+            );
         }
 
         $this->listeners[] = $listener;
@@ -165,7 +181,10 @@ final class Escalation
         try {
             return $this->notifier->send($message->buildNotification());
         } catch (InvalidDestination $e) {
-            $this->logger->error('[ALERT] Escalation notification not sent', ['policy' => $this->policy->name, 'exception' => $e]);
+            $this->logger->error('[ALERT] Escalation notification not sent', [
+                'policy'    => $this->policy->name,
+                'exception' => $e,
+            ]);
 
             return null;
         }
@@ -179,6 +198,8 @@ final class Escalation
 
     private function rememberNotified(DestinationCollection $destinations): void
     {
-        $this->notifiedDestinations = $this->notifiedDestinations->withAppendedDestinations(...$destinations->withoutSpokenDestinations());
+        $this->notifiedDestinations = $this->notifiedDestinations->withAppendedDestinations(
+            ...$destinations->withoutSpokenDestinations(),
+        );
     }
 }

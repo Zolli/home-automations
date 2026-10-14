@@ -14,7 +14,12 @@ use Shared\Notification\DestinationType;
 use Shared\Notification\Exception\InvalidNotificationPayload;
 
 /**
- * @phpstan-type DestinationPayload array{type: string, target: string|list<string>, conditions?: list<array<string, mixed>>, options?: array<string, mixed>}
+ * @phpstan-type DestinationPayload array{
+ *     type: string,
+ *     target: string|list<string>,
+ *     conditions?: list<array<string, mixed>>,
+ *     options?: array<string, mixed>,
+ * }
  */
 final readonly class DestinationPayloadMapper
 {
@@ -65,7 +70,11 @@ final readonly class DestinationPayloadMapper
 
         if ($destinationType === null) {
             $knownTypes = array_map(static fn(DestinationType $known) => $known->value, DestinationType::cases());
-            $reason = \sprintf('Destination type "%s" is unknown, expected one of: %s.', $type, implode(', ', $knownTypes));
+            $reason     = \sprintf(
+                'Destination type "%s" is unknown, expected one of: %s.',
+                $type,
+                implode(', ', $knownTypes),
+            );
 
             throw InvalidNotificationPayload::forViolation(PayloadViolation::atPath($path, $reason));
         }
@@ -86,7 +95,9 @@ final readonly class DestinationPayloadMapper
             try {
                 $mapped[] = $this->conditions->mapToCondition($condition);
             } catch (InvalidCondition|InvalidTypedOptions $e) {
-                throw InvalidNotificationPayload::forViolation(PayloadViolation::atPath([...$path, $index], $e->getMessage()));
+                throw InvalidNotificationPayload::forViolation(
+                    PayloadViolation::atPath([...$path, $index], $e->getMessage()),
+                );
             }
         }
 

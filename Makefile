@@ -79,6 +79,14 @@ test: ## Run the tests
 stan: ## Static analysis
 	$(RUN) vendor/bin/phpstan analyse
 
+.PHONY: cs
+cs: ## Check the coding style
+	$(RUN) vendor/bin/php-cs-fixer check --diff
+
+.PHONY: cs-fix
+cs-fix: ## Fix the coding style
+	$(RUN) vendor/bin/php-cs-fixer fix
+
 # --- server ---------------------------------------------------------------
 
 .PHONY: up

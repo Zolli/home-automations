@@ -29,12 +29,15 @@ final class NotificationMqttBridgeAppTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->fixture = new NotificationFixture();
-        $harness = $this->fixture->harness;
+        $this->fixture  = new NotificationFixture();
+        $harness        = $this->fixture->harness;
         $this->notifier = new NotifierRecorder($this->fixture->createActionRouter());
-        $this->logger = $harness->logger;
+        $this->logger   = $harness->logger;
         $harness->provideService(Notifier::class, $this->notifier);
-        $harness->provideService(NotificationPayloadMapper::class, new ServiceContainer(NotificationPayloadMapper::class)->getService(NotificationPayloadMapper::class));
+        $harness->provideService(
+            NotificationPayloadMapper::class,
+            new ServiceContainer(NotificationPayloadMapper::class)->getService(NotificationPayloadMapper::class),
+        );
         $harness->provideService(NotificationActionPayloadMapper::class, new NotificationActionPayloadMapper());
         $harness->startApp(NotificationMqttBridgeApp::class);
     }
@@ -51,9 +54,9 @@ final class NotificationMqttBridgeAppTest extends TestCase
     public function testSendsMappedNotification(): void
     {
         $this->receive([
-            'message' => ['title' => 'Vacuum', 'body' => 'Empty the bin'],
+            'message'      => ['title' => 'Vacuum', 'body' => 'Empty the bin'],
             'destinations' => [['type' => 'notify_service', 'target' => 'notify.mobile_app_zoli_phone']],
-            'meta' => ['importance' => 'high'],
+            'meta'         => ['importance' => 'high'],
         ]);
 
         self::assertCount(1, $this->notifier->sent);
@@ -76,7 +79,10 @@ final class NotificationMqttBridgeAppTest extends TestCase
 
         self::assertSame([], $this->notifier->sent);
         self::assertCount(1, $this->logger->listMessagesAt('warning'));
-        self::assertStringContainsString('destinations must have at least 1 items', $this->logger->listMessagesAt('warning')[0]);
+        self::assertStringContainsString(
+            'destinations must have at least 1 items',
+            $this->logger->listMessagesAt('warning')[0],
+        );
     }
 
     public function testDropsPayloadWithRejectedDestination(): void
@@ -96,7 +102,10 @@ final class NotificationMqttBridgeAppTest extends TestCase
         $this->fixture->pressAction('vacuum-bin:DONE', ['reply_text' => 'emptied'], 'user-1');
 
         self::assertSame(
-            [['nodered/vacuum/action', ['id' => 'vacuum-bin', 'action' => 'DONE', 'replyText' => 'emptied', 'userId' => 'user-1']]],
+            [[
+                'nodered/vacuum/action',
+                ['id' => 'vacuum-bin', 'action' => 'DONE', 'replyText' => 'emptied', 'userId' => 'user-1'],
+            ]],
             $this->listPublished(),
         );
     }
@@ -107,7 +116,10 @@ final class NotificationMqttBridgeAppTest extends TestCase
 
         $this->fixture->pressAction('vacuum-bin:NEXT');
 
-        self::assertSame([['stewart/notify/action', ['id' => 'vacuum-bin', 'action' => 'NEXT']]], $this->listPublished());
+        self::assertSame(
+            [['stewart/notify/action', ['id' => 'vacuum-bin', 'action' => 'NEXT']]],
+            $this->listPublished(),
+        );
     }
 
     public function testResendingSameIdPublishesOnce(): void
@@ -122,7 +134,10 @@ final class NotificationMqttBridgeAppTest extends TestCase
 
     public function testDoesNotListenWithoutButtons(): void
     {
-        $this->receive(['message' => ['body' => 'Hi'], 'destinations' => [['type' => 'notify_service', 'target' => 'notify.notify']]]);
+        $this->receive([
+            'message'      => ['body' => 'Hi'],
+            'destinations' => [['type' => 'notify_service', 'target' => 'notify.notify']],
+        ]);
 
         self::assertSame(0, $this->fixture->harness->timers->countPendingTimers());
     }
@@ -153,24 +168,28 @@ final class NotificationMqttBridgeAppTest extends TestCase
     private function withButtons(array $meta): array
     {
         return [
-            'message' => [
-                'body' => 'Empty the bin',
+            'message'      => [
+                'body'    => 'Empty the bin',
                 'buttons' => [['action' => 'DONE', 'title' => 'Done'], ['action' => 'NEXT', 'title' => 'Next time']],
             ],
             'destinations' => [['type' => 'notify_service', 'target' => 'notify.mobile_app_zoli_phone']],
-            'meta' => $meta,
+            'meta'         => $meta,
         ];
     }
 
     /** @param array<string, mixed> $payload */
     private function receive(array $payload, string $topic = self::NOTIFY_TOPIC): void
     {
-        $this->fixture->harness->mqtt->pushMessage(new MqttMessage($topic, json_encode($payload, \JSON_THROW_ON_ERROR)));
+        $this->fixture->harness->mqtt->pushMessage(
+            new MqttMessage($topic, json_encode($payload, \JSON_THROW_ON_ERROR)),
+        );
     }
 
     /** @return list<array{string, mixed}> */
     private function listPublished(): array
     {
-        return $this->fixture->harness->mqtt->published->mapToList(static fn(MqttMessage $message): array => [$message->topic, $message->decodeJsonPayload()]);
+        return $this->fixture->harness->mqtt->published->mapToList(
+            static fn(MqttMessage $message): array => [$message->topic, $message->decodeJsonPayload()],
+        );
     }
 }

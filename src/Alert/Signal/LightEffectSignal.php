@@ -13,7 +13,7 @@ use Stewart\Contracts\State\EntityState;
 
 final readonly class LightEffectSignal implements Signal
 {
-    private const string LIGHT_DOMAIN = 'light';
+    private const string LIGHT_DOMAIN          = 'light';
     private const string EFFECT_LIST_ATTRIBUTE = 'effect_list';
 
     public function __construct(
@@ -30,11 +30,20 @@ final readonly class LightEffectSignal implements Signal
         }
 
         $lightIds = $ha->listStates(EntityFilter::inArea($area->areaId)->withDomain(self::LIGHT_DOMAIN))
-            ->filter(fn(EntityState $light): bool => \in_array($this->effect, $light->getArrayAttribute(self::EFFECT_LIST_ATTRIBUTE) ?? [], true))
+            ->filter(fn(EntityState $light): bool => \in_array(
+                $this->effect,
+                $light->getArrayAttribute(self::EFFECT_LIST_ATTRIBUTE) ?? [],
+                true,
+            ))
             ->mapToList(static fn(EntityState $light) => $light->entityId);
 
         if ($lightIds !== []) {
-            $ha->callService(self::LIGHT_DOMAIN, 'turn_on', ['effect' => $this->effect], ServiceTarget::forEntities(...$lightIds));
+            $ha->callService(
+                self::LIGHT_DOMAIN,
+                'turn_on',
+                ['effect' => $this->effect],
+                ServiceTarget::forEntities(...$lightIds),
+            );
         }
     }
 

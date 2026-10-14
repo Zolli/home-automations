@@ -28,7 +28,7 @@ final readonly class NotificationDispatcher implements Notifier
     {
         $this->validateDestinations($notification->destinations);
 
-        $context = new ConditionContext($this->ha, FactCollection::keyedByClass([$notification->meta->importance]));
+        $context   = new ConditionContext($this->ha, FactCollection::keyedByClass([$notification->meta->importance]));
         $delivered = false;
 
         foreach ($notification->destinations as $destination) {
@@ -38,12 +38,15 @@ final readonly class NotificationDispatcher implements Notifier
         return new SentNotification($notification, $this->actionRouter, $delivered);
     }
 
-    private function sendToDestination(Notification $notification, Destination $destination, ConditionContext $context): bool
-    {
+    private function sendToDestination(
+        Notification $notification,
+        Destination $destination,
+        ConditionContext $context,
+    ): bool {
         $log = [
-            'id' => $notification->meta->id->value,
-            'type' => $destination->type->value,
-            'targets' => $destination->targets,
+            'id'         => $notification->meta->id->value,
+            'type'       => $destination->type->value,
+            'targets'    => $destination->targets,
             'conditions' => $destination->condition->describe(),
         ];
         $delivered = false;

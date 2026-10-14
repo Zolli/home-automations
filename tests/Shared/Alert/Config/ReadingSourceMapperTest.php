@@ -17,10 +17,10 @@ final class ReadingSourceMapperTest extends TestCase
     public function testCombinesEntityAndTopicSources(): void
     {
         $sources = new ReadingSourceMapper()->mapToSources($this->createOptions([
-            'entity' => 'sensor.a',
+            'entity'   => 'sensor.a',
             'entities' => ['sensor.b'],
-            'topic' => 'meter/l1',
-            'topics' => ['meter/l2'],
+            'topic'    => 'meter/l1',
+            'topics'   => ['meter/l2'],
         ]));
 
         self::assertEquals(

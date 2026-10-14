@@ -32,6 +32,7 @@ use Stewart\Contracts\Time\Duration;
 final class EscalationTest extends TestCase
 {
     private AlertFixture $fixture;
+
     private NotifierRecorder $notifier;
 
     /** @var list<Acknowledgement> */
@@ -39,7 +40,7 @@ final class EscalationTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->fixture = new AlertFixture();
+        $this->fixture  = new AlertFixture();
         $this->notifier = new NotifierRecorder(new ActionRouter($this->fixture->harness->scheduler, new NullLogger()));
     }
 
@@ -56,7 +57,10 @@ final class EscalationTest extends TestCase
         $first = $this->notifier->sent[0];
         self::assertSame('Kitchen flood', $first->message->title);
         self::assertSame(Importance::Critical, $first->meta->importance);
-        self::assertSame([Escalation::ACKNOWLEDGE_ACTION], $first->message->buttons->mapToList(static fn($button) => $button->action));
+        self::assertSame(
+            [Escalation::ACKNOWLEDGE_ACTION],
+            $first->message->buttons->mapToList(static fn($button) => $button->action),
+        );
     }
 
     public function testRepeatsLastStepUntilAcknowledged(): void
@@ -127,7 +131,10 @@ final class EscalationTest extends TestCase
         $escalation->sendFollowUp('Cleared');
 
         $followUp = $this->notifier->sent[1];
-        self::assertSame(['notify.phone'], $followUp->destinations->mapToList(static fn($destination) => $destination->targets[0]));
+        self::assertSame(
+            ['notify.phone'],
+            $followUp->destinations->mapToList(static fn($destination) => $destination->targets[0]),
+        );
         self::assertSame('Kitchen flood', $followUp->message->title);
         self::assertSame('Cleared', $followUp->message->body);
         self::assertSame(Importance::High, $followUp->meta->importance);
@@ -136,7 +143,8 @@ final class EscalationTest extends TestCase
 
     public function testStopsRepeatingAfterMaxTimes(): void
     {
-        $this->createEscalation($this->createRepeatingPolicy(new StepRepetition(Duration::seconds(30), maxTimes: 5)))->startEscalating();
+        $repetition = new StepRepetition(Duration::seconds(30), maxTimes: 5);
+        $this->createEscalation($this->createRepeatingPolicy($repetition))->startEscalating();
 
         $this->fixture->advanceTime(Duration::hours(1));
 
@@ -146,7 +154,10 @@ final class EscalationTest extends TestCase
     public function testStopsRepeatingOnceConditionFails(): void
     {
         $this->fixture->ha->pushState('input_boolean.alarm_test_mode', 'off');
-        $repetition = new StepRepetition(Duration::seconds(30), while: CompareCondition::equals('input_boolean.alarm_test_mode', 'off'));
+        $repetition = new StepRepetition(
+            Duration::seconds(30),
+            while: CompareCondition::equals('input_boolean.alarm_test_mode', 'off'),
+        );
         $this->createEscalation($this->createRepeatingPolicy($repetition))->startEscalating();
         $this->fixture->advanceTime(Duration::seconds(60));
 
@@ -172,22 +183,35 @@ final class EscalationTest extends TestCase
 
         $escalation->sendFollowUp('Cleared');
 
-        self::assertSame(['notify.phone'], $this->notifier->sent[2]->destinations->mapToList(static fn($destination) => $destination->targets[0]));
+        self::assertSame(
+            ['notify.phone'],
+            $this->notifier->sent[2]->destinations->mapToList(static fn($destination) => $destination->targets[0]),
+        );
     }
 
     public function testRepeatsSignalStepUntilAcknowledged(): void
     {
         $signal = new SignalRecorder();
         $this->createEscalation(new EscalationPolicy('signalling', EscalationStepCollection::fromSteps([
-            new EscalationStep(Duration::zero(), DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')])),
-            EscalationStep::forSignal(Duration::seconds(2), $signal, new StepRepetition(Duration::seconds(4), maxTimes: 84)),
+            new EscalationStep(
+                Duration::zero(),
+                DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')]),
+            ),
+            EscalationStep::forSignal(
+                Duration::seconds(2),
+                $signal,
+                new StepRepetition(Duration::seconds(4), maxTimes: 84),
+            ),
         ])))->startEscalating();
         $this->fixture->advanceTime(Duration::seconds(10));
 
         $this->pressAcknowledgeOn($this->notifier->sent[0]);
         $this->fixture->advanceTime(Duration::minutes(10));
 
-        self::assertSame(['binary_sensor.kitchen_leak', 'binary_sensor.kitchen_leak', 'binary_sensor.kitchen_leak'], $signal->emittedFor);
+        self::assertSame(
+            ['binary_sensor.kitchen_leak', 'binary_sensor.kitchen_leak', 'binary_sensor.kitchen_leak'],
+            $signal->emittedFor,
+        );
     }
 
     public function testFailingSignalDoesNotStopEscalation(): void
@@ -195,7 +219,10 @@ final class EscalationTest extends TestCase
         $signal = new SignalRecorder(failing: true);
         $this->createEscalation(new EscalationPolicy('signalling', EscalationStepCollection::fromSteps([
             EscalationStep::forSignal(Duration::zero(), $signal),
-            new EscalationStep(Duration::seconds(5), DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')])),
+            new EscalationStep(
+                Duration::seconds(5),
+                DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')]),
+            ),
         ])))->startEscalating();
 
         $this->fixture->advanceTime(Duration::seconds(5));
@@ -206,7 +233,10 @@ final class EscalationTest extends TestCase
     public function testSkipsFollowUpBeforeAnyStepSent(): void
     {
         $policy = new EscalationPolicy('delayed', EscalationStepCollection::fromSteps([
-            new EscalationStep(Duration::seconds(60), DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')])),
+            new EscalationStep(
+                Duration::seconds(60),
+                DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')]),
+            ),
         ]));
         $escalation = $this->createEscalation($policy);
         $escalation->startEscalating();
@@ -221,7 +251,10 @@ final class EscalationTest extends TestCase
         $escalation = $this->createEscalation(new EscalationPolicy(
             'critical',
             EscalationStepCollection::fromSteps([
-                new EscalationStep(Duration::zero(), DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')])),
+                new EscalationStep(
+                    Duration::zero(),
+                    DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')]),
+                ),
                 new EscalationStep(
                     Duration::seconds(120),
                     DestinationCollection::fromDestinations([ChimeTtsSender::createDestination('media_player.home')]),
@@ -251,7 +284,11 @@ final class EscalationTest extends TestCase
         return new Escalation(
             $policy,
             NotificationBuilder::create()->withTitle('Kitchen flood')->withBody('Leak sensor is on'),
-            new Fault(ReadingSource::forEntity(new EntityId('binary_sensor.kitchen_leak')), 'Leak sensor', 'Leak sensor is on'),
+            new Fault(
+                ReadingSource::forEntity(new EntityId('binary_sensor.kitchen_leak')),
+                'Leak sensor',
+                'Leak sensor is on',
+            ),
             function (Acknowledgement $acknowledgement): void {
                 $this->acknowledged[] = $acknowledgement;
             },
@@ -270,6 +307,9 @@ final class EscalationTest extends TestCase
     /** @return list<?string> */
     private function listSentTargets(): array
     {
-        return array_map(static fn(Notification $notification) => $notification->destinations->getFirst()?->targets[0], $this->notifier->sent);
+        return array_map(
+            static fn(Notification $notification) => $notification->destinations->getFirst()?->targets[0],
+            $this->notifier->sent,
+        );
     }
 }

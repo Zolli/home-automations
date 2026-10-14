@@ -18,7 +18,12 @@ use Shared\Notification\NotificationId;
 
 /**
  * @phpstan-type ButtonPayload array{action: string, title: string, ...<string, mixed>}
- * @phpstan-type MessagePayload array{body: string, title?: string, additionalData?: array<string, mixed>, buttons?: list<ButtonPayload>}
+ * @phpstan-type MessagePayload array{
+ *     body: string,
+ *     title?: string,
+ *     additionalData?: array<string, mixed>,
+ *     buttons?: list<ButtonPayload>,
+ * }
  * @phpstan-type MetaPayload array{importance?: string, debug?: bool, id?: string, replyTopic?: string}
  * @phpstan-type Payload array{message: MessagePayload, destinations: list<mixed>, meta?: MetaPayload}
  */
@@ -43,7 +48,7 @@ final readonly class NotificationPayloadMapper
      */
     private function mapValidatedPayload(array $payload): NotificationRequest
     {
-        $meta = $payload['meta'] ?? [];
+        $meta         = $payload['meta'] ?? [];
         $notification = new Notification(
             $this->mapMessage($payload['message']),
             $this->destinations->mapToDestinations($payload['destinations'], ['destinations']),
@@ -111,7 +116,11 @@ final readonly class NotificationPayloadMapper
 
         if ($importance === null) {
             $knownLevels = array_map(static fn(Importance $importance) => $importance->value, Importance::cases());
-            $reason = \sprintf('Importance "%s" is unknown, expected one of: %s.', $level, implode(', ', $knownLevels));
+            $reason      = \sprintf(
+                'Importance "%s" is unknown, expected one of: %s.',
+                $level,
+                implode(', ', $knownLevels),
+            );
 
             throw InvalidNotificationPayload::forViolation(PayloadViolation::atPath(['meta', 'importance'], $reason));
         }

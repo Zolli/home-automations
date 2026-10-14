@@ -14,7 +14,7 @@ final class DestinationSenderCollectionTest extends TestCase
 {
     public function testFindsSenderByDestinationType(): void
     {
-        $notify = new NotifyServiceSender();
+        $notify  = new NotifyServiceSender();
         $senders = DestinationSenderCollection::keyedByDestinationType([$notify]);
 
         self::assertSame($notify, $senders->find(DestinationType::NotifyService));

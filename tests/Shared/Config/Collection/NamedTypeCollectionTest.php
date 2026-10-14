@@ -14,7 +14,7 @@ final class NamedTypeCollectionTest extends TestCase
     public function testFindsTypeByName(): void
     {
         $always = new NamedTypeStub('always');
-        $types = NamedTypeStubCollection::keyedByName([new NamedTypeStub('never'), $always]);
+        $types  = NamedTypeStubCollection::keyedByName([new NamedTypeStub('never'), $always]);
 
         self::assertSame($always, $types->find('always'));
         self::assertNull($types->find('sometimes'));
@@ -30,7 +30,7 @@ final class NamedTypeCollectionTest extends TestCase
     public function testRequiresTypeNamedByOptions(): void
     {
         $always = new NamedTypeStub('always');
-        $types = NamedTypeStubCollection::keyedByName([$always]);
+        $types  = NamedTypeStubCollection::keyedByName([$always]);
 
         self::assertSame($always, $types->requireType(TypedOptions::fromArray('Stub', ['type' => 'always'])));
     }
@@ -39,6 +39,7 @@ final class NamedTypeCollectionTest extends TestCase
     {
         $this->expectException(InvalidTypedOptions::class);
 
-        NamedTypeStubCollection::keyedByName([new NamedTypeStub('always')])->requireType(TypedOptions::fromArray('Stub', ['type' => 'never']));
+        NamedTypeStubCollection::keyedByName([new NamedTypeStub('always')])
+            ->requireType(TypedOptions::fromArray('Stub', ['type' => 'never']));
     }
 }

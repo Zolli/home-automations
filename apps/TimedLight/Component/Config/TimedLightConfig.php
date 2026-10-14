@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\TimedLight\Component\Config;
 
 final readonly class TimedLightConfig
@@ -17,9 +19,7 @@ final readonly class TimedLightConfig
         public ?string $coverEntityId = null,
     ) {}
 
-    /**
-     * @param array<string, mixed> $options
-     */
+    /** @param array<string, mixed> $options */
     public static function fromConfig(array $options): self
     {
         return new self(
@@ -28,7 +28,7 @@ final readonly class TimedLightConfig
             $options['timeoutSeconds'],
             (!empty($options['motionSensors'])) ? $options['motionSensors'] : null,
             (!empty($options['entrySensors'])) ? $options['entrySensors'] : null,
-            (!empty($options['coverEntityId'])) ? $options['coverEntityId'] : null
+            (!empty($options['coverEntityId'])) ? $options['coverEntityId'] : null,
         );
     }
 }

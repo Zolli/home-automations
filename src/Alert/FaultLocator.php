@@ -19,7 +19,7 @@ final readonly class FaultLocator
         }
 
         $registry = $ha->getRegistry();
-        $areaId = $registry->findEntityPlacement($entityId)->areaId;
+        $areaId   = $registry->findEntityPlacement($entityId)->areaId;
 
         return $areaId === null ? null : $registry->findArea($areaId);
     }
