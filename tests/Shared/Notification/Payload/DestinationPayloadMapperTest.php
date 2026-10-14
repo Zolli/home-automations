@@ -17,14 +17,19 @@ final class DestinationPayloadMapperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->mapper = new ServiceContainer(DestinationPayloadMapper::class)->getService(DestinationPayloadMapper::class);
+        $this->mapper = new ServiceContainer(DestinationPayloadMapper::class)
+            ->getService(DestinationPayloadMapper::class);
     }
 
     public function testMapsDestinationsWithConditions(): void
     {
         $destinations = $this->mapper->mapToDestinations([
             ['type' => 'tts', 'target' => ['media_player.kitchen', 'media_player.hall']],
-            ['type' => 'notify_service', 'target' => 'notify.phone', 'conditions' => [['type' => 'importance', 'field' => 'input_select.level']]],
+            [
+                'type'       => 'notify_service',
+                'target'     => 'notify.phone',
+                'conditions' => [['type' => 'importance', 'field' => 'input_select.level']],
+            ],
         ], ['steps', 0, 'destinations']);
 
         $mapped = $destinations->listValues();
@@ -41,7 +46,10 @@ final class DestinationPayloadMapperTest extends TestCase
         yield 'not a list' => ['notify.phone', 'steps[0].destinations must be of type array'];
         yield 'empty list' => [[], 'steps[0].destinations must have at least 1 items'];
         yield 'missing target' => [[['type' => 'tts']], 'steps[0].destinations[0].target is required'];
-        yield 'unknown type' => [[['type' => 'telegram', 'target' => 'chat']], 'steps[0].destinations[0].type Destination type "telegram" is unknown'];
+        yield 'unknown type' => [
+            [['type' => 'telegram', 'target' => 'chat']],
+            'steps[0].destinations[0].type Destination type "telegram" is unknown',
+        ];
     }
 
     #[DataProvider('invalidDestinations')]

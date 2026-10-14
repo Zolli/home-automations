@@ -52,7 +52,9 @@ final class HomeAlertApp implements App
     public function initialize(): void
     {
         $this->monitoredAlerts = MonitoredAlertCollection::fromAlerts(
-            $this->definitions->mapToList(fn(AlertDefinition $definition) => $this->monitor->startMonitoring($definition, $this->context)),
+            $this->definitions->mapToList(
+                fn(AlertDefinition $definition) => $this->monitor->startMonitoring($definition, $this->context),
+            ),
         );
 
         foreach ($this->definitions as $definition) {

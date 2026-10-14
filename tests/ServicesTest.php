@@ -38,14 +38,26 @@ final class ServicesTest extends TestCase
 
         self::assertInstanceOf(
             ImportanceCondition::class,
-            $container->getService(ConditionFactory::class)->mapToCondition(['type' => 'importance', 'field' => 'input_select.level']),
+            $container
+                ->getService(ConditionFactory::class)
+                ->mapToCondition(['type' => 'importance', 'field' => 'input_select.level']),
         );
 
-        $container->getService(NotificationPayloadSchema::class)->validatePayload(['message' => ['body' => 'Hi'], 'destinations' => [['type' => 'tts', 'target' => 'media_player.kitchen']]]);
-        $container->getService(NotificationPayloadMapper::class)->mapToNotificationRequest(['message' => ['body' => 'Hi'], 'destinations' => [['type' => 'tts', 'target' => 'media_player.kitchen']]]);
+        $payload = [
+            'message'      => ['body' => 'Hi'],
+            'destinations' => [['type' => 'tts', 'target' => 'media_player.kitchen']],
+        ];
+
+        $container->getService(NotificationPayloadSchema::class)->validatePayload($payload);
+        $container->getService(NotificationPayloadMapper::class)->mapToNotificationRequest($payload);
         $container->getService(NotificationActionPayloadMapper::class);
 
-        $container->getService(Notifier::class)->send(NotificationBuilder::create()->withBody('Hi')->withAppendedDestinations(ChimeTtsSender::createDestination('media_player.kitchen'))->buildNotification());
+        $container->getService(Notifier::class)->send(
+            NotificationBuilder::create()
+                ->withBody('Hi')
+                ->withAppendedDestinations(ChimeTtsSender::createDestination('media_player.kitchen'))
+                ->buildNotification(),
+        );
 
         self::assertCount(1, $harness->ha->calls);
         self::assertSame('chime_tts.say', $harness->ha->getLastCall()->getServiceName());
@@ -53,7 +65,13 @@ final class ServicesTest extends TestCase
 
     public function testWiresAlertConfigServices(): void
     {
-        $container = new ServiceContainer(AlertRuleFactory::class, EscalationPolicyMapper::class, MitigationFactory::class, AlertConfigMapper::class, AlertMonitor::class);
+        $container = new ServiceContainer(
+            AlertRuleFactory::class,
+            EscalationPolicyMapper::class,
+            MitigationFactory::class,
+            AlertConfigMapper::class,
+            AlertMonitor::class,
+        );
         $container->replaceSyntheticWithFakes(new AppHarness());
         $policies = $container->getService(EscalationPolicyMapper::class)->mapToPolicies([
             'critical' => ['steps' => [
@@ -62,10 +80,20 @@ final class ServicesTest extends TestCase
             ]],
         ]);
 
-        self::assertInstanceOf(ThresholdRule::class, $container->getService(AlertRuleFactory::class)->mapToRule(['type' => 'below', 'entity' => 'sensor.l1_voltage', 'threshold' => 180]));
+        self::assertInstanceOf(
+            ThresholdRule::class,
+            $container
+                ->getService(AlertRuleFactory::class)
+                ->mapToRule(['type' => 'below', 'entity' => 'sensor.l1_voltage', 'threshold' => 180]),
+        );
         self::assertNotNull($policies->find('critical'));
         self::assertTrue($container->getService(AlertConfigMapper::class)->mapToDefinitions([], [])->isEmpty());
         self::assertInstanceOf(AlertMonitor::class, $container->getService(AlertMonitor::class));
-        self::assertCount(1, $container->getService(MitigationFactory::class)->mapToMitigations([['type' => 'turn-off', 'entity' => 'valve.main_water']]));
+        self::assertCount(
+            1,
+            $container
+                ->getService(MitigationFactory::class)
+                ->mapToMitigations([['type' => 'turn-off', 'entity' => 'valve.main_water']]),
+        );
     }
 }

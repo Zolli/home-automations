@@ -17,7 +17,12 @@ final class InvalidAlertConfig extends InvalidArgumentException
     /** @param list<string> $knownTypes */
     public static function forUnknownType(string $kind, string $type, array $knownTypes): self
     {
-        return new self(\sprintf('%s type "%s" is unknown, expected one of: %s.', $kind, $type, implode(', ', $knownTypes)));
+        return new self(\sprintf(
+            '%s type "%s" is unknown, expected one of: %s.',
+            $kind,
+            $type,
+            implode(', ', $knownTypes),
+        ));
     }
 
     public static function forDuplicateType(string $kind, string $type): self

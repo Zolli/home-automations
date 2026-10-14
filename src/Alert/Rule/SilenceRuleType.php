@@ -22,9 +22,18 @@ final readonly class SilenceRuleType implements AlertRuleType
         $maxSilenceSeconds = $options->requireNumber(self::MAX_SILENCE_KEY);
 
         if ($maxSilenceSeconds <= 0) {
-            throw InvalidAlertConfig::forInvalidOption($options->kind, $options->type, self::MAX_SILENCE_KEY, 'a positive number');
+            throw InvalidAlertConfig::forInvalidOption(
+                $options->kind,
+                $options->type,
+                self::MAX_SILENCE_KEY,
+                'a positive number',
+            );
         }
 
-        return new SilenceRule($options->requireTopicSources(), Duration::seconds($maxSilenceSeconds), $options->findHoldDuration());
+        return new SilenceRule(
+            $options->requireTopicSources(),
+            Duration::seconds($maxSilenceSeconds),
+            $options->findHoldDuration(),
+        );
     }
 }

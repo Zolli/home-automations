@@ -56,7 +56,9 @@ final readonly class TypedOptions
         }
 
         foreach ($this->findList(self::ENTITIES_KEY) as $entityId) {
-            $sources[] = ReadingSource::forEntity($this->mapToEntityId($entityId, self::ENTITIES_KEY, 'a list of entity ids'));
+            $sources[] = ReadingSource::forEntity(
+                $this->mapToEntityId($entityId, self::ENTITIES_KEY, 'a list of entity ids'),
+            );
         }
 
         if ($this->hasOption(self::TOPIC_KEY)) {
@@ -68,7 +70,14 @@ final readonly class TypedOptions
         }
 
         if ($sources === []) {
-            throw InvalidAlertConfig::forMissingSource($this->kind, $this->type, self::ENTITY_KEY, self::ENTITIES_KEY, self::TOPIC_KEY, self::TOPICS_KEY);
+            throw InvalidAlertConfig::forMissingSource(
+                $this->kind,
+                $this->type,
+                self::ENTITY_KEY,
+                self::ENTITIES_KEY,
+                self::TOPIC_KEY,
+                self::TOPICS_KEY,
+            );
         }
 
         return ReadingSourceCollection::fromSources($sources);
@@ -81,7 +90,10 @@ final readonly class TypedOptions
 
         return $topics === []
             ? throw InvalidAlertConfig::forMissingSource($this->kind, $this->type, self::TOPICS_KEY)
-            : ReadingSourceCollection::fromSources(array_map(fn(mixed $topic): ReadingSource => $this->mapToTopicSource($topic, self::TOPICS_KEY), $topics));
+            : ReadingSourceCollection::fromSources(array_map(
+                fn(mixed $topic): ReadingSource => $this->mapToTopicSource($topic, self::TOPICS_KEY),
+                $topics,
+            ));
     }
 
     /** @throws InvalidAlertConfig */
@@ -89,7 +101,9 @@ final readonly class TypedOptions
     {
         $value = $this->fields[$key] ?? null;
 
-        return \is_string($value) && $value !== '' ? $value : throw $this->createInvalidOption($key, 'a non-empty string');
+        return \is_string($value) && $value !== ''
+            ? $value
+            : throw $this->createInvalidOption($key, 'a non-empty string');
     }
 
     /** @throws InvalidAlertConfig */
@@ -103,7 +117,9 @@ final readonly class TypedOptions
     {
         $value = $this->fields[$key] ?? null;
 
-        return \is_int($value) || \is_float($value) ? (float) $value : throw $this->createInvalidOption($key, 'a number');
+        return \is_int($value) || \is_float($value)
+            ? (float) $value
+            : throw $this->createInvalidOption($key, 'a number');
     }
 
     /** @throws InvalidAlertConfig */
@@ -153,13 +169,16 @@ final readonly class TypedOptions
     {
         $values = $this->fields[$key] ?? [];
 
-        return \is_array($values) && array_is_list($values) ? $values : throw $this->createInvalidOption($key, 'a list');
+        return \is_array($values) && array_is_list($values)
+            ? $values
+            : throw $this->createInvalidOption($key, 'a list');
     }
 
     /** @throws InvalidAlertConfig */
     private function mapToEntityId(mixed $value, string $key, string $expectation): EntityId
     {
-        return (\is_string($value) ? EntityId::tryFromString($value) : null) ?? throw $this->createInvalidOption($key, $expectation);
+        return (\is_string($value) ? EntityId::tryFromString($value) : null)
+            ?? throw $this->createInvalidOption($key, $expectation);
     }
 
     /** @throws InvalidAlertConfig */

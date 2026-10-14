@@ -31,7 +31,10 @@ final readonly class SilenceRule implements RecheckedAlertRule
 
     public function getRecheckInterval(): Duration
     {
-        return Duration::seconds(max(self::MIN_RECHECK_SECONDS, $this->maxSilence->toSeconds() / self::RECHECKS_PER_SILENCE));
+        return Duration::seconds(max(
+            self::MIN_RECHECK_SECONDS,
+            $this->maxSilence->toSeconds() / self::RECHECKS_PER_SILENCE,
+        ));
     }
 
     public function findFault(ReadingSnapshot $snapshot): ?Fault
@@ -40,7 +43,11 @@ final readonly class SilenceRule implements RecheckedAlertRule
             $silence = $snapshot->measureSilence($source);
 
             if ($silence->isLongerThan($this->maxSilence)) {
-                return new Fault($source, $source->key, \sprintf('%s sent nothing for %d s', $source->key, $silence->toSeconds()));
+                return new Fault(
+                    $source,
+                    $source->key,
+                    \sprintf('%s sent nothing for %d s', $source->key, $silence->toSeconds()),
+                );
             }
         }
 
@@ -54,6 +61,10 @@ final readonly class SilenceRule implements RecheckedAlertRule
 
     public function describe(): string
     {
-        return \sprintf('any of %s silent for over %d s', $this->topicSources->describe(), $this->maxSilence->toSeconds());
+        return \sprintf(
+            'any of %s silent for over %d s',
+            $this->topicSources->describe(),
+            $this->maxSilence->toSeconds(),
+        );
     }
 }

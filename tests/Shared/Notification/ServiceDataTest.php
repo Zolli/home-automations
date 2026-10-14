@@ -13,7 +13,10 @@ final class ServiceDataTest extends TestCase
     {
         self::assertSame(
             ['data' => ['color' => 'red', 'tag' => 'hello'], 'title' => 'Hi'],
-            ServiceData::mergeReplacingLists(['data' => ['color' => 'red'], 'title' => 'Hi'], ['data' => ['tag' => 'hello']]),
+            ServiceData::mergeReplacingLists(
+                ['data' => ['color' => 'red'], 'title' => 'Hi'],
+                ['data' => ['tag' => 'hello']],
+            ),
         );
     }
 
@@ -29,7 +32,11 @@ final class ServiceDataTest extends TestCase
     {
         self::assertSame(
             ['data' => ['color' => 'blue']],
-            ServiceData::mergeReplacingLists(['data' => ['color' => 'red']], ['data' => ['color' => 'green']], ['data' => ['color' => 'blue']]),
+            ServiceData::mergeReplacingLists(
+                ['data' => ['color' => 'red']],
+                ['data' => ['color' => 'green']],
+                ['data' => ['color' => 'blue']],
+            ),
         );
     }
 }

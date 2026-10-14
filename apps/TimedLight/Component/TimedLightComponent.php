@@ -64,9 +64,12 @@ class TimedLightComponent
                 }
 
                 $this->timeoutTask?->cancel();
-                $this->timeoutTask = $this->scheduler->runAfter(Duration::seconds($this->lightTimeoutSeconds), function (): void {
-                    $this->turnOffLight();
-                });
+                $this->timeoutTask = $this->scheduler->runAfter(
+                    Duration::seconds($this->lightTimeoutSeconds),
+                    function (): void {
+                        $this->turnOffLight();
+                    },
+                );
 
                 break;
         }

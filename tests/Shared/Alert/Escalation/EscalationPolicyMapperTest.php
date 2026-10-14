@@ -36,7 +36,9 @@ final class EscalationPolicyMapperTest extends TestCase
                         'repeat'       => [
                             'everySeconds' => 30,
                             'times'        => 5,
-                            'while'        => [['type' => 'eq', 'field' => 'input_boolean.alarm_test_mode', 'value' => 'off']],
+                            'while'        => [
+                                ['type' => 'eq', 'field' => 'input_boolean.alarm_test_mode', 'value' => 'off'],
+                            ],
                         ],
                     ],
                 ],
@@ -63,7 +65,11 @@ final class EscalationPolicyMapperTest extends TestCase
     public function testMapsSignalStep(): void
     {
         $policies = $this->mapper->mapToPolicies(['smoke-leak' => ['steps' => [
-            ['afterSeconds' => 2, 'signal' => ['type' => 'light-effect', 'effect' => 'okay'], 'repeat' => ['everySeconds' => 4, 'times' => 84]],
+            [
+                'afterSeconds' => 2,
+                'signal'       => ['type' => 'light-effect', 'effect' => 'okay'],
+                'repeat'       => ['everySeconds' => 4, 'times' => 84],
+            ],
         ]]]);
 
         $step = $policies->find('smoke-leak')?->steps->getFirst();
@@ -80,21 +86,42 @@ final class EscalationPolicyMapperTest extends TestCase
 
         yield 'missing steps' => [['critical' => ['acknowledgeOnDismiss' => true]]];
         yield 'missing destinations' => [['critical' => ['steps' => [['afterSeconds' => 0]]]]];
-        yield 'unknown destination type' => [['critical' => ['steps' => [['destinations' => [['type' => 'sms', 'target' => 'x']]]]]]];
-        yield 'unknown importance' => [['critical' => ['steps' => [['importance' => 'urgent', 'destinations' => $phone]]]]];
+        yield 'unknown destination type' => [['critical' => ['steps' => [
+            ['destinations' => [['type' => 'sms', 'target' => 'x']]],
+        ]]]];
+        yield 'unknown importance' => [['critical' => ['steps' => [
+            ['importance' => 'urgent', 'destinations' => $phone],
+        ]]]];
         yield 'negative delay' => [['critical' => ['steps' => [['afterSeconds' => -1, 'destinations' => $phone]]]]];
-        yield 'non-boolean dismiss option' => [['critical' => ['acknowledgeOnDismiss' => 'yes', 'steps' => [['destinations' => $phone]]]]];
+        yield 'non-boolean dismiss option' => [['critical' => ['acknowledgeOnDismiss' => 'yes', 'steps' => [
+            ['destinations' => $phone],
+        ]]]];
         yield 'unknown signal' => [['critical' => ['steps' => [['signal' => ['type' => 'siren']]]]]];
         yield 'signal without effect' => [['critical' => ['steps' => [['signal' => ['type' => 'light-effect']]]]]];
         yield 'repeat not a map' => [['critical' => ['steps' => [['destinations' => $phone, 'repeat' => 30]]]]];
-        yield 'repeat without interval' => [['critical' => ['steps' => [['destinations' => $phone, 'repeat' => ['times' => 5]]]]]];
-        yield 'non-integer repeat times' => [['critical' => ['steps' => [['destinations' => $phone, 'repeat' => ['everySeconds' => 30, 'times' => 'many']]]]]];
-        yield 'unknown repeat condition' => [['critical' => ['steps' => [['destinations' => $phone, 'repeat' => ['everySeconds' => 30, 'while' => [['type' => 'between']]]]]]]];
+        yield 'repeat without interval' => [['critical' => ['steps' => [
+            ['destinations' => $phone, 'repeat' => ['times' => 5]],
+        ]]]];
+        yield 'non-integer repeat times' => [['critical' => ['steps' => [
+            ['destinations' => $phone, 'repeat' => ['everySeconds' => 30, 'times' => 'many']],
+        ]]]];
+        yield 'unknown repeat condition' => [['critical' => ['steps' => [
+            ['destinations' => $phone, 'repeat' => ['everySeconds' => 30, 'while' => [['type' => 'between']]]],
+        ]]]];
         yield 'no steps' => [['critical' => ['steps' => []]]];
-        yield 'unordered steps' => [['critical' => ['steps' => [['afterSeconds' => 60, 'destinations' => $phone], ['afterSeconds' => 0, 'destinations' => $phone]]]]];
-        yield 'destinations and signal' => [['critical' => ['steps' => [['destinations' => $phone, 'signal' => ['type' => 'light-effect', 'effect' => 'okay']]]]]];
-        yield 'zero repeat interval' => [['critical' => ['steps' => [['destinations' => $phone, 'repeat' => ['everySeconds' => 0]]]]]];
-        yield 'zero repeat times' => [['critical' => ['steps' => [['destinations' => $phone, 'repeat' => ['everySeconds' => 30, 'times' => 0]]]]]];
+        yield 'unordered steps' => [['critical' => ['steps' => [
+            ['afterSeconds' => 60, 'destinations' => $phone],
+            ['afterSeconds' => 0, 'destinations' => $phone],
+        ]]]];
+        yield 'destinations and signal' => [['critical' => ['steps' => [
+            ['destinations' => $phone, 'signal' => ['type' => 'light-effect', 'effect' => 'okay']],
+        ]]]];
+        yield 'zero repeat interval' => [['critical' => ['steps' => [
+            ['destinations' => $phone, 'repeat' => ['everySeconds' => 0]],
+        ]]]];
+        yield 'zero repeat times' => [['critical' => ['steps' => [
+            ['destinations' => $phone, 'repeat' => ['everySeconds' => 30, 'times' => 0]],
+        ]]]];
     }
 
     /** @param array<array-key, mixed> $policies */

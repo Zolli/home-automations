@@ -37,9 +37,15 @@ final class ChimeTtsSenderTest extends TestCase
     public function testOptionsCanOverrideSpokenMessage(): void
     {
         $destination  = ChimeTtsSender::createDestination('media_player.kitchen_speaker', ['message' => 'Laundry!']);
-        $notification = NotificationBuilder::create()->withBody('The laundry is done')->withAppendedDestinations($destination)->buildNotification();
+        $notification = NotificationBuilder::create()
+            ->withBody('The laundry is done')
+            ->withAppendedDestinations($destination)
+            ->buildNotification();
 
-        self::assertSame(['message' => 'Laundry!'], new ChimeTtsSender()->buildServiceCalls($notification, $destination)->listValues()[0]->data);
+        self::assertSame(
+            ['message' => 'Laundry!'],
+            new ChimeTtsSender()->buildServiceCalls($notification, $destination)->listValues()[0]->data,
+        );
     }
 
     public function testRejectsTargetThatIsNotEntityId(): void

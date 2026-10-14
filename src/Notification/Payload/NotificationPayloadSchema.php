@@ -54,7 +54,9 @@ final readonly class NotificationPayloadSchema
         $error = $this->validator->validate(Helper::convertAssocArrayToObject($data), $schema)->error();
 
         if ($error !== null) {
-            throw InvalidNotificationPayload::forViolations(PayloadViolationCollection::fromViolations($this->mapToViolations($error, $path)));
+            throw InvalidNotificationPayload::forViolations(
+                PayloadViolationCollection::fromViolations($this->mapToViolations($error, $path)),
+            );
         }
     }
 
@@ -113,7 +115,10 @@ final readonly class NotificationPayloadSchema
 
         return match ($error->keyword()) {
             'type'      => 'must be of type ' . implode(' or ', (array) $args['expected']),
-            'enum'      => 'must be one of: ' . implode(', ', array_map(strval(...), (array) ($error->schema()->info()->data()->enum ?? []))),
+            'enum'      => 'must be one of: ' . implode(
+                ', ',
+                array_map(strval(...), (array) ($error->schema()->info()->data()->enum ?? [])),
+            ),
             'minItems'  => "must have at least {$args['min']} items",
             'maxItems'  => "must have at most {$args['max']} items",
             'minLength' => $args['min'] === 1 ? 'must not be empty' : "must have at least {$args['min']} characters",

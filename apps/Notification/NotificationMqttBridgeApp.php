@@ -71,7 +71,10 @@ final class NotificationMqttBridgeApp implements App
         }
 
         $notification          = $request->notification;
-        $this->awaitingActions = array_filter($this->awaitingActions, static fn(ActionListener $listener) => $listener->isListening());
+        $this->awaitingActions = array_filter(
+            $this->awaitingActions,
+            static fn(ActionListener $listener) => $listener->isListening(),
+        );
 
         if (!$notification->message->hasButtons()) {
             return;

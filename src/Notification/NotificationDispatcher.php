@@ -38,8 +38,11 @@ final readonly class NotificationDispatcher implements Notifier
         return new SentNotification($notification, $this->actionRouter, $delivered);
     }
 
-    private function sendToDestination(Notification $notification, Destination $destination, ConditionContext $context): bool
-    {
+    private function sendToDestination(
+        Notification $notification,
+        Destination $destination,
+        ConditionContext $context,
+    ): bool {
         $log = [
             'id'         => $notification->meta->id->value,
             'type'       => $destination->type->value,

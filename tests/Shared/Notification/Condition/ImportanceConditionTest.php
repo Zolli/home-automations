@@ -32,9 +32,15 @@ final class ImportanceConditionTest extends TestCase
     #[DataProvider('levels')]
     public function testComparesImportanceWithLevel(Importance $importance, string $level, bool $satisfied): void
     {
-        $context = ConditionContextFixture::createWithStates(['input_select.zoli_notification_level' => [$level]], [$importance]);
+        $context = ConditionContextFixture::createWithStates(
+            ['input_select.zoli_notification_level' => [$level]],
+            [$importance],
+        );
 
-        self::assertSame($satisfied, new ImportanceCondition(new EntityId('input_select.zoli_notification_level'))->isSatisfied($context));
+        self::assertSame(
+            $satisfied,
+            new ImportanceCondition(new EntityId('input_select.zoli_notification_level'))->isSatisfied($context),
+        );
     }
 
     public function testMissingHelperSends(): void
@@ -65,6 +71,7 @@ final class ImportanceConditionTest extends TestCase
     {
         $this->expectException(InvalidCondition::class);
 
-        new ConditionFactory(ConditionTypeCollection::keyedByName([new ImportanceConditionType()]))->mapToCondition(['type' => 'importance']);
+        new ConditionFactory(ConditionTypeCollection::keyedByName([new ImportanceConditionType()]))
+            ->mapToCondition(['type' => 'importance']);
     }
 }

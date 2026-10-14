@@ -63,9 +63,14 @@ final class AlertConfigMapperTest extends TestCase
         yield 'missing id' => [[['policy' => 'critical', 'rule' => $rule]]];
         yield 'unknown policy' => [[['id' => 'flood', 'policy' => 'warning', 'rule' => $rule]]];
         yield 'missing rule' => [[['id' => 'flood', 'policy' => 'critical']]];
-        yield 'invalid mitigation' => [[['id' => 'flood', 'policy' => 'critical', 'rule' => $rule, 'mitigations' => [['type' => 'siren']]]]];
+        yield 'invalid mitigation' => [[
+            ['id' => 'flood', 'policy' => 'critical', 'rule' => $rule, 'mitigations' => [['type' => 'siren']]],
+        ]];
         yield 'empty message' => [[['id' => 'flood', 'policy' => 'critical', 'rule' => $rule, 'message' => ' ']]];
-        yield 'duplicate id' => [[['id' => 'flood', 'policy' => 'critical', 'rule' => $rule], ['id' => 'flood', 'policy' => 'critical', 'rule' => $rule]]];
+        yield 'duplicate id' => [[
+            ['id' => 'flood', 'policy' => 'critical', 'rule' => $rule],
+            ['id' => 'flood', 'policy' => 'critical', 'rule' => $rule],
+        ]];
     }
 
     /** @param list<array<string, mixed>> $alerts */

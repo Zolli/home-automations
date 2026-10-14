@@ -96,7 +96,10 @@ final class ActionListener
         try {
             $callback();
         } catch (Throwable $e) {
-            $this->logger->error('[NOTIFICATION] Action callback failed', ['id' => $this->notificationId->value, ...$context, 'exception' => $e]);
+            $this->logger->error(
+                '[NOTIFICATION] Action callback failed',
+                ['id' => $this->notificationId->value, ...$context, 'exception' => $e],
+            );
         }
     }
 }

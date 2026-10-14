@@ -17,7 +17,9 @@ final class DestinationTest extends TestCase
 {
     public function testNormalizesTargets(): void
     {
-        $destination = ChimeTtsSender::createDestination([' media_player.kitchen ', 'media_player.kitchen', '', 'media_player.bedroom']);
+        $destination = ChimeTtsSender::createDestination(
+            [' media_player.kitchen ', 'media_player.kitchen', '', 'media_player.bedroom'],
+        );
 
         self::assertSame(['media_player.kitchen', 'media_player.bedroom'], $destination->targets);
     }

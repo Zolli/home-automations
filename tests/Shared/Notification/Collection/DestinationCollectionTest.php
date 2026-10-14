@@ -24,7 +24,9 @@ final class DestinationCollectionTest extends TestCase
 
     public function testAppendingKeepsOriginalUnchanged(): void
     {
-        $original = DestinationCollection::fromDestinations([ChimeTtsSender::createDestination('media_player.kitchen')]);
+        $original = DestinationCollection::fromDestinations(
+            [ChimeTtsSender::createDestination('media_player.kitchen')],
+        );
 
         $original->withAppendedDestinations(ChimeTtsSender::createDestination('media_player.office'));
 

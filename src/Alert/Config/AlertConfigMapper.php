@@ -68,7 +68,9 @@ final readonly class AlertConfigMapper
                 $message,
                 $this->rules->mapToRule(\is_array($alert['rule'] ?? null) ? $alert['rule'] : []),
                 $policy,
-                $this->mitigations->mapToMitigations(\is_array($alert['mitigations'] ?? null) ? $alert['mitigations'] : []),
+                $this->mitigations->mapToMitigations(
+                    \is_array($alert['mitigations'] ?? null) ? $alert['mitigations'] : [],
+                ),
             );
         } catch (InvalidAlertConfig $e) {
             throw InvalidAlertConfig::forInvalidAlert($id, $e->getMessage(), $e);

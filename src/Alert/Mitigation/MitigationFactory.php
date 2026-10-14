@@ -38,7 +38,11 @@ final readonly class MitigationFactory
     {
         $options        = TypedOptions::fromArray(MitigationType::KIND, $fields);
         $mitigationType = $this->types->find($options->type)
-            ?? throw InvalidAlertConfig::forUnknownType(MitigationType::KIND, $options->type, $this->types->listNames());
+            ?? throw InvalidAlertConfig::forUnknownType(
+                MitigationType::KIND,
+                $options->type,
+                $this->types->listNames(),
+            );
 
         return $mitigationType->mapToMitigation($options);
     }

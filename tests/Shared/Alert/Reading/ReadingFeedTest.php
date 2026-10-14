@@ -25,7 +25,10 @@ final class ReadingFeedTest extends TestCase
     {
         $this->fixture = new AlertFixture();
         $this->feed    = new ReadingFeed(
-            ReadingSourceCollection::fromSources([ReadingSource::forEntity(new EntityId('sensor.l1_voltage')), ReadingSource::forTopic(self::TOPIC)]),
+            ReadingSourceCollection::fromSources([
+                ReadingSource::forEntity(new EntityId('sensor.l1_voltage')),
+                ReadingSource::forTopic(self::TOPIC),
+            ]),
             $this->fixture->createMonitoringContext(),
         );
     }

@@ -23,7 +23,12 @@ final class CompareConditionTypeTest extends TestCase
     public function testBuildsCompareCondition(): void
     {
         $condition = new CompareConditionType(Operator::Gte)->mapToCondition(
-            ConditionDefinition::fromArray(['type' => 'gte', 'field' => 'sun.sun', 'attribute' => 'elevation', 'value' => 10]),
+            ConditionDefinition::fromArray([
+                'type'      => 'gte',
+                'field'     => 'sun.sun',
+                'attribute' => 'elevation',
+                'value'     => 10,
+            ]),
         );
 
         self::assertEquals(new CompareCondition(new EntityId('sun.sun'), Operator::Gte, 10, 'elevation'), $condition);
@@ -35,8 +40,14 @@ final class CompareConditionTypeTest extends TestCase
         yield 'missing field' => [Operator::Eq, ['type' => 'eq', 'value' => 'on']];
         yield 'field without entity id' => [Operator::Eq, ['type' => 'eq', 'field' => 'guest_mode', 'value' => 'on']];
         yield 'missing value' => [Operator::Eq, ['type' => 'eq', 'field' => 'sun.sun']];
-        yield 'non-string attribute' => [Operator::Eq, ['type' => 'eq', 'field' => 'sun.sun', 'value' => 1, 'attribute' => 5]];
-        yield 'non-numeric ordering value' => [Operator::Gt, ['type' => 'gt', 'field' => 'sensor.temperature', 'value' => 'warm']];
+        yield 'non-string attribute' => [
+            Operator::Eq,
+            ['type' => 'eq', 'field' => 'sun.sun', 'value' => 1, 'attribute' => 5],
+        ];
+        yield 'non-numeric ordering value' => [
+            Operator::Gt,
+            ['type' => 'gt', 'field' => 'sensor.temperature', 'value' => 'warm'],
+        ];
     }
 
     /** @param array<array-key, mixed> $definition */

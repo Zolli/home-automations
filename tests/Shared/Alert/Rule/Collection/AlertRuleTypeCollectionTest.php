@@ -15,7 +15,10 @@ final class AlertRuleTypeCollectionTest extends TestCase
 {
     public function testFindsTypeByName(): void
     {
-        $types = AlertRuleTypeCollection::keyedByName([new StateMatchRuleType(), new ThresholdRuleType(ThresholdDirection::Above)]);
+        $types = AlertRuleTypeCollection::keyedByName([
+            new StateMatchRuleType(),
+            new ThresholdRuleType(ThresholdDirection::Above),
+        ]);
 
         self::assertInstanceOf(ThresholdRuleType::class, $types->find('above'));
         self::assertNull($types->find('below'));

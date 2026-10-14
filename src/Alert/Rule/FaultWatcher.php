@@ -34,7 +34,10 @@ final class FaultWatcher
         $this->feed->startWatching($this->evaluateReadings(...));
 
         if ($this->rule instanceof RecheckedAlertRule) {
-            $this->recheck ??= $this->scheduler->runEvery($this->rule->getRecheckInterval(), fn() => $this->evaluateReadings());
+            $this->recheck ??= $this->scheduler->runEvery(
+                $this->rule->getRecheckInterval(),
+                fn() => $this->evaluateReadings(),
+            );
         }
 
         $this->evaluateReadings();

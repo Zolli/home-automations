@@ -19,7 +19,9 @@ final class ReadingFixture
 
     public static function createEntitySources(string ...$entityIds): ReadingSourceCollection
     {
-        return ReadingSourceCollection::fromSources(array_map(static fn(string $id) => ReadingSource::forEntity(new EntityId($id)), $entityIds));
+        return ReadingSourceCollection::fromSources(
+            array_map(static fn(string $id) => ReadingSource::forEntity(new EntityId($id)), $entityIds),
+        );
     }
 
     /** @param array<string, mixed> $attributes */

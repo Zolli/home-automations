@@ -23,7 +23,9 @@ final class HomeAlertAppTest extends TestCase
             ],
         ],
     ];
-    private const array TEST_MODE_OFF     = [['type' => 'eq', 'field' => 'input_boolean.alarm_test_mode', 'value' => 'off']];
+    private const array TEST_MODE_OFF = [
+        ['type' => 'eq', 'field' => 'input_boolean.alarm_test_mode', 'value' => 'off'],
+    ];
     private const array SMOKE_LEAK_POLICY = [
         'steps' => [
             ['destinations' => [['type' => 'notify_service', 'target' => 'notify.mobile_app_phone']]],
@@ -92,7 +94,11 @@ final class HomeAlertAppTest extends TestCase
             'policy' => 'critical',
             'rule'   => [
                 'type'               => 'below',
-                'topics'             => ['dsmr/reading/phase_voltage_l1', 'dsmr/reading/phase_voltage_l2', 'dsmr/reading/phase_voltage_l3'],
+                'topics'             => [
+                    'dsmr/reading/phase_voltage_l1',
+                    'dsmr/reading/phase_voltage_l2',
+                    'dsmr/reading/phase_voltage_l3',
+                ],
                 'threshold'          => 50,
                 'unavailableIsFault' => true,
                 'forSeconds'         => 10,
@@ -104,7 +110,10 @@ final class HomeAlertAppTest extends TestCase
         $this->fixture->advanceTime(Duration::seconds(10));
 
         self::assertSame(['notify.mobile_app_phone'], $this->fixture->listCalledServices());
-        self::assertSame('dsmr/reading/phase_voltage_l2 is 0, below 50', $this->fixture->ha->getLastCall()->data['message'] ?? null);
+        self::assertSame(
+            'dsmr/reading/phase_voltage_l2 is 0, below 50',
+            $this->fixture->ha->getLastCall()->data['message'] ?? null,
+        );
     }
 
     public function testSmokeNotifiesSpeaksAndBlinksUntilAcknowledged(): void

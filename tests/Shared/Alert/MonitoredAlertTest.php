@@ -121,7 +121,10 @@ final class MonitoredAlertTest extends TestCase
         $this->fixture->ha->pushState(self::LEAK_SENSOR, 'off');
         $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
 
-        self::assertSame(['binary_sensor.kitchen_leak is on', 'Cleared.', 'binary_sensor.kitchen_leak is on'], $this->listBodies());
+        self::assertSame(
+            ['binary_sensor.kitchen_leak is on', 'Cleared.', 'binary_sensor.kitchen_leak is on'],
+            $this->listBodies(),
+        );
     }
 
     public function testClearsAfterMitigationRecoversAndRaisesAgain(): void
@@ -186,8 +189,11 @@ final class MonitoredAlertTest extends TestCase
     }
 
     /** @param list<Mitigation> $mitigations */
-    private function startAlert(bool $acknowledgeOnDismiss, TextTemplate $message, array $mitigations = []): MonitoredAlert
-    {
+    private function startAlert(
+        bool $acknowledgeOnDismiss,
+        TextTemplate $message,
+        array $mitigations = [],
+    ): MonitoredAlert {
         $policy = new EscalationPolicy(
             'critical',
             EscalationStepCollection::fromSteps([
@@ -207,7 +213,13 @@ final class MonitoredAlertTest extends TestCase
             $policy,
             MitigationCollection::fromMitigations($mitigations),
         );
-        $alert = new MonitoredAlert($definition, $this->fixture->createMonitoringContext(), $this->notifier, new FaultLocator(), new NullLogger());
+        $alert = new MonitoredAlert(
+            $definition,
+            $this->fixture->createMonitoringContext(),
+            $this->notifier,
+            new FaultLocator(),
+            new NullLogger(),
+        );
         $alert->startMonitoring();
 
         return $alert;
@@ -216,6 +228,9 @@ final class MonitoredAlertTest extends TestCase
     /** @return list<string> */
     private function listBodies(): array
     {
-        return array_map(static fn(Notification $notification): string => $notification->message->body, $this->notifier->sent);
+        return array_map(
+            static fn(Notification $notification): string => $notification->message->body,
+            $this->notifier->sent,
+        );
     }
 }

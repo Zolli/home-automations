@@ -47,13 +47,19 @@ final class ReadingFeed
         $this->watchingSince = $this->context->clock->getNow();
 
         if ($this->entitySelector !== null) {
-            $this->subscriptions[] = $this->context->ha->watchStateChanges($this->entitySelector)->subscribe(static fn() => $whenChanged());
+            $this->subscriptions[] = $this->context->ha
+                ->watchStateChanges($this->entitySelector)
+                ->subscribe(static fn() => $whenChanged());
         }
 
         foreach ($this->topics as $topic) {
             $this->subscriptions[] = $this->context->mqtt->watchMessages($topic)->subscribe(
                 function (MqttMessage $message) use ($whenChanged): void {
-                    $this->latestMqttReadings[$message->topic] = Reading::fromMqttPayload($message->topic, $message->payload, $this->context->clock->getNow());
+                    $this->latestMqttReadings[$message->topic] = Reading::fromMqttPayload(
+                        $message->topic,
+                        $message->payload,
+                        $this->context->clock->getNow(),
+                    );
                     $whenChanged();
                 },
             );

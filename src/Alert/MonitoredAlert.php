@@ -33,7 +33,12 @@ final class MonitoredAlert implements FaultListener
         private readonly FaultLocator $locator,
         private readonly LoggerInterface $logger,
     ) {
-        $this->watcher = new FaultWatcher($definition->rule, new ReadingFeed($definition->rule->listSources(), $context), $context->scheduler, $this);
+        $this->watcher = new FaultWatcher(
+            $definition->rule,
+            new ReadingFeed($definition->rule->listSources(), $context),
+            $context->scheduler,
+            $this,
+        );
     }
 
     public function startMonitoring(): void
@@ -95,8 +100,13 @@ final class MonitoredAlert implements FaultListener
     private function acknowledge(Acknowledgement $acknowledgement): void
     {
         $this->state = AlertState::Acknowledged;
-        $this->logger->info("[ALERT] {$this->definition->id} acknowledged", ['method' => $acknowledgement->method->value, 'user' => $acknowledgement->userId]);
-        $this->escalation?->sendFollowUp($acknowledgement->method === AcknowledgeMethod::Dismissal ? 'Dismissed.' : 'Acknowledged.');
+        $this->logger->info("[ALERT] {$this->definition->id} acknowledged", [
+            'method' => $acknowledgement->method->value,
+            'user'   => $acknowledgement->userId,
+        ]);
+        $this->escalation?->sendFollowUp(
+            $acknowledgement->method === AcknowledgeMethod::Dismissal ? 'Dismissed.' : 'Acknowledged.',
+        );
     }
 
     /** @return list<string> */
@@ -108,7 +118,10 @@ final class MonitoredAlert implements FaultListener
 
                 return $mitigation->describe();
             } catch (Throwable $e) {
-                $this->logger->error("[ALERT] {$this->definition->id} mitigation failed", ['mitigation' => $mitigation->describe(), 'exception' => $e]);
+                $this->logger->error("[ALERT] {$this->definition->id} mitigation failed", [
+                    'mitigation' => $mitigation->describe(),
+                    'exception'  => $e,
+                ]);
 
                 return "Failed: {$mitigation->describe()}";
             }

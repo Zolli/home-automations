@@ -44,7 +44,11 @@ final readonly class PhoneTtsSender implements DestinationSender
     {
         $data = [
             'message' => self::TTS_COMMAND,
-            'data'    => ['tts_text' => $notification->message->body, 'media_stream' => self::DEFAULT_MEDIA_STREAM, ...$destination->options],
+            'data'    => [
+                'tts_text'     => $notification->message->body,
+                'media_stream' => self::DEFAULT_MEDIA_STREAM,
+                ...$destination->options,
+            ],
         ];
 
         return ServiceCallCollection::fromServiceCalls(array_map(
