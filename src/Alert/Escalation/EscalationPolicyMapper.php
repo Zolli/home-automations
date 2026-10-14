@@ -12,6 +12,7 @@ use Shared\Alert\Signal\SignalFactory;
 use Shared\Condition\AllOf;
 use Shared\Condition\ConditionFactory;
 use Shared\Condition\InvalidCondition;
+use Shared\Config\InvalidTypedOptions;
 use Shared\Notification\Collection\DestinationCollection;
 use Shared\Notification\Exception\InvalidNotificationPayload;
 use Shared\Notification\Importance;
@@ -113,7 +114,7 @@ final readonly class EscalationPolicyMapper
     {
         try {
             return $this->signals->mapToSignal(\is_array($signal) ? $signal : []);
-        } catch (InvalidAlertConfig $e) {
+        } catch (InvalidTypedOptions $e) {
             throw InvalidAlertConfig::forInvalidPolicy($policyName, "{$path}: {$e->getMessage()}", $e);
         }
     }
@@ -149,7 +150,7 @@ final readonly class EscalationPolicyMapper
         foreach ($conditions as $condition) {
             try {
                 $mapped[] = $this->conditions->mapToCondition(\is_array($condition) ? $condition : []);
-            } catch (InvalidCondition $e) {
+            } catch (InvalidCondition|InvalidTypedOptions $e) {
                 throw InvalidAlertConfig::forInvalidPolicy($policyName, "{$path}: {$e->getMessage()}", $e);
             }
         }

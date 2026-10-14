@@ -10,6 +10,7 @@ use Shared\Alert\Escalation\Collection\EscalationPolicyCollection;
 use Shared\Alert\Escalation\EscalationPolicyMapper;
 use Shared\Alert\Mitigation\MitigationFactory;
 use Shared\Alert\Rule\AlertRuleFactory;
+use Shared\Config\InvalidTypedOptions;
 use Shared\Template\TextTemplate;
 
 final readonly class AlertConfigMapper
@@ -70,7 +71,7 @@ final readonly class AlertConfigMapper
                 $policy,
                 $this->mitigations->mapToMitigations(\is_array($alert['mitigations'] ?? null) ? $alert['mitigations'] : []),
             );
-        } catch (InvalidAlertConfig $e) {
+        } catch (InvalidTypedOptions $e) {
             throw InvalidAlertConfig::forInvalidAlert($id, $e->getMessage(), $e);
         }
     }

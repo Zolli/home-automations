@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Shared\Alert\Signal;
 
-use Shared\Alert\Config\InvalidAlertConfig;
-use Shared\Alert\Config\TypedOptions;
 use Shared\Alert\Signal\Collection\SignalTypeCollection;
+use Shared\Config\InvalidTypedOptions;
+use Shared\Config\TypedOptions;
 
 final readonly class SignalFactory
 {
@@ -14,14 +14,12 @@ final readonly class SignalFactory
 
     /**
      * @param array<array-key, mixed> $fields
-     * @throws InvalidAlertConfig
+     * @throws InvalidTypedOptions
      */
     public function mapToSignal(array $fields): Signal
     {
         $options = TypedOptions::fromArray(SignalType::KIND, $fields);
-        $signalType = $this->types->find($options->type)
-            ?? throw InvalidAlertConfig::forUnknownType(SignalType::KIND, $options->type, $this->types->listNames());
 
-        return $signalType->mapToSignal($options);
+        return $this->types->requireType($options)->mapToSignal($options);
     }
 }

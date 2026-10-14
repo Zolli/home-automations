@@ -7,6 +7,7 @@ namespace Shared\Notification\Payload;
 use Shared\Condition\AllOf;
 use Shared\Condition\ConditionFactory;
 use Shared\Condition\InvalidCondition;
+use Shared\Config\InvalidTypedOptions;
 use Shared\Notification\Collection\DestinationCollection;
 use Shared\Notification\Destination;
 use Shared\Notification\DestinationType;
@@ -84,7 +85,7 @@ final readonly class DestinationPayloadMapper
         foreach ($conditions as $index => $condition) {
             try {
                 $mapped[] = $this->conditions->mapToCondition($condition);
-            } catch (InvalidCondition $e) {
+            } catch (InvalidCondition|InvalidTypedOptions $e) {
                 throw InvalidNotificationPayload::forViolation(PayloadViolation::atPath([...$path, $index], $e->getMessage()));
             }
         }

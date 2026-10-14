@@ -65,7 +65,7 @@ final class EscalationTest extends TestCase
         $this->fixture->advanceTime(Duration::seconds(420));
         self::assertCount(3, $this->notifier->sent);
 
-        $this->pressAcknowledgeOn($this->notifier->sent[2]);
+        $this->pressAcknowledgeOn($this->notifier->sent[0]);
         $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertCount(3, $this->notifier->sent);
@@ -154,6 +154,15 @@ final class EscalationTest extends TestCase
         $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertCount(3, $this->notifier->sent);
+    }
+
+    public function testSpokenStepSendsNoAcknowledgeButton(): void
+    {
+        $this->startEscalation();
+        $this->fixture->advanceTime(Duration::seconds(120));
+
+        self::assertTrue($this->notifier->sent[0]->message->hasButtons());
+        self::assertFalse($this->notifier->sent[1]->message->hasButtons());
     }
 
     public function testFollowUpSkipsSpokenDestinations(): void

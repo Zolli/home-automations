@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Shared\Condition\Collection\ConditionTypeCollection;
 use Shared\Condition\ConditionFactory;
-use Shared\Condition\InvalidCondition;
+use Shared\Config\InvalidTypedOptions;
 use Shared\Notification\Condition\ImportanceCondition;
 use Shared\Notification\Condition\ImportanceConditionType;
 use Shared\Notification\Importance;
@@ -63,7 +63,7 @@ final class ImportanceConditionTest extends TestCase
 
     public function testFactoryRejectsMissingField(): void
     {
-        $this->expectException(InvalidCondition::class);
+        $this->expectException(InvalidTypedOptions::class);
 
         new ConditionFactory(ConditionTypeCollection::keyedByName([new ImportanceConditionType()]))->mapToCondition(['type' => 'importance']);
     }

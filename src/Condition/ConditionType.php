@@ -4,10 +4,17 @@ declare(strict_types=1);
 
 namespace Shared\Condition;
 
-interface ConditionType
-{
-    public function getName(): string;
+use Shared\Config\InvalidTypedOptions;
+use Shared\Config\NamedType;
+use Shared\Config\TypedOptions;
 
-    /** @throws InvalidCondition */
-    public function mapToCondition(ConditionDefinition $definition): Condition;
+interface ConditionType extends NamedType
+{
+    public const string KIND = 'Condition';
+
+    /**
+     * @throws InvalidTypedOptions
+     * @throws InvalidCondition
+     */
+    public function mapToCondition(TypedOptions $options): Condition;
 }
