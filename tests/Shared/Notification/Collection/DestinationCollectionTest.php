@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Shared\Notification\Collection\DestinationCollection;
 use Shared\Notification\Sender\ChimeTtsSender;
 use Shared\Notification\Sender\NotifyServiceSender;
+use Shared\Notification\Sender\PhoneTtsSender;
 
 final class DestinationCollectionTest extends TestCase
 {
@@ -29,5 +30,17 @@ final class DestinationCollectionTest extends TestCase
         $original->withAppendedDestinations(ChimeTtsSender::createDestination('media_player.office'));
 
         self::assertCount(1, $original);
+    }
+
+    public function testDropsSpokenDestinations(): void
+    {
+        $phone = NotifyServiceSender::createDestination('notify.mobile_app_phone');
+        $destinations = DestinationCollection::fromDestinations([
+            ChimeTtsSender::createDestination('media_player.kitchen'),
+            $phone,
+            PhoneTtsSender::createDestination('notify.mobile_app_phone'),
+        ]);
+
+        self::assertSame([$phone], $destinations->withoutSpokenDestinations()->listValues());
     }
 }

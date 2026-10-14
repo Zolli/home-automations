@@ -12,7 +12,6 @@ use Shared\Notification\Action\NotificationAction;
 use Shared\Notification\Action\NotificationButton;
 use Shared\Notification\Action\NotificationDismissal;
 use Shared\Notification\Collection\DestinationCollection;
-use Shared\Notification\Destination;
 use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\Importance;
 use Shared\Notification\NotificationBuilder;
@@ -133,18 +132,22 @@ final class Escalation
 
     private function sendStepNotification(EscalationStep $step): void
     {
+        $isAcknowledgeable = !$step->destinations->withoutSpokenDestinations()->isEmpty();
+        $message = $this->message
+            ->withId(NotificationId::generate())
+            ->withImportance($step->importance)
+            ->withAppendedDestinations(...$step->destinations);
         $sent = $this->sendNotification(
-            $this->message
-                ->withId(NotificationId::generate())
-                ->withImportance($step->importance)
-                ->withAppendedDestinations(...$step->destinations)
-                ->withAppendedButtons(new NotificationButton(self::ACKNOWLEDGE_ACTION, 'Acknowledge')),
+            $isAcknowledgeable ? $message->withAppendedButtons(new NotificationButton(self::ACKNOWLEDGE_ACTION, 'Acknowledge')) : $message,
         );
 
-        if ($sent === null) {
-            return;
+        if ($sent !== null && $isAcknowledgeable) {
+            $this->listenForAcknowledgement($sent);
         }
+    }
 
+    private function listenForAcknowledgement(SentNotification $sent): void
+    {
         $listener = $sent->listenForActions($this->ha)->onAction(
             self::ACKNOWLEDGE_ACTION,
             fn(NotificationAction $action) => $this->acknowledge(Acknowledgement::fromAction($action)),
@@ -176,8 +179,6 @@ final class Escalation
 
     private function rememberNotified(DestinationCollection $destinations): void
     {
-        $this->notifiedDestinations = $this->notifiedDestinations->withAppendedDestinations(
-            ...$destinations->filter(static fn(Destination $destination): bool => !$destination->type->isSpoken()),
-        );
+        $this->notifiedDestinations = $this->notifiedDestinations->withAppendedDestinations(...$destinations->withoutSpokenDestinations());
     }
 }
