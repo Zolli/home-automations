@@ -3,7 +3,7 @@
 - If it necessary to store these decisions/history use ADRs or other documents, but try to minimize
 - Dont commit anything in git by yourself
 - Commit messages: `type(component): few-word summary`, an empty line, then a few `- ` bullets naming the main changes, each only a few words, meaningful; no decisions, reasons or history, nothing else
-- PHP runs only in the container; use the `make` targets (`make stan`, `make test`). `make run ONLY=<app> DRY_RUN=1` runs one app without sending service calls.
+- PHP runs only in the container; use the `make` targets (`make cs-fix`, `make stan`, `make test`). `make run ONLY=<app> DRY_RUN=1` runs one app without sending service calls.
 - `generated/` is written by `make generate`; never edit it by hand.
 
 # Coding instuctions
