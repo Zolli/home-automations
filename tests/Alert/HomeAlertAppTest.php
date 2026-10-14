@@ -23,41 +23,37 @@ final class HomeAlertAppTest extends TestCase
             ],
         ],
     ];
-
-    private const array TEST_MODE_OFF = [['type' => 'eq', 'field' => 'input_boolean.alarm_test_mode', 'value' => 'off']];
-
+    private const array TEST_MODE_OFF     = [['type' => 'eq', 'field' => 'input_boolean.alarm_test_mode', 'value' => 'off']];
     private const array SMOKE_LEAK_POLICY = [
         'steps' => [
             ['destinations' => [['type' => 'notify_service', 'target' => 'notify.mobile_app_phone']]],
             [
                 'destinations' => [[
-                    'type' => 'phone_tts',
-                    'target' => 'notify.mobile_app_phone',
+                    'type'       => 'phone_tts',
+                    'target'     => 'notify.mobile_app_phone',
                     'conditions' => [['type' => 'eq', 'field' => 'input_boolean.alarm_theater_mode', 'value' => 'off']],
                 ]],
-                'repeat' => ['everySeconds' => 30, 'times' => 5, 'while' => self::TEST_MODE_OFF],
+                'repeat'       => ['everySeconds' => 30, 'times' => 5, 'while' => self::TEST_MODE_OFF],
             ],
             [
                 'afterSeconds' => 2,
-                'signal' => ['type' => 'light-effect', 'effect' => 'okay'],
-                'repeat' => ['everySeconds' => 4, 'times' => 84, 'while' => self::TEST_MODE_OFF],
+                'signal'       => ['type' => 'light-effect', 'effect' => 'okay'],
+                'repeat'       => ['everySeconds' => 4, 'times' => 84, 'while' => self::TEST_MODE_OFF],
             ],
         ],
     ];
-
     private const array SMOKE_ALERT = [
-        'id' => 'smoke',
-        'title' => 'SMOKE ALARM',
+        'id'      => 'smoke',
+        'title'   => 'SMOKE ALARM',
         'message' => 'Smoke alarm in the {area}',
-        'policy' => 'smoke-leak',
-        'rule' => ['type' => 'state', 'entities' => ['binary_sensor.smoke_detector_kitchen_smoke']],
+        'policy'  => 'smoke-leak',
+        'rule'    => ['type' => 'state', 'entities' => ['binary_sensor.smoke_detector_kitchen_smoke']],
     ];
-
     private const array FLOOD_ALERT = [
-        'id' => 'kitchen-flood',
-        'title' => 'Kitchen flood',
-        'policy' => 'critical',
-        'rule' => ['type' => 'state', 'entities' => ['binary_sensor.kitchen_leak'], 'forSeconds' => 5],
+        'id'          => 'kitchen-flood',
+        'title'       => 'Kitchen flood',
+        'policy'      => 'critical',
+        'rule'        => ['type' => 'state', 'entities' => ['binary_sensor.kitchen_leak'], 'forSeconds' => 5],
         'mitigations' => [['type' => 'turn-off', 'entity' => 'valve.main_water']],
     ];
 
@@ -66,8 +62,8 @@ final class HomeAlertAppTest extends TestCase
     protected function setUp(): void
     {
         $this->fixture = new AlertFixture();
-        $harness = $this->fixture->harness;
-        $container = new ServiceContainer(AlertConfigMapper::class, AlertMonitor::class);
+        $harness       = $this->fixture->harness;
+        $container     = new ServiceContainer(AlertConfigMapper::class, AlertMonitor::class);
         $container->replaceSyntheticWithFakes($harness);
         $harness->provideService(AlertConfigMapper::class, $container->getService(AlertConfigMapper::class));
         $harness->provideService(AlertMonitor::class, $container->getService(AlertMonitor::class));
@@ -91,15 +87,15 @@ final class HomeAlertAppTest extends TestCase
     public function testDsmrPhaseLossOverMqttNotifies(): void
     {
         $this->startApp([[
-            'id' => 'phase-loss',
-            'title' => 'Phase down',
+            'id'     => 'phase-loss',
+            'title'  => 'Phase down',
             'policy' => 'critical',
-            'rule' => [
-                'type' => 'below',
-                'topics' => ['dsmr/reading/phase_voltage_l1', 'dsmr/reading/phase_voltage_l2', 'dsmr/reading/phase_voltage_l3'],
-                'threshold' => 50,
+            'rule'   => [
+                'type'               => 'below',
+                'topics'             => ['dsmr/reading/phase_voltage_l1', 'dsmr/reading/phase_voltage_l2', 'dsmr/reading/phase_voltage_l3'],
+                'threshold'          => 50,
                 'unavailableIsFault' => true,
-                'forSeconds' => 10,
+                'forSeconds'         => 10,
             ],
         ]]);
 
@@ -197,8 +193,8 @@ final class HomeAlertAppTest extends TestCase
         foreach ($this->fixture->ha->calls as $call) {
             $kind = match (true) {
                 $call->getServiceName() === 'light.turn_on' => 'light',
-                ($call->data['message'] ?? null) === 'TTS' => 'tts',
-                default => 'text',
+                ($call->data['message'] ?? null) === 'TTS'  => 'tts',
+                default                                     => 'text',
             };
             $counts[$kind]++;
         }
@@ -211,7 +207,7 @@ final class HomeAlertAppTest extends TestCase
     {
         $this->fixture->harness->startApp(HomeAlertApp::class, [
             'policies' => [...self::POLICIES, 'smoke-leak' => self::SMOKE_LEAK_POLICY],
-            'alerts' => $alerts,
+            'alerts'   => $alerts,
         ]);
     }
 }

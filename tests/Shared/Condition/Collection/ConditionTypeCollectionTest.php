@@ -14,7 +14,7 @@ final class ConditionTypeCollectionTest extends TestCase
     public function testFindsTypeByName(): void
     {
         $always = new AlwaysConditionType();
-        $types = ConditionTypeCollection::keyedByName([new AlwaysConditionType('never'), $always]);
+        $types  = ConditionTypeCollection::keyedByName([new AlwaysConditionType('never'), $always]);
 
         self::assertSame($always, $types->find('always'));
         self::assertNull($types->find('sometimes'));

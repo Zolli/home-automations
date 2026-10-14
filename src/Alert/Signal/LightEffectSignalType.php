@@ -9,7 +9,9 @@ use Shared\Alert\FaultLocator;
 
 final readonly class LightEffectSignalType implements SignalType
 {
-    public function __construct(private FaultLocator $locator) {}
+    public function __construct(
+        private FaultLocator $locator,
+    ) {}
 
     public function getName(): string
     {

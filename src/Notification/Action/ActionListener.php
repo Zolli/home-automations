@@ -69,8 +69,8 @@ final class ActionListener
             return;
         }
 
-        $this->listening = false;
-        $this->callbacks = [];
+        $this->listening             = false;
+        $this->callbacks             = [];
         $this->callbacksForAnyAction = [];
         $this->callbacksForDismissal = [];
         ($this->release)($this);

@@ -21,8 +21,8 @@ final readonly class ServiceCall
     {
         return array_filter([
             'service' => "{$this->domain}.{$this->service}",
-            'data' => $this->data,
-            'target' => $this->target?->toArray(),
+            'data'    => $this->data,
+            'target'  => $this->target?->toArray(),
         ], static fn(mixed $value) => $value !== null);
     }
 }

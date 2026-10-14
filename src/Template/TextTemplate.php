@@ -8,7 +8,9 @@ use Shared\Template\Collection\TemplateVariableCollection;
 
 final readonly class TextTemplate
 {
-    public function __construct(public string $text) {}
+    public function __construct(
+        public string $text,
+    ) {}
 
     public function render(TemplateVariableCollection $variables): string
     {

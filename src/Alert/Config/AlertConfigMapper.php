@@ -30,7 +30,7 @@ final readonly class AlertConfigMapper
     public function mapToDefinitions(array $policies, array $alerts): AlertDefinitionCollection
     {
         $mappedPolicies = $this->policies->mapToPolicies($policies);
-        $definitions = [];
+        $definitions    = [];
 
         foreach ($alerts as $alert) {
             $definitions[] = $this->mapDefinition(\is_array($alert) ? $alert : [], $mappedPolicies);
@@ -51,11 +51,11 @@ final readonly class AlertConfigMapper
             throw InvalidAlertConfig::forMissingAlertId();
         }
 
-        $title = $this->mapTemplate($id, 'title', $alert['title'] ?? $id);
+        $title   = $this->mapTemplate($id, 'title', $alert['title'] ?? $id);
         $message = $this->mapTemplate($id, 'message', $alert['message'] ?? self::DEFAULT_MESSAGE);
 
         $policyName = $alert['policy'] ?? null;
-        $policy = \is_string($policyName) ? $policies->find($policyName) : null;
+        $policy     = \is_string($policyName) ? $policies->find($policyName) : null;
 
         if ($policy === null) {
             throw InvalidAlertConfig::forInvalidAlert($id, 'policy must name a defined escalation policy.');

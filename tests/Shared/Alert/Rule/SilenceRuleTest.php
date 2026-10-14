@@ -59,7 +59,7 @@ final class SilenceRuleTest extends TestCase
 
     private function createSnapshot(int $l1SecondsAgo, ?int $l2SecondsAgo, int $watchingSecondsAgo = 3600): ReadingSnapshot
     {
-        $now = Instant::fromEpochMicroseconds(1_800_000_000_000_000);
+        $now      = Instant::fromEpochMicroseconds(1_800_000_000_000_000);
         $readings = [Reading::fromMqttPayload(self::L1, '230', $now->minus(Duration::seconds($l1SecondsAgo)))];
 
         if ($l2SecondsAgo !== null) {

@@ -10,7 +10,9 @@ use Shared\Alert\Signal\Collection\SignalTypeCollection;
 
 final readonly class SignalFactory
 {
-    public function __construct(private SignalTypeCollection $types) {}
+    public function __construct(
+        private SignalTypeCollection $types,
+    ) {}
 
     /**
      * @param array<array-key, mixed> $fields
@@ -18,7 +20,7 @@ final readonly class SignalFactory
      */
     public function mapToSignal(array $fields): Signal
     {
-        $options = TypedOptions::fromArray(SignalType::KIND, $fields);
+        $options    = TypedOptions::fromArray(SignalType::KIND, $fields);
         $signalType = $this->types->find($options->type)
             ?? throw InvalidAlertConfig::forUnknownType(SignalType::KIND, $options->type, $this->types->listNames());
 

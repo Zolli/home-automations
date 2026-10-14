@@ -6,7 +6,7 @@ namespace Shared\Alert;
 
 enum AlertState: string
 {
-    case Idle = 'idle';
-    case Raised = 'raised';
+    case Idle         = 'idle';
+    case Raised       = 'raised';
     case Acknowledged = 'acknowledged';
 }

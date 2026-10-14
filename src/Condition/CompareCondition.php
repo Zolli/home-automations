@@ -50,6 +50,11 @@ final readonly class CompareCondition implements Condition
         return new self(EntityId::fromStringOrId($entityId), Operator::Lte, $value, $attribute);
     }
 
+    public static function formatValue(mixed $value): string
+    {
+        return json_encode($value, \JSON_PARTIAL_OUTPUT_ON_ERROR) ?: get_debug_type($value);
+    }
+
     public function isSatisfied(ConditionContext $context): bool
     {
         $state = $context->ha->getState($this->entityId);
@@ -68,10 +73,5 @@ final readonly class CompareCondition implements Condition
         $subject = $this->attribute === null ? $this->entityId->value : "{$this->entityId->value}[{$this->attribute}]";
 
         return \sprintf('%s %s %s', $subject, $this->operator->value, self::formatValue($this->value));
-    }
-
-    public static function formatValue(mixed $value): string
-    {
-        return json_encode($value, \JSON_PARTIAL_OUTPUT_ON_ERROR) ?: get_debug_type($value);
     }
 }

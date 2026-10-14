@@ -27,25 +27,25 @@ final class EscalationPolicyMapperTest extends TestCase
         $policies = $this->mapper->mapToPolicies([
             'critical' => [
                 'acknowledgeOnDismiss' => true,
-                'steps' => [
+                'steps'                => [
                     ['destinations' => [['type' => 'notify_service', 'target' => 'notify.phone']]],
                     [
                         'afterSeconds' => 120,
-                        'importance' => 'high',
+                        'importance'   => 'high',
                         'destinations' => [['type' => 'tts', 'target' => 'media_player.home']],
-                        'repeat' => [
+                        'repeat'       => [
                             'everySeconds' => 30,
-                            'times' => 5,
-                            'while' => [['type' => 'eq', 'field' => 'input_boolean.alarm_test_mode', 'value' => 'off']],
+                            'times'        => 5,
+                            'while'        => [['type' => 'eq', 'field' => 'input_boolean.alarm_test_mode', 'value' => 'off']],
                         ],
                     ],
                 ],
             ],
-            'warning' => ['steps' => [['destinations' => [['type' => 'notify_service', 'target' => 'notify.phone']]]]],
+            'warning'  => ['steps' => [['destinations' => [['type' => 'notify_service', 'target' => 'notify.phone']]]]],
         ]);
 
         $critical = $policies->find('critical');
-        $steps = $critical?->steps->listValues() ?? [];
+        $steps    = $critical?->steps->listValues() ?? [];
 
         self::assertSame(0, $steps[0]->after->toMilliseconds());
         self::assertSame(Importance::Critical, $steps[0]->importance);

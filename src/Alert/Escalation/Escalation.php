@@ -79,7 +79,7 @@ final class Escalation
             $listener->stopListening();
         }
 
-        $this->tasks = [];
+        $this->tasks     = [];
         $this->repeaters = [];
         $this->listeners = [];
     }

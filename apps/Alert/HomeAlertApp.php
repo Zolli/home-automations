@@ -44,8 +44,8 @@ final class HomeAlertApp implements App
         array $policies = [],
         array $alerts = [],
     ) {
-        $this->definitions = $configMapper->mapToDefinitions($policies, $alerts);
-        $this->context = new MonitoringContext($ha, $scheduler, $mqtt, $clock);
+        $this->definitions     = $configMapper->mapToDefinitions($policies, $alerts);
+        $this->context         = new MonitoringContext($ha, $scheduler, $mqtt, $clock);
         $this->monitoredAlerts = MonitoredAlertCollection::empty();
     }
 

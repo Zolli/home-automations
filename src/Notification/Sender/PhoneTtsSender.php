@@ -13,8 +13,8 @@ use Stewart\Contracts\Entity\EntityId;
 
 final readonly class PhoneTtsSender implements DestinationSender
 {
-    private const string NOTIFY_DOMAIN = 'notify';
-    private const string TTS_COMMAND = 'TTS';
+    private const string NOTIFY_DOMAIN        = 'notify';
+    private const string TTS_COMMAND          = 'TTS';
     private const string DEFAULT_MEDIA_STREAM = 'alarm_stream_max';
 
     /**
@@ -44,7 +44,7 @@ final readonly class PhoneTtsSender implements DestinationSender
     {
         $data = [
             'message' => self::TTS_COMMAND,
-            'data' => ['tts_text' => $notification->message->body, 'media_stream' => self::DEFAULT_MEDIA_STREAM, ...$destination->options],
+            'data'    => ['tts_text' => $notification->message->body, 'media_stream' => self::DEFAULT_MEDIA_STREAM, ...$destination->options],
         ];
 
         return ServiceCallCollection::fromServiceCalls(array_map(

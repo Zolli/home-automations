@@ -13,7 +13,7 @@ use Stewart\Contracts\State\EntityState;
 
 final readonly class LightEffectSignal implements Signal
 {
-    private const string LIGHT_DOMAIN = 'light';
+    private const string LIGHT_DOMAIN          = 'light';
     private const string EFFECT_LIST_ATTRIBUTE = 'effect_list';
 
     public function __construct(

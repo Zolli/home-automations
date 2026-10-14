@@ -26,11 +26,12 @@ final class ActionRouterTest extends TestCase
     private const int LISTENING_TTL_HOURS = 2;
 
     private NotificationFixture $fixture;
+
     private NotificationDispatcher $notifier;
 
     protected function setUp(): void
     {
-        $this->fixture = new NotificationFixture();
+        $this->fixture  = new NotificationFixture();
         $this->notifier = new NotificationDispatcher(
             DestinationSenderCollection::keyedByDestinationType([new NotifyServiceSender()]),
             $this->fixture->ha,
@@ -44,10 +45,10 @@ final class ActionRouterTest extends TestCase
         $pressed = [];
 
         $this->listen('vacuum-bin')
-            ->onAction('DONE', function (NotificationAction $action) use (&$pressed): void {
+            ->onAction('DONE', static function (NotificationAction $action) use (&$pressed): void {
                 $pressed[] = $action;
             })
-            ->onAction('NEXT', fn() => self::fail('NEXT was not pressed'));
+            ->onAction('NEXT', static fn() => self::fail('NEXT was not pressed'));
 
         $this->fixture->pressAction('vacuum-bin:DONE', ['reply_text' => 'emptied'], 'user-1');
 
@@ -62,7 +63,7 @@ final class ActionRouterTest extends TestCase
     {
         $pressed = [];
 
-        $this->listen('vacuum-bin')->onAnyAction(function (NotificationAction $action) use (&$pressed): void {
+        $this->listen('vacuum-bin')->onAnyAction(static function (NotificationAction $action) use (&$pressed): void {
             $pressed[] = $action->action;
         });
 
@@ -76,10 +77,10 @@ final class ActionRouterTest extends TestCase
     {
         $dismissed = [];
         $this->listen('vacuum-bin')
-            ->onDismissed(function (NotificationDismissal $dismissal) use (&$dismissed): void {
+            ->onDismissed(static function (NotificationDismissal $dismissal) use (&$dismissed): void {
                 $dismissed[] = $dismissal;
             })
-            ->onAnyAction(fn() => self::fail('Dismissal is not an action'));
+            ->onAnyAction(static fn() => self::fail('Dismissal is not an action'));
 
         $this->fixture->dismissNotification(['tag' => 'vacuum-bin', 'message' => 'Empty me'], 'user-1');
         $this->fixture->dismissNotification(['data' => ['tag' => 'vacuum-bin']]);
@@ -94,7 +95,7 @@ final class ActionRouterTest extends TestCase
 
     public function testIgnoresOtherNotificationsAndForeignActions(): void
     {
-        $this->listen('vacuum-bin')->onAnyAction(fn() => self::fail('Should not be called'));
+        $this->listen('vacuum-bin')->onAnyAction(static fn() => self::fail('Should not be called'));
 
         $this->fixture->pressAction('laundry:DONE');
         $this->fixture->pressAction('DONE');
@@ -105,10 +106,10 @@ final class ActionRouterTest extends TestCase
     public function testRoutesEachPressOnceWithSharedContext(): void
     {
         $pressed = [];
-        $vacuum = $this->listen('vacuum-bin')->onAnyAction(function (NotificationAction $action) use (&$pressed): void {
+        $vacuum  = $this->listen('vacuum-bin')->onAnyAction(static function (NotificationAction $action) use (&$pressed): void {
             $pressed[] = $action->notificationId->value;
         });
-        $this->listen('laundry')->onAnyAction(function (NotificationAction $action) use (&$pressed): void {
+        $this->listen('laundry')->onAnyAction(static function (NotificationAction $action) use (&$pressed): void {
             $pressed[] = $action->notificationId->value;
         });
 
@@ -123,8 +124,8 @@ final class ActionRouterTest extends TestCase
     public function testStoppingOlderListenerKeepsNewerWithSameId(): void
     {
         $pressed = 0;
-        $older = $this->listen('vacuum-bin')->onAction('DONE', fn() => self::fail('Older listener was replaced'));
-        $newer = $this->listen('vacuum-bin')->onAction('DONE', function () use (&$pressed): void {
+        $older   = $this->listen('vacuum-bin')->onAction('DONE', static fn() => self::fail('Older listener was replaced'));
+        $newer   = $this->listen('vacuum-bin')->onAction('DONE', static function () use (&$pressed): void {
             $pressed++;
         });
 
@@ -138,7 +139,7 @@ final class ActionRouterTest extends TestCase
 
     public function testExpiredListenerNoLongerReceivesActions(): void
     {
-        $listener = $this->listen('vacuum-bin')->onAction('DONE', fn() => self::fail('Should have expired'));
+        $listener = $this->listen('vacuum-bin')->onAction('DONE', static fn() => self::fail('Should have expired'));
 
         $this->fixture->advanceTime(Duration::hours(self::LISTENING_TTL_HOURS));
         $this->fixture->pressAction('vacuum-bin:DONE');
@@ -151,8 +152,8 @@ final class ActionRouterTest extends TestCase
         $pressed = [];
 
         $this->listen('vacuum-bin')
-            ->onAction('DONE', fn() => throw new RuntimeException('boom'))
-            ->onAnyAction(function (NotificationAction $action) use (&$pressed): void {
+            ->onAction('DONE', static fn() => throw new RuntimeException('boom'))
+            ->onAnyAction(static function (NotificationAction $action) use (&$pressed): void {
                 $pressed[] = $action->action;
             });
 
@@ -163,10 +164,10 @@ final class ActionRouterTest extends TestCase
 
     public function testSubscribesThroughGivenAppContext(): void
     {
-        $app = new NotificationFixture();
+        $app     = new NotificationFixture();
         $pressed = 0;
 
-        $this->send('vacuum-bin')->listenForActions($app->ha)->onAction('DONE', function () use (&$pressed): void {
+        $this->send('vacuum-bin')->listenForActions($app->ha)->onAction('DONE', static function () use (&$pressed): void {
             $pressed++;
         });
         $app->pressAction('vacuum-bin:DONE');
@@ -178,7 +179,7 @@ final class ActionRouterTest extends TestCase
     public function testIgnoresPressesFromOtherAppContext(): void
     {
         $other = new NotificationFixture();
-        $this->listen('vacuum-bin')->onAnyAction(fn() => self::fail('Pressed through another app'));
+        $this->listen('vacuum-bin')->onAnyAction(static fn() => self::fail('Pressed through another app'));
         $this->send('laundry')->listenForActions($other->ha);
 
         $other->pressAction('vacuum-bin:DONE');
@@ -195,7 +196,7 @@ final class ActionRouterTest extends TestCase
             ->buildNotification());
 
         self::assertFalse($sent->wasDelivered());
-        self::assertFalse($sent->listenForActions($this->fixture->ha)->onAnyAction(fn() => self::fail('Stopped listener was called'))->isListening());
+        self::assertFalse($sent->listenForActions($this->fixture->ha)->onAnyAction(static fn() => self::fail('Stopped listener was called'))->isListening());
         $this->fixture->pressAction($sent->notification->meta->id->value . ':DONE');
     }
 

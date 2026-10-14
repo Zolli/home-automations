@@ -91,7 +91,7 @@ final class FaultWatcher
     private function raiseHeldFault(): void
     {
         $this->pendingFault = null;
-        $fault = $this->rule->findFault($this->feed->readSnapshot());
+        $fault              = $this->rule->findFault($this->feed->readSnapshot());
 
         if ($fault !== null) {
             $this->raiseFault($fault);

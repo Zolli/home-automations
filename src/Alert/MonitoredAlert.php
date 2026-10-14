@@ -46,7 +46,7 @@ final class MonitoredAlert implements FaultListener
         $this->watcher->stopWatching();
         $this->escalation?->stopEscalating();
         $this->escalation = null;
-        $this->state = AlertState::Idle;
+        $this->state      = AlertState::Idle;
     }
 
     public function getState(): AlertState
@@ -64,7 +64,7 @@ final class MonitoredAlert implements FaultListener
         $this->logger->warning("[ALERT] {$this->definition->id} raised", ['reason' => $fault->reason]);
 
         $variables = $fault->listTemplateVariables($this->findArea($fault));
-        $body = implode("\n", [$this->definition->message->render($variables), ...$this->runMitigations()]);
+        $body      = implode("\n", [$this->definition->message->render($variables), ...$this->runMitigations()]);
 
         $this->escalation = new Escalation(
             $this->definition->policy,
@@ -89,7 +89,7 @@ final class MonitoredAlert implements FaultListener
         $this->escalation?->stopEscalating();
         $this->escalation?->sendFollowUp('Cleared.');
         $this->escalation = null;
-        $this->state = AlertState::Idle;
+        $this->state      = AlertState::Idle;
     }
 
     private function acknowledge(Acknowledgement $acknowledgement): void

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App;
 
 use App\Generated\Entities;
@@ -7,7 +9,6 @@ use App\Generated\Services;
 use Psr\Log\LoggerInterface;
 use Stewart\Contracts\App;
 use Stewart\Contracts\Automation;
-use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Schedule\ScheduledTask;
 use Stewart\Contracts\Schedule\Scheduler;
 use Stewart\Contracts\State\StateChange;
@@ -16,7 +17,6 @@ use Stewart\Contracts\Time\Duration;
 #[Automation(id: 'cover-event-handlers')]
 class CoverEventHandlersApp implements App
 {
-
     private ?ScheduledTask $lightTurnOnDelay = null;
 
     public function __construct(
@@ -39,12 +39,18 @@ class CoverEventHandlersApp implements App
         $this->logger->info('Cover event handler registered');
     }
 
+    public function dispose(): void
+    {
+        $this->lightTurnOnDelay?->cancel();
+    }
+
     private function whenKitchenAndLivingRoomClosed(StateChange $stateChange): void
     {
         $this->logger->info('State changed', ['from' => $stateChange->from, 'to' => $stateChange->to]);
 
         if ($this->lightTurnOnDelay?->isActive()) {
             $this->logger->info('Skipping state change because of active schedule');
+
             return;
         }
 
@@ -55,14 +61,9 @@ class CoverEventHandlersApp implements App
             function (): void {
                 $this->services->light->turnOn(
                     $this->entities->light->getEntity('light.light_kitchen_all'),
-                    brightnessPct: 40
+                    brightnessPct: 40,
                 );
-            }
+            },
         );
-    }
-
-    public function dispose(): void
-    {
-        $this->lightTurnOnDelay?->cancel();
     }
 }

@@ -21,7 +21,7 @@ final readonly class NotificationFixture
     public function __construct()
     {
         $this->harness = new AppHarness();
-        $this->ha = $this->harness->ha;
+        $this->ha      = $this->harness->ha;
     }
 
     public function createActionRouter(): ActionRouter

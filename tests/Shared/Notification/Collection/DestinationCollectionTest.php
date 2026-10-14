@@ -13,9 +13,9 @@ final class DestinationCollectionTest extends TestCase
 {
     public function testAppendsDestinationsInOrder(): void
     {
-        $phone = NotifyServiceSender::createDestination('notify.mobile_app_phone');
+        $phone   = NotifyServiceSender::createDestination('notify.mobile_app_phone');
         $speaker = ChimeTtsSender::createDestination('media_player.kitchen');
-        $tablet = NotifyServiceSender::createDestination('notify.mobile_app_tablet');
+        $tablet  = NotifyServiceSender::createDestination('notify.mobile_app_tablet');
 
         $destinations = DestinationCollection::fromDestinations([$phone])->withAppendedDestinations($speaker, $tablet);
 

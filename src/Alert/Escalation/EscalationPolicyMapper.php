@@ -47,7 +47,7 @@ final readonly class EscalationPolicyMapper
      */
     private function mapPolicy(string $name, array $policy): EscalationPolicy
     {
-        $steps = $policy['steps'] ?? null;
+        $steps                = $policy['steps'] ?? null;
         $acknowledgeOnDismiss = $policy['acknowledgeOnDismiss'] ?? false;
 
         if (!\is_array($steps)) {
@@ -77,9 +77,9 @@ final readonly class EscalationPolicyMapper
      */
     private function mapStep(string $policyName, int $index, array $step): EscalationStep
     {
-        $path = "steps[{$index}]";
-        $importance = $step['importance'] ?? Importance::Critical->value;
-        $signal = \array_key_exists('signal', $step) ? $this->mapSignal($policyName, "{$path}.signal", $step['signal']) : null;
+        $path         = "steps[{$index}]";
+        $importance   = $step['importance'] ?? Importance::Critical->value;
+        $signal       = \array_key_exists('signal', $step) ? $this->mapSignal($policyName, "{$path}.signal", $step['signal']) : null;
         $destinations = $signal !== null && !\array_key_exists('destinations', $step)
             ? DestinationCollection::empty()
             : $this->mapDestinations($policyName, $index, $step['destinations'] ?? null);

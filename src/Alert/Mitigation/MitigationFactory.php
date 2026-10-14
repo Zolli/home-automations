@@ -11,7 +11,9 @@ use Shared\Alert\Mitigation\Collection\MitigationTypeCollection;
 
 final readonly class MitigationFactory
 {
-    public function __construct(private MitigationTypeCollection $types) {}
+    public function __construct(
+        private MitigationTypeCollection $types,
+    ) {}
 
     /**
      * @param array<array-key, mixed> $mitigations
@@ -34,7 +36,7 @@ final readonly class MitigationFactory
      */
     private function mapToMitigation(array $fields): Mitigation
     {
-        $options = TypedOptions::fromArray(MitigationType::KIND, $fields);
+        $options        = TypedOptions::fromArray(MitigationType::KIND, $fields);
         $mitigationType = $this->types->find($options->type)
             ?? throw InvalidAlertConfig::forUnknownType(MitigationType::KIND, $options->type, $this->types->listNames());
 

@@ -32,6 +32,7 @@ use Stewart\Contracts\Time\Duration;
 final class EscalationTest extends TestCase
 {
     private AlertFixture $fixture;
+
     private NotifierRecorder $notifier;
 
     /** @var list<Acknowledgement> */
@@ -39,7 +40,7 @@ final class EscalationTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->fixture = new AlertFixture();
+        $this->fixture  = new AlertFixture();
         $this->notifier = new NotifierRecorder(new ActionRouter($this->fixture->harness->scheduler, new NullLogger()));
     }
 

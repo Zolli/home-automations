@@ -11,17 +11,12 @@ use Stewart\Contracts\Time\Duration;
 
 final readonly class TypedOptions
 {
-    private const string HOLD_KEY = 'forSeconds';
-
+    private const string HOLD_KEY       = 'forSeconds';
     private const string HYSTERESIS_KEY = 'hysteresis';
-
-    private const string ENTITY_KEY = 'entity';
-
-    private const string ENTITIES_KEY = 'entities';
-
-    private const string TOPIC_KEY = 'topic';
-
-    private const string TOPICS_KEY = 'topics';
+    private const string ENTITY_KEY     = 'entity';
+    private const string ENTITIES_KEY   = 'entities';
+    private const string TOPIC_KEY      = 'topic';
+    private const string TOPICS_KEY     = 'topics';
 
     /** @param array<array-key, mixed> $fields */
     private function __construct(

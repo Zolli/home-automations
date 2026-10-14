@@ -26,9 +26,9 @@ final class NotificationPayloadSchemaTest extends TestCase
         $this->expectNotToPerformAssertions();
 
         $this->schema->validatePayload([
-            'message' => ['body' => 'Hi', 'additionalData' => ['data' => []]],
+            'message'      => ['body' => 'Hi', 'additionalData' => ['data' => []]],
             'destinations' => [self::DESTINATION + ['options' => []]],
-            'meta' => [],
+            'meta'         => [],
         ]);
     }
 

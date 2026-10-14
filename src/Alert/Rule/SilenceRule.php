@@ -11,8 +11,7 @@ use Stewart\Contracts\Time\Duration;
 final readonly class SilenceRule implements RecheckedAlertRule
 {
     private const int RECHECKS_PER_SILENCE = 10;
-
-    private const int MIN_RECHECK_SECONDS = 1;
+    private const int MIN_RECHECK_SECONDS  = 1;
 
     public function __construct(
         private ReadingSourceCollection $topicSources,

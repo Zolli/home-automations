@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Lighting;
 
 use App\Generated\Entities;
@@ -14,7 +16,6 @@ class HallwayMirrorLightController implements App
         private readonly Entities $entities,
     ) {}
 
-
     public function initialize(): void
     {
         $this
@@ -25,9 +26,11 @@ class HallwayMirrorLightController implements App
             ->subscribe($this->onButtonPress(...));
     }
 
+    public function dispose(): void {}
+
     private function onButtonPress(StateChange $change): void
     {
-        $eventType = $change->to?->getStringAttribute('event_type');
+        $eventType    = $change->to?->getStringAttribute('event_type');
         $ceilingLight = $this->entities->light->getEntity('light.light_hallway_ceiling_03');
 
         switch ($eventType) {
@@ -42,9 +45,5 @@ class HallwayMirrorLightController implements App
 
                 break;
         }
-    }
-
-    public function dispose(): void
-    {
     }
 }

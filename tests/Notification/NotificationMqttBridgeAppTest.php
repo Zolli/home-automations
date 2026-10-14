@@ -29,10 +29,10 @@ final class NotificationMqttBridgeAppTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->fixture = new NotificationFixture();
-        $harness = $this->fixture->harness;
+        $this->fixture  = new NotificationFixture();
+        $harness        = $this->fixture->harness;
         $this->notifier = new NotifierRecorder($this->fixture->createActionRouter());
-        $this->logger = $harness->logger;
+        $this->logger   = $harness->logger;
         $harness->provideService(Notifier::class, $this->notifier);
         $harness->provideService(NotificationPayloadMapper::class, new ServiceContainer(NotificationPayloadMapper::class)->getService(NotificationPayloadMapper::class));
         $harness->provideService(NotificationActionPayloadMapper::class, new NotificationActionPayloadMapper());
@@ -51,9 +51,9 @@ final class NotificationMqttBridgeAppTest extends TestCase
     public function testSendsMappedNotification(): void
     {
         $this->receive([
-            'message' => ['title' => 'Vacuum', 'body' => 'Empty the bin'],
+            'message'      => ['title' => 'Vacuum', 'body' => 'Empty the bin'],
             'destinations' => [['type' => 'notify_service', 'target' => 'notify.mobile_app_zoli_phone']],
-            'meta' => ['importance' => 'high'],
+            'meta'         => ['importance' => 'high'],
         ]);
 
         self::assertCount(1, $this->notifier->sent);
@@ -153,12 +153,12 @@ final class NotificationMqttBridgeAppTest extends TestCase
     private function withButtons(array $meta): array
     {
         return [
-            'message' => [
-                'body' => 'Empty the bin',
+            'message'      => [
+                'body'    => 'Empty the bin',
                 'buttons' => [['action' => 'DONE', 'title' => 'Done'], ['action' => 'NEXT', 'title' => 'Next time']],
             ],
             'destinations' => [['type' => 'notify_service', 'target' => 'notify.mobile_app_zoli_phone']],
-            'meta' => $meta,
+            'meta'         => $meta,
         ];
     }
 

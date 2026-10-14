@@ -45,7 +45,7 @@ final class NotificationDispatcherTest extends TestCase
 
     public function testReturnsSentNotification(): void
     {
-        $fixture = new NotificationFixture();
+        $fixture      = new NotificationFixture();
         $notification = NotificationBuilder::create()->withBody('Hi')->withAppendedDestinations(NotifyServiceSender::createDestination('notify.notify'))->buildNotification();
 
         self::assertSame($notification, $this->dispatcher($fixture)->send($notification)->notification);
@@ -53,7 +53,7 @@ final class NotificationDispatcherTest extends TestCase
 
     public function testRejectsTypeWithoutSenderBeforeSendingAny(): void
     {
-        $fixture = new NotificationFixture();
+        $fixture    = new NotificationFixture();
         $dispatcher = new NotificationDispatcher(
             DestinationSenderCollection::keyedByDestinationType([new NotifyServiceSender()]),
             $fixture->ha,

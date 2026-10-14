@@ -8,7 +8,9 @@ use Shared\Alert\Config\TypedOptions;
 
 final readonly class ThresholdRuleType implements AlertRuleType
 {
-    public function __construct(private ThresholdDirection $direction) {}
+    public function __construct(
+        private ThresholdDirection $direction,
+    ) {}
 
     public function getName(): string
     {

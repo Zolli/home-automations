@@ -11,12 +11,12 @@ use Psr\Log\NullLogger;
 use RuntimeException;
 use Shared\Alert\AlertDefinition;
 use Shared\Alert\AlertState;
-use Shared\Alert\FaultLocator;
 use Shared\Alert\Escalation\Collection\EscalationStepCollection;
 use Shared\Alert\Escalation\Escalation;
 use Shared\Alert\Escalation\EscalationPolicy;
 use Shared\Alert\Escalation\EscalationStep;
 use Shared\Alert\Escalation\StepRepetition;
+use Shared\Alert\FaultLocator;
 use Shared\Alert\Mitigation\Collection\MitigationCollection;
 use Shared\Alert\Mitigation\Mitigation;
 use Shared\Alert\Mitigation\TurnOffMitigation;
@@ -36,11 +36,12 @@ final class MonitoredAlertTest extends TestCase
     private const string LEAK_SENSOR = 'binary_sensor.kitchen_leak';
 
     private AlertFixture $fixture;
+
     private NotifierRecorder $notifier;
 
     protected function setUp(): void
     {
-        $this->fixture = new AlertFixture();
+        $this->fixture  = new AlertFixture();
         $this->notifier = new NotifierRecorder(new ActionRouter($this->fixture->harness->scheduler, new NullLogger()));
         $this->fixture->ha->pushState(self::LEAK_SENSOR, 'off');
     }

@@ -10,7 +10,9 @@ use Shared\Alert\Rule\Collection\AlertRuleTypeCollection;
 
 final readonly class AlertRuleFactory
 {
-    public function __construct(private AlertRuleTypeCollection $types) {}
+    public function __construct(
+        private AlertRuleTypeCollection $types,
+    ) {}
 
     /**
      * @param array<array-key, mixed> $fields
@@ -18,7 +20,7 @@ final readonly class AlertRuleFactory
      */
     public function mapToRule(array $fields): AlertRule
     {
-        $options = TypedOptions::fromArray(AlertRuleType::KIND, $fields);
+        $options  = TypedOptions::fromArray(AlertRuleType::KIND, $fields);
         $ruleType = $this->types->find($options->type)
             ?? throw InvalidAlertConfig::forUnknownType(AlertRuleType::KIND, $options->type, $this->types->listNames());
 

@@ -90,14 +90,14 @@ final class NotificationPayloadMapperTest extends TestCase
     public function testMapsOptionalExtensions(): void
     {
         $request = $this->mapper->mapToNotificationRequest([
-            'message' => ['body' => 'Laundry done'],
+            'message'      => ['body' => 'Laundry done'],
             'destinations' => [[
-                'type' => 'tts',
-                'target' => ['media_player.kitchen_speaker', 'media_player.living_room_speaker'],
-                'options' => ['chime_path' => 'bells', 'volume_level' => 0.5],
+                'type'       => 'tts',
+                'target'     => ['media_player.kitchen_speaker', 'media_player.living_room_speaker'],
+                'options'    => ['chime_path' => 'bells', 'volume_level' => 0.5],
                 'conditions' => [['type' => 'lt', 'field' => 'sun.sun', 'attribute' => 'elevation', 'value' => 10]],
             ]],
-            'meta' => ['id' => 'laundry', 'replyTopic' => 'nodered/laundry/action', 'importance' => 'high'],
+            'meta'         => ['id' => 'laundry', 'replyTopic' => 'nodered/laundry/action', 'importance' => 'high'],
         ]);
         $notification = $request->notification;
 
@@ -113,7 +113,7 @@ final class NotificationPayloadMapperTest extends TestCase
     public function testPassesExtraButtonKeysAsOptions(): void
     {
         $notification = $this->mapper->mapToNotificationRequest([
-            'message' => ['body' => 'Hi', 'buttons' => [['action' => 'URI', 'title' => 'Open', 'uri' => '/lovelace/vacuum']]],
+            'message'      => ['body' => 'Hi', 'buttons' => [['action' => 'URI', 'title' => 'Open', 'uri' => '/lovelace/vacuum']]],
             'destinations' => [['type' => 'notify_service', 'target' => 'notify.notify']],
         ])->notification;
 
@@ -126,7 +126,7 @@ final class NotificationPayloadMapperTest extends TestCase
     public function testMetaIsOptional(): void
     {
         $notification = $this->mapper->mapToNotificationRequest([
-            'message' => ['body' => 'Hi'],
+            'message'      => ['body' => 'Hi'],
             'destinations' => [['type' => 'notify_service', 'target' => 'notify.notify']],
         ])->notification;
 

@@ -46,7 +46,7 @@ final class ThresholdRuleTest extends TestCase
 
     public function testReadsAttributeWhenConfigured(): void
     {
-        $rule = new ThresholdRule(ReadingFixture::createEntitySources('sensor.main_voltage'), ThresholdDirection::Above, 30.0, 0.0, Duration::zero(), 'temperature');
+        $rule     = new ThresholdRule(ReadingFixture::createEntitySources('sensor.main_voltage'), ThresholdDirection::Above, 30.0, 0.0, Duration::zero(), 'temperature');
         $readings = ReadingFixture::collectReadings(ReadingFixture::createEntityReading('sensor.main_voltage', '230', ['temperature' => 31]));
 
         self::assertNotNull($rule->findFault($readings));

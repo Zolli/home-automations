@@ -86,7 +86,7 @@ final readonly class ThresholdRule implements AlertRule
 
     public function describe(): string
     {
-        $subject = $this->attribute === null ? $this->sources->describe() : "{$this->sources->describe()}[{$this->attribute}]";
+        $subject     = $this->attribute === null ? $this->sources->describe() : "{$this->sources->describe()}[{$this->attribute}]";
         $unavailable = $this->unavailableIsFault ? ' or unavailable' : '';
 
         return "{$subject} {$this->direction->value} {$this->threshold}{$unavailable}";

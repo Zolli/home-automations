@@ -43,7 +43,7 @@ final readonly class NotificationPayloadMapper
      */
     private function mapValidatedPayload(array $payload): NotificationRequest
     {
-        $meta = $payload['meta'] ?? [];
+        $meta         = $payload['meta'] ?? [];
         $notification = new Notification(
             $this->mapMessage($payload['message']),
             $this->destinations->mapToDestinations($payload['destinations'], ['destinations']),
@@ -111,7 +111,7 @@ final readonly class NotificationPayloadMapper
 
         if ($importance === null) {
             $knownLevels = array_map(static fn(Importance $importance) => $importance->value, Importance::cases());
-            $reason = \sprintf('Importance "%s" is unknown, expected one of: %s.', $level, implode(', ', $knownLevels));
+            $reason      = \sprintf('Importance "%s" is unknown, expected one of: %s.', $level, implode(', ', $knownLevels));
 
             throw InvalidNotificationPayload::forViolation(PayloadViolation::atPath(['meta', 'importance'], $reason));
         }

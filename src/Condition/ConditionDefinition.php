@@ -32,7 +32,7 @@ final readonly class ConditionDefinition
     /** @throws InvalidCondition */
     public function requireEntityId(): EntityId
     {
-        $field = $this->fields['field'] ?? null;
+        $field    = $this->fields['field'] ?? null;
         $entityId = \is_string($field) ? EntityId::tryFromString($field) : null;
 
         return $entityId ?? throw InvalidCondition::forMissingEntityId($this->type);

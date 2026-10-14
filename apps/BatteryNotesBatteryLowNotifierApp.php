@@ -31,18 +31,21 @@ final class BatteryNotesBatteryLowNotifierApp implements App
             ->subscribe($this->whenBatteryNotesEventFired(...));
     }
 
+    public function dispose(): void {}
+
     private function whenBatteryNotesEventFired(HaEvent $event): void
     {
         $isLow = $event->getValue('battery_low');
 
-        $this->logger->info('battery_low type', ['value' => $isLow, 'type' => gettype($isLow)]);
+        $this->logger->info('battery_low type', ['value' => $isLow, 'type' => \gettype($isLow)]);
 
         if ($isLow) {
-            $body = sprintf('One of the device are running low on battery, its time to replace it: %s. '
+            $body = \sprintf(
+                'One of the device are running low on battery, its time to replace it: %s. '
                 . 'You will need %sx%s battery to replace it.',
                 $event->getValue('device_name'),
                 $event->getValue('battery_quantity'),
-                $event->getValue('battery_type')
+                $event->getValue('battery_type'),
             );
 
             $this->notifier->send(
@@ -51,20 +54,16 @@ final class BatteryNotesBatteryLowNotifierApp implements App
                     ->withBody($body)
                     ->withImportance(Importance::High)
                     ->withServiceData([
-                        'visibility' => 'public',
+                        'visibility'        => 'public',
                         'notification_icon' => 'mdi:battery-arrow-down-outline',
-                        'color' => '#D32F2F',
+                        'color'             => '#D32F2F',
                     ])
                     ->withAppendedDestinations(
-                        NotifyServiceSender::createDestination('notify.mobile_app_zoli_phone')
+                        NotifyServiceSender::createDestination('notify.mobile_app_zoli_phone'),
                     )
                     ->withDebug()
-                    ->buildNotification()
+                    ->buildNotification(),
             );
         }
-    }
-
-    public function dispose(): void
-    {
     }
 }

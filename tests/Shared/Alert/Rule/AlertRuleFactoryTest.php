@@ -54,9 +54,9 @@ final class AlertRuleFactoryTest extends TestCase
     public function testMapsMqttTopicSources(): void
     {
         $phaseLoss = $this->factory->mapToRule([
-            'type' => 'below',
-            'topics' => ['dsmr/reading/phase_voltage_l1', 'dsmr/reading/phase_voltage_l2'],
-            'threshold' => 50,
+            'type'               => 'below',
+            'topics'             => ['dsmr/reading/phase_voltage_l1', 'dsmr/reading/phase_voltage_l2'],
+            'threshold'          => 50,
             'unavailableIsFault' => true,
         ]);
         $threshold = $this->factory->mapToRule(['type' => 'above', 'topic' => 'dsmr/reading/phase_voltage_l1', 'threshold' => 253]);

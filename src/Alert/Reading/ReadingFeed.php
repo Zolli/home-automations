@@ -32,9 +32,9 @@ final class ReadingFeed
         ReadingSourceCollection $sources,
         private readonly MonitoringContext $context,
     ) {
-        $entityIds = $sources->listKeysOfType(ReadingSourceType::Entity);
+        $entityIds            = $sources->listKeysOfType(ReadingSourceType::Entity);
         $this->entitySelector = $entityIds === [] ? null : Selector::anyOf(...$entityIds);
-        $this->topics = $sources->listKeysOfType(ReadingSourceType::MqttTopic);
+        $this->topics         = $sources->listKeysOfType(ReadingSourceType::MqttTopic);
     }
 
     /** @param Closure(): void $whenChanged */
@@ -66,14 +66,14 @@ final class ReadingFeed
             $subscription->unsubscribe();
         }
 
-        $this->subscriptions = [];
+        $this->subscriptions      = [];
         $this->latestMqttReadings = [];
-        $this->watchingSince = null;
+        $this->watchingSince      = null;
     }
 
     public function readSnapshot(): ReadingSnapshot
     {
-        $now = $this->context->clock->getNow();
+        $now            = $this->context->clock->getNow();
         $entityReadings = $this->entitySelector === null
             ? []
             : $this->context->ha->listStates($this->entitySelector)->mapToList(Reading::fromEntityState(...));

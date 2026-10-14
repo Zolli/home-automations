@@ -16,11 +16,11 @@ final class ActionListenerTest extends TestCase
     public function testStopReleasesOnceAndDropsCallbacks(): void
     {
         $released = 0;
-        $listener = new ActionListener(NotificationId::fromString('vacuum-bin'), new NullLogger(), function () use (&$released): void {
+        $listener = new ActionListener(NotificationId::fromString('vacuum-bin'), new NullLogger(), static function () use (&$released): void {
             $released++;
         });
-        $listener->onAnyAction(fn() => self::fail('Callbacks were dropped'));
-        $listener->onDismissed(fn() => self::fail('Callbacks were dropped'));
+        $listener->onAnyAction(static fn() => self::fail('Callbacks were dropped'));
+        $listener->onDismissed(static fn() => self::fail('Callbacks were dropped'));
 
         $listener->stopListening();
         $listener->stopListening();
@@ -33,8 +33,8 @@ final class ActionListenerTest extends TestCase
 
     public function testStoppedListenerIgnoresNewCallbacks(): void
     {
-        $listener = new ActionListener(NotificationId::fromString('vacuum-bin'), new NullLogger(), fn() => null, listening: false);
-        $listener->onAction('DONE', fn() => self::fail('Callback was registered'));
+        $listener = new ActionListener(NotificationId::fromString('vacuum-bin'), new NullLogger(), static fn() => null, listening: false);
+        $listener->onAction('DONE', static fn() => self::fail('Callback was registered'));
 
         $listener->dispatchAction(new NotificationAction(NotificationId::fromString('vacuum-bin'), 'DONE'));
 

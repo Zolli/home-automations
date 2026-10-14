@@ -19,7 +19,9 @@ final class NotifierRecorder implements Notifier
 
     private ?InvalidDestination $rejection = null;
 
-    public function __construct(private readonly ActionRouter $router) {}
+    public function __construct(
+        private readonly ActionRouter $router,
+    ) {}
 
     public function send(Notification $notification): SentNotification
     {

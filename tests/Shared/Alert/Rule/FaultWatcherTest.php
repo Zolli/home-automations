@@ -20,15 +20,15 @@ use Stewart\Contracts\Time\Duration;
 final class FaultWatcherTest extends TestCase
 {
     private const string LEAK_SENSOR = 'binary_sensor.kitchen_leak';
-
-    private const string DSMR_TOPIC = 'dsmr/reading/phase_voltage_l1';
+    private const string DSMR_TOPIC  = 'dsmr/reading/phase_voltage_l1';
 
     private AlertFixture $fixture;
+
     private FaultListenerRecorder $listener;
 
     protected function setUp(): void
     {
-        $this->fixture = new AlertFixture();
+        $this->fixture  = new AlertFixture();
         $this->listener = new FaultListenerRecorder();
     }
 
