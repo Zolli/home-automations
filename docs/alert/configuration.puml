@@ -1,0 +1,102 @@
+@startuml alert-configuration
+hide empty members
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+class HomeAlertApp
+class AlertConfigMapper {
+  +mapToDefinitions(policies, alerts): AlertDefinitionCollection
+}
+class EscalationPolicyMapper {
+  +mapToPolicies(policies): EscalationPolicyCollection
+}
+class AlertRuleFactory {
+  +mapToRule(fields): AlertRule
+}
+class MitigationFactory {
+  +mapToMitigations(list): MitigationCollection
+}
+class SignalFactory {
+  +mapToSignal(fields): Signal
+}
+class ReadingSourceMapper {
+  +mapToSources(options)
+  +mapToTopicSources(options)
+}
+class DestinationPayloadMapper
+class ConditionFactory
+
+package "Shared\Config" {
+  class TypedOptions <<VO>> {
+    +kind
+    +type
+  }
+  interface NamedType {
+    +getName()
+  }
+  abstract class NamedTypeCollection<T> {
+    +keyedByName(types)
+    +requireType(options): T
+  }
+}
+
+class AlertRuleTypeCollection
+class MitigationTypeCollection
+class SignalTypeCollection
+
+interface AlertRuleType {
+  +mapToRule(options): AlertRule
+}
+interface MitigationType {
+  +mapToMitigation(options): Mitigation
+}
+interface SignalType {
+  +mapToSignal(options): Signal
+}
+
+class StateMatchRuleType
+class ThresholdRuleType
+class UnavailableRuleType
+class SilenceRuleType
+class TurnOffMitigationType
+class LightEffectSignalType
+
+note bottom of ThresholdRuleType : one service per ThresholdDirection:\nabove, below
+
+HomeAlertApp --> AlertConfigMapper : policies, alerts
+AlertConfigMapper --> EscalationPolicyMapper
+AlertConfigMapper --> AlertRuleFactory
+AlertConfigMapper --> MitigationFactory
+EscalationPolicyMapper --> DestinationPayloadMapper : step destinations
+EscalationPolicyMapper --> ConditionFactory : repeat.while
+EscalationPolicyMapper --> SignalFactory : step signal
+
+AlertRuleFactory --> AlertRuleTypeCollection
+MitigationFactory --> MitigationTypeCollection
+SignalFactory --> SignalTypeCollection
+
+NamedTypeCollection <|-- AlertRuleTypeCollection
+NamedTypeCollection <|-- MitigationTypeCollection
+NamedTypeCollection <|-- SignalTypeCollection
+NamedTypeCollection ..> TypedOptions : dispatches on type
+
+AlertRuleTypeCollection o-- "*" AlertRuleType : shared.alert_rule_type
+MitigationTypeCollection o-- "*" MitigationType : shared.alert_mitigation_type
+SignalTypeCollection o-- "*" SignalType : shared.alert_signal_type
+
+NamedType <|-- AlertRuleType
+NamedType <|-- MitigationType
+NamedType <|-- SignalType
+
+AlertRuleType <|.. StateMatchRuleType
+AlertRuleType <|.. ThresholdRuleType
+AlertRuleType <|.. UnavailableRuleType
+AlertRuleType <|.. SilenceRuleType
+MitigationType <|.. TurnOffMitigationType
+SignalType <|.. LightEffectSignalType
+
+StateMatchRuleType --> ReadingSourceMapper
+ThresholdRuleType --> ReadingSourceMapper
+UnavailableRuleType --> ReadingSourceMapper
+SilenceRuleType --> ReadingSourceMapper
+@enduml

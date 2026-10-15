@@ -1,0 +1,32 @@
+@startuml house-mode-trigger-lifecycle
+hide empty description
+skinparam shadowing false
+
+state Detached
+state Attached : tunable entity exposed,\nrestored value read
+state Armed : listening for its time,\nstate, crossing or sun event
+
+[*] --> Detached
+Detached --> Attached : attach(context)
+Attached --> Armed : arm(context, whenFired)
+Armed --> Attached : disarm()
+Armed --> Armed : fires:\nwhenFired(name)
+Attached --> Detached : detach()
+Armed --> Detached : detach()
+
+note right of Attached
+  fixed_time exposes a time entity,
+  above/below a number entity;
+  state and sun expose nothing.
+  A value changed in Home Assistant
+  is kept for the next arm().
+end note
+
+note right of Armed
+  Armed: the selected strategy and
+  every alwaysActive strategy.
+  Selecting another strategy disarms
+  the previous one. A value changed in
+  Home Assistant re-arms with it.
+end note
+@enduml

@@ -6,8 +6,8 @@ namespace App\Tests\Shared\Alert\Rule;
 
 use PHPUnit\Framework\TestCase;
 use Shared\Alert\Reading\ReadingSnapshot;
-use Shared\Alert\Rule\ThresholdDirection;
 use Shared\Alert\Rule\ThresholdRule;
+use Shared\Threshold\ThresholdDirection;
 use Stewart\Contracts\Time\Duration;
 
 final class ThresholdRuleTest extends TestCase

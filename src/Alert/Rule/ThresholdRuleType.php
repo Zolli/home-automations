@@ -6,6 +6,7 @@ namespace Shared\Alert\Rule;
 
 use Shared\Alert\Config\ReadingSourceMapper;
 use Shared\Config\TypedOptions;
+use Shared\Threshold\ThresholdDirection;
 
 final readonly class ThresholdRuleType implements AlertRuleType
 {

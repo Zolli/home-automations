@@ -6,6 +6,7 @@ namespace Shared\Alert\Rule;
 
 use Shared\Alert\Reading\Collection\ReadingSourceCollection;
 use Shared\Alert\Reading\ReadingSnapshot;
+use Shared\Threshold\ThresholdDirection;
 use Stewart\Contracts\Time\Duration;
 
 final readonly class ThresholdRule implements AlertRule

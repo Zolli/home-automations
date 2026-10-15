@@ -13,8 +13,8 @@ use Shared\Alert\Rule\AlertRule;
 use Shared\Alert\Rule\FaultWatcher;
 use Shared\Alert\Rule\SilenceRule;
 use Shared\Alert\Rule\StateMatchRule;
-use Shared\Alert\Rule\ThresholdDirection;
 use Shared\Alert\Rule\ThresholdRule;
+use Shared\Threshold\ThresholdDirection;
 use Stewart\Contracts\Time\Duration;
 
 final class FaultWatcherTest extends TestCase

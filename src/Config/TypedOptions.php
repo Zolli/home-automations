@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Shared\Config;
 
 use Stewart\Contracts\Entity\EntityId;
+use Stewart\Contracts\Exception\ScheduleException;
+use Stewart\Contracts\Schedule\TimeOfDay;
 use Stewart\Contracts\Time\Duration;
 
 final readonly class TypedOptions
@@ -100,6 +102,24 @@ final readonly class TypedOptions
     public function findDuration(string $secondsKey): Duration
     {
         return Duration::seconds($this->findNonNegativeNumber($secondsKey));
+    }
+
+    /** @throws InvalidTypedOptions */
+    public function findPositiveDuration(string $secondsKey): ?Duration
+    {
+        $duration = $this->findDuration($secondsKey);
+
+        return $duration->isLongerThan(Duration::zero()) ? $duration : null;
+    }
+
+    /** @throws InvalidTypedOptions */
+    public function requireTimeOfDay(string $key): TimeOfDay
+    {
+        try {
+            return TimeOfDay::parse($this->requireString($key));
+        } catch (ScheduleException) {
+            throw $this->createInvalidOption($key, 'a time of day like 07:00');
+        }
     }
 
     /** @throws InvalidTypedOptions */
