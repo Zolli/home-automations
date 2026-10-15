@@ -15,10 +15,8 @@ use Stewart\Contracts\Time\Duration;
 
 final class ActionRouter
 {
-    public const string ACTION_EVENT = 'mobile_app_notification_action';
-
-    public const string CLEARED_EVENT = 'mobile_app_notification_cleared';
-
+    public const string ACTION_EVENT      = 'mobile_app_notification_action';
+    public const string CLEARED_EVENT     = 'mobile_app_notification_cleared';
     private const int LISTENING_TTL_HOURS = 2;
 
     /** @var array<string, ListeningNotification> */
@@ -82,16 +80,16 @@ final class ActionRouter
     private function whenEventReceived(HaContext $appContext, HaEvent $event): void
     {
         match ($event->type) {
-            self::ACTION_EVENT => $this->whenActionPressed($appContext, $event),
+            self::ACTION_EVENT  => $this->whenActionPressed($appContext, $event),
             self::CLEARED_EVENT => $this->whenNotificationCleared($appContext, $event),
-            default => null,
+            default             => null,
         };
     }
 
     private function whenActionPressed(HaContext $appContext, HaEvent $event): void
     {
         $value = $event->getValue('action');
-        $key = \is_string($value) ? ActionKey::tryFromString($value) : null;
+        $key   = \is_string($value) ? ActionKey::tryFromString($value) : null;
 
         if ($key === null) {
             return;
@@ -104,8 +102,8 @@ final class ActionRouter
 
     private function whenNotificationCleared(HaContext $appContext, HaEvent $event): void
     {
-        $nestedData = $event->getValue('data');
-        $tag = $event->getValue('tag') ?? (\is_array($nestedData) ? $nestedData['tag'] ?? null : null);
+        $nestedData     = $event->getValue('data');
+        $tag            = $event->getValue('tag') ?? (\is_array($nestedData) ? $nestedData['tag'] ?? null : null);
         $notificationId = \is_string($tag) ? NotificationId::tryFromString($tag) : null;
 
         if ($notificationId === null) {

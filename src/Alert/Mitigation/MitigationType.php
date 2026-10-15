@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Shared\Alert\Mitigation;
 
-use Shared\Alert\Config\InvalidAlertConfig;
-use Shared\Alert\Config\TypedOptions;
+use Shared\Config\InvalidTypedOptions;
+use Shared\Config\NamedType;
+use Shared\Config\TypedOptions;
 
-interface MitigationType
+interface MitigationType extends NamedType
 {
     public const string KIND = 'Mitigation';
 
-    public function getName(): string;
-
-    /** @throws InvalidAlertConfig */
+    /** @throws InvalidTypedOptions */
     public function mapToMitigation(TypedOptions $options): Mitigation;
 }

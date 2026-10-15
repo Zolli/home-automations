@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Shared\Alert\Rule;
 
-use Shared\Alert\Config\InvalidAlertConfig;
-use Shared\Alert\Config\TypedOptions;
+use Shared\Config\InvalidTypedOptions;
+use Shared\Config\NamedType;
+use Shared\Config\TypedOptions;
 
-interface AlertRuleType
+interface AlertRuleType extends NamedType
 {
-    public const string KIND = 'Alert rule';
+    public const string KIND     = 'Alert rule';
+    public const string HOLD_KEY = 'forSeconds';
 
-    public function getName(): string;
-
-    /** @throws InvalidAlertConfig */
+    /** @throws InvalidTypedOptions */
     public function mapToRule(TypedOptions $options): AlertRule;
 }

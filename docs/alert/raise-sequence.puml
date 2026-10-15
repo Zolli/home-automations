@@ -1,0 +1,57 @@
+@startuml alert-raise-sequence
+skinparam shadowing false
+autonumber
+
+participant "Home Assistant\n/ MQTT" as Source
+participant ReadingFeed
+participant FaultWatcher
+participant AlertRule
+participant MonitoredAlert
+participant Mitigation
+participant Escalation
+participant StepRepeater
+participant Notifier
+actor "Phone user" as User
+
+== fault ==
+Source -> ReadingFeed : state change / message
+ReadingFeed -> FaultWatcher : whenChanged()
+FaultWatcher -> ReadingFeed : readSnapshot()
+FaultWatcher -> AlertRule : findFault(snapshot)
+AlertRule --> FaultWatcher : Fault
+FaultWatcher -> FaultWatcher : schedule hold (forSeconds)
+...hold elapsed...
+FaultWatcher -> AlertRule : findFault(new snapshot)
+AlertRule --> FaultWatcher : Fault
+FaultWatcher -> MonitoredAlert : raiseFault(fault)
+MonitoredAlert -> Mitigation : mitigate(ha)
+note right of MonitoredAlert : results are appended to the message body
+MonitoredAlert -> Escalation : startEscalating()
+loop each step, now or after afterSeconds
+  alt destinations
+    Escalation -> Notifier : send(message + Acknowledge button)
+  else signal
+    Escalation -> Escalation : signal.emit(fault, ha)
+  end
+  opt repeat
+    Escalation -> StepRepeater : startRepeating()
+  end
+end
+
+== acknowledge ==
+User -> Escalation : Acknowledge (or dismiss)
+Escalation -> Escalation : stopEscalating()
+Escalation -> MonitoredAlert : whenAcknowledged(acknowledgement)
+MonitoredAlert -> Escalation : sendFollowUp("Acknowledged.")
+Escalation -> Notifier : send(to notified destinations)
+
+== recovery ==
+Source -> ReadingFeed : state change / message
+ReadingFeed -> FaultWatcher : whenChanged()
+FaultWatcher -> AlertRule : isRecovered(snapshot)
+AlertRule --> FaultWatcher : true
+FaultWatcher -> MonitoredAlert : clearFault()
+MonitoredAlert -> Escalation : stopEscalating()
+MonitoredAlert -> Escalation : sendFollowUp("Cleared.")
+Escalation -> Notifier : send(to notified destinations)
+@enduml

@@ -14,7 +14,9 @@ final class SignalRecorder implements Signal
     /** @var list<string> */
     public array $emittedFor = [];
 
-    public function __construct(private readonly bool $failing = false) {}
+    public function __construct(
+        private readonly bool $failing = false,
+    ) {}
 
     public function emit(Fault $fault, HaContext $ha): void
     {

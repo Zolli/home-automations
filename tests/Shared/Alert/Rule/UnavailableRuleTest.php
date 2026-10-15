@@ -37,13 +37,20 @@ final class UnavailableRuleTest extends TestCase
 
     private function createRule(): UnavailableRule
     {
-        return new UnavailableRule(ReadingFixture::createEntitySources('binary_sensor.kitchen_leak'), Duration::minutes(10));
+        return new UnavailableRule(
+            ReadingFixture::createEntitySources('binary_sensor.kitchen_leak'),
+            Duration::minutes(10),
+        );
     }
 
     private function createReadings(string $state): ReadingSnapshot
     {
         return ReadingFixture::collectReadings(
-            ReadingFixture::createEntityReading('binary_sensor.kitchen_leak', $state, ['friendly_name' => 'Leak sensor']),
+            ReadingFixture::createEntityReading(
+                'binary_sensor.kitchen_leak',
+                $state,
+                ['friendly_name' => 'Leak sensor'],
+            ),
         );
     }
 }

@@ -26,7 +26,9 @@ final class NotificationButtonTest extends TestCase
 
     public function testUriButtonIsNotRoutable(): void
     {
-        self::assertFalse(new NotificationButton(NotificationButton::URI_ACTION, 'Open', ['uri' => '/lovelace'])->isRoutable());
+        self::assertFalse(
+            new NotificationButton(NotificationButton::URI_ACTION, 'Open', ['uri' => '/lovelace'])->isRoutable(),
+        );
     }
 
     public function testActionButtonIsRoutable(): void

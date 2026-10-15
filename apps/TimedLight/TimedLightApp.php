@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\TimedLight;
 
 use App\Generated\Entities;
@@ -21,9 +23,7 @@ final class TimedLightApp implements App
     /** @var array<string, TimedLightComponent> */
     private array $timedLightComponentsByName = [];
 
-    /**
-     * @param list<array<string, mixed>> $configuration
-     */
+    /** @param list<array<string, mixed>> $configuration */
     public function __construct(
         private readonly HaContext $context,
         private readonly Entities $entities,
@@ -32,13 +32,13 @@ final class TimedLightApp implements App
         array $configuration,
     ) {
         $this->configuration = array_map(TimedLightConfig::fromConfig(...), $configuration);
-        $this->logger->info("[TIMED-LIGHT] Created configuration for " . count($this->configuration) . ' instances');
+        $this->logger->info('[TIMED-LIGHT] Created configuration for ' . \count($this->configuration) . ' instances');
     }
 
     public function initialize(): void
     {
         foreach ($this->configuration as $config) {
-            $this->logger->info("[TIMED-LIGHT] Initializing for: " . $config->name);
+            $this->logger->info('[TIMED-LIGHT] Initializing for: ' . $config->name);
 
             $timeLightComponent = new TimedLightComponent(
                 $this->scheduler,
@@ -49,18 +49,18 @@ final class TimedLightApp implements App
 
             if (!empty($config->entrySensors)) {
                 $timeLightComponent->attachToEntrySensorStream(
-                    $this->context->watchStateChanges(Selector::anyOf(...$config->entrySensors))
+                    $this->context->watchStateChanges(Selector::anyOf(...$config->entrySensors)),
                 );
             }
 
-            if(!empty($config->motionSensors)) {
+            if (!empty($config->motionSensors)) {
                 $timeLightComponent->attachToMotionSensorStream(
-                    $this->context->watchStateChanges(Selector::anyOf(...$config->motionSensors))
+                    $this->context->watchStateChanges(Selector::anyOf(...$config->motionSensors)),
                 );
             }
 
             $this->timedLightComponentsByName[$config->name] = $timeLightComponent;
-            $this->logger->info("[TIMED-LIGHT] Initialization done for: " . $config->name);
+            $this->logger->info('[TIMED-LIGHT] Initialization done for: ' . $config->name);
         }
     }
 

@@ -29,7 +29,7 @@ final readonly class AlertFixture
     public function __construct()
     {
         $this->harness = new AppHarness();
-        $this->ha = $this->harness->ha;
+        $this->ha      = $this->harness->ha;
     }
 
     public function createMonitoringContext(): MonitoringContext
@@ -51,12 +51,20 @@ final readonly class AlertFixture
 
     public function pressAction(string $key): void
     {
-        $this->ha->pushEvent(new HaEvent(ActionRouter::ACTION_EVENT, ['action' => $key], context: new EventContext('ctx', userId: self::ACTING_USER_ID)));
+        $this->ha->pushEvent(new HaEvent(
+            ActionRouter::ACTION_EVENT,
+            ['action' => $key],
+            context: new EventContext('ctx', userId: self::ACTING_USER_ID),
+        ));
     }
 
     public function dismissNotification(string $tag): void
     {
-        $this->ha->pushEvent(new HaEvent(ActionRouter::CLEARED_EVENT, ['tag' => $tag], context: new EventContext('ctx', userId: self::ACTING_USER_ID)));
+        $this->ha->pushEvent(new HaEvent(
+            ActionRouter::CLEARED_EVENT,
+            ['tag' => $tag],
+            context: new EventContext('ctx', userId: self::ACTING_USER_ID),
+        ));
     }
 
     /** @return list<string> */

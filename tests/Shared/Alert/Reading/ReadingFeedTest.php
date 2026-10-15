@@ -16,14 +16,19 @@ final class ReadingFeedTest extends TestCase
     private const string TOPIC = 'dsmr/reading/phase_voltage_l1';
 
     private AlertFixture $fixture;
+
     private ReadingFeed $feed;
+
     private int $changes = 0;
 
     protected function setUp(): void
     {
         $this->fixture = new AlertFixture();
-        $this->feed = new ReadingFeed(
-            ReadingSourceCollection::fromSources([ReadingSource::forEntity(new EntityId('sensor.l1_voltage')), ReadingSource::forTopic(self::TOPIC)]),
+        $this->feed    = new ReadingFeed(
+            ReadingSourceCollection::fromSources([
+                ReadingSource::forEntity(new EntityId('sensor.l1_voltage')),
+                ReadingSource::forTopic(self::TOPIC),
+            ]),
             $this->fixture->createMonitoringContext(),
         );
     }

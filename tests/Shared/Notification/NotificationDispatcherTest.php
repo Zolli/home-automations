@@ -32,9 +32,13 @@ final class NotificationDispatcherTest extends TestCase
             ->withImportance(Importance::Normal)
             ->withAppendedDestinations(
                 NotifyServiceSender::createDestination('notify.mobile_app_zoli_phone')
-                    ->withAppendedConditions(new ImportanceCondition(new EntityId('input_select.zoli_notification_level'))),
+                    ->withAppendedConditions(
+                        new ImportanceCondition(new EntityId('input_select.zoli_notification_level')),
+                    ),
                 NotifyServiceSender::createDestination('notify.mobile_app_zsuzsi_phone')
-                    ->withAppendedConditions(new ImportanceCondition(new EntityId('input_select.zsuzsi_notification_level'))),
+                    ->withAppendedConditions(
+                        new ImportanceCondition(new EntityId('input_select.zsuzsi_notification_level')),
+                    ),
                 ChimeTtsSender::createDestination('media_player.kitchen_speaker')
                     ->withAppendedConditions(CompareCondition::equals('input_boolean.guest_mode', 'off')),
             )
@@ -45,15 +49,18 @@ final class NotificationDispatcherTest extends TestCase
 
     public function testReturnsSentNotification(): void
     {
-        $fixture = new NotificationFixture();
-        $notification = NotificationBuilder::create()->withBody('Hi')->withAppendedDestinations(NotifyServiceSender::createDestination('notify.notify'))->buildNotification();
+        $fixture      = new NotificationFixture();
+        $notification = NotificationBuilder::create()
+            ->withBody('Hi')
+            ->withAppendedDestinations(NotifyServiceSender::createDestination('notify.notify'))
+            ->buildNotification();
 
         self::assertSame($notification, $this->dispatcher($fixture)->send($notification)->notification);
     }
 
     public function testRejectsTypeWithoutSenderBeforeSendingAny(): void
     {
-        $fixture = new NotificationFixture();
+        $fixture    = new NotificationFixture();
         $dispatcher = new NotificationDispatcher(
             DestinationSenderCollection::keyedByDestinationType([new NotifyServiceSender()]),
             $fixture->ha,
@@ -97,14 +104,21 @@ final class NotificationDispatcherTest extends TestCase
     {
         $fixture = new NotificationFixture();
         $fixture->ha->seedState('input_boolean.guest_mode', 'on');
-        $logger = new RecordingLogger();
+        $logger     = new RecordingLogger();
+        $dispatcher = new NotificationDispatcher(
+            DestinationSenderCollection::keyedByDestinationType([new NotifyServiceSender()]),
+            $fixture->ha,
+            $fixture->createActionRouter(),
+            $logger,
+        );
 
-        new NotificationDispatcher(DestinationSenderCollection::keyedByDestinationType([new NotifyServiceSender()]), $fixture->ha, $fixture->createActionRouter(), $logger)->send(NotificationBuilder::create()
+        $dispatcher->send(NotificationBuilder::create()
             ->withBody('Hi')
             ->withDebug()
             ->withAppendedDestinations(
                 NotifyServiceSender::createDestination('notify.notify'),
-                NotifyServiceSender::createDestination('notify.tv')->withAppendedConditions(CompareCondition::equals('input_boolean.guest_mode', 'off')),
+                NotifyServiceSender::createDestination('notify.tv')
+                    ->withAppendedConditions(CompareCondition::equals('input_boolean.guest_mode', 'off')),
             )
             ->buildNotification());
 
@@ -116,6 +130,11 @@ final class NotificationDispatcherTest extends TestCase
 
     private function dispatcher(NotificationFixture $fixture): NotificationDispatcher
     {
-        return new NotificationDispatcher(DestinationSenderCollection::keyedByDestinationType([new NotifyServiceSender(), new ChimeTtsSender()]), $fixture->ha, $fixture->createActionRouter(), new NullLogger());
+        return new NotificationDispatcher(
+            DestinationSenderCollection::keyedByDestinationType([new NotifyServiceSender(), new ChimeTtsSender()]),
+            $fixture->ha,
+            $fixture->createActionRouter(),
+            new NullLogger(),
+        );
     }
 }

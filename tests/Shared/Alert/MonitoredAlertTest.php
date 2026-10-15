@@ -11,12 +11,12 @@ use Psr\Log\NullLogger;
 use RuntimeException;
 use Shared\Alert\AlertDefinition;
 use Shared\Alert\AlertState;
-use Shared\Alert\FaultLocator;
 use Shared\Alert\Escalation\Collection\EscalationStepCollection;
 use Shared\Alert\Escalation\Escalation;
 use Shared\Alert\Escalation\EscalationPolicy;
 use Shared\Alert\Escalation\EscalationStep;
 use Shared\Alert\Escalation\StepRepetition;
+use Shared\Alert\FaultLocator;
 use Shared\Alert\Mitigation\Collection\MitigationCollection;
 use Shared\Alert\Mitigation\Mitigation;
 use Shared\Alert\Mitigation\TurnOffMitigation;
@@ -36,11 +36,12 @@ final class MonitoredAlertTest extends TestCase
     private const string LEAK_SENSOR = 'binary_sensor.kitchen_leak';
 
     private AlertFixture $fixture;
+
     private NotifierRecorder $notifier;
 
     protected function setUp(): void
     {
-        $this->fixture = new AlertFixture();
+        $this->fixture  = new AlertFixture();
         $this->notifier = new NotifierRecorder(new ActionRouter($this->fixture->harness->scheduler, new NullLogger()));
         $this->fixture->ha->pushState(self::LEAK_SENSOR, 'off');
     }
@@ -120,7 +121,10 @@ final class MonitoredAlertTest extends TestCase
         $this->fixture->ha->pushState(self::LEAK_SENSOR, 'off');
         $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
 
-        self::assertSame(['binary_sensor.kitchen_leak is on', 'Cleared.', 'binary_sensor.kitchen_leak is on'], $this->listBodies());
+        self::assertSame(
+            ['binary_sensor.kitchen_leak is on', 'Cleared.', 'binary_sensor.kitchen_leak is on'],
+            $this->listBodies(),
+        );
     }
 
     public function testClearsAfterMitigationRecoversAndRaisesAgain(): void
@@ -185,8 +189,11 @@ final class MonitoredAlertTest extends TestCase
     }
 
     /** @param list<Mitigation> $mitigations */
-    private function startAlert(bool $acknowledgeOnDismiss, TextTemplate $message, array $mitigations = []): MonitoredAlert
-    {
+    private function startAlert(
+        bool $acknowledgeOnDismiss,
+        TextTemplate $message,
+        array $mitigations = [],
+    ): MonitoredAlert {
         $policy = new EscalationPolicy(
             'critical',
             EscalationStepCollection::fromSteps([
@@ -206,7 +213,13 @@ final class MonitoredAlertTest extends TestCase
             $policy,
             MitigationCollection::fromMitigations($mitigations),
         );
-        $alert = new MonitoredAlert($definition, $this->fixture->createMonitoringContext(), $this->notifier, new FaultLocator(), new NullLogger());
+        $alert = new MonitoredAlert(
+            $definition,
+            $this->fixture->createMonitoringContext(),
+            $this->notifier,
+            new FaultLocator(),
+            new NullLogger(),
+        );
         $alert->startMonitoring();
 
         return $alert;
@@ -215,6 +228,9 @@ final class MonitoredAlertTest extends TestCase
     /** @return list<string> */
     private function listBodies(): array
     {
-        return array_map(static fn(Notification $notification): string => $notification->message->body, $this->notifier->sent);
+        return array_map(
+            static fn(Notification $notification): string => $notification->message->body,
+            $this->notifier->sent,
+        );
     }
 }

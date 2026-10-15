@@ -13,7 +13,7 @@ final class TurnOffMitigationTest extends TestCase
 {
     public function testClosesValve(): void
     {
-        $ha = new RecordingHaContext();
+        $ha         = new RecordingHaContext();
         $mitigation = new TurnOffMitigation(new EntityId('valve.main_water'));
 
         $mitigation->mitigate($ha);
@@ -26,7 +26,7 @@ final class TurnOffMitigationTest extends TestCase
 
     public function testTurnsOffOtherEntities(): void
     {
-        $ha = new RecordingHaContext();
+        $ha         = new RecordingHaContext();
         $mitigation = new TurnOffMitigation(new EntityId('switch.boiler_relay'));
 
         $mitigation->mitigate($ha);

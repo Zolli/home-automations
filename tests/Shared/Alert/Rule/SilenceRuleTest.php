@@ -31,8 +31,12 @@ final class SilenceRuleTest extends TestCase
     {
         $rule = $this->createRule();
 
-        self::assertNull($rule->findFault($this->createSnapshot(l1SecondsAgo: 5, l2SecondsAgo: null, watchingSecondsAgo: 60)));
-        self::assertNotNull($rule->findFault($this->createSnapshot(l1SecondsAgo: 5, l2SecondsAgo: null, watchingSecondsAgo: 121)));
+        self::assertNull($rule->findFault(
+            $this->createSnapshot(l1SecondsAgo: 5, l2SecondsAgo: null, watchingSecondsAgo: 60),
+        ));
+        self::assertNotNull($rule->findFault(
+            $this->createSnapshot(l1SecondsAgo: 5, l2SecondsAgo: null, watchingSecondsAgo: 121),
+        ));
     }
 
     public function testRecoversWhenAllTopicsAreRecent(): void
@@ -51,21 +55,31 @@ final class SilenceRuleTest extends TestCase
     private function createRule(): SilenceRule
     {
         return new SilenceRule(
-            ReadingSourceCollection::fromSources([ReadingSource::forTopic(self::L1), ReadingSource::forTopic(self::L2)]),
+            ReadingSourceCollection::fromSources([
+                ReadingSource::forTopic(self::L1),
+                ReadingSource::forTopic(self::L2),
+            ]),
             Duration::seconds(120),
             Duration::zero(),
         );
     }
 
-    private function createSnapshot(int $l1SecondsAgo, ?int $l2SecondsAgo, int $watchingSecondsAgo = 3600): ReadingSnapshot
-    {
-        $now = Instant::fromEpochMicroseconds(1_800_000_000_000_000);
+    private function createSnapshot(
+        int $l1SecondsAgo,
+        ?int $l2SecondsAgo,
+        int $watchingSecondsAgo = 3600,
+    ): ReadingSnapshot {
+        $now      = Instant::fromEpochMicroseconds(1_800_000_000_000_000);
         $readings = [Reading::fromMqttPayload(self::L1, '230', $now->minus(Duration::seconds($l1SecondsAgo)))];
 
         if ($l2SecondsAgo !== null) {
             $readings[] = Reading::fromMqttPayload(self::L2, '230', $now->minus(Duration::seconds($l2SecondsAgo)));
         }
 
-        return new ReadingSnapshot(ReadingCollection::keyedBySource($readings), $now, $now->minus(Duration::seconds($watchingSecondsAgo)));
+        return new ReadingSnapshot(
+            ReadingCollection::keyedBySource($readings),
+            $now,
+            $now->minus(Duration::seconds($watchingSecondsAgo)),
+        );
     }
 }

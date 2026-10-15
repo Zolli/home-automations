@@ -1,0 +1,42 @@
+@startuml alert-lifecycle
+hide empty description
+skinparam shadowing false
+
+state "FaultWatcher" as Watcher {
+  state "Clear" as Clear
+  state "Pending" as Pending : hold timer running
+  state "Raised" as WatcherRaised
+
+  [*] --> Clear
+  Clear --> Pending : fault found,\nforSeconds > 0
+  Clear --> WatcherRaised : fault found,\nno hold
+  Pending --> Clear : fault gone
+  Pending --> WatcherRaised : hold elapsed,\nfault still found
+  WatcherRaised --> Clear : rule recovered
+}
+
+state "MonitoredAlert" as Alert {
+  state "Idle" as Idle
+  state "Raised" as AlertRaised : mitigations ran,\nescalation running
+  state "Acknowledged" as Acknowledged : escalation stopped
+
+  [*] --> Idle
+  Idle --> AlertRaised : raiseFault()
+  AlertRaised --> Acknowledged : Acknowledge button\nor dismissal
+  AlertRaised --> Idle : clearFault()\nfollow-up "Cleared."
+  Acknowledged --> Idle : clearFault()\nfollow-up "Cleared."
+}
+
+note right of Watcher
+  Evaluated at start, on every reading change
+  and every recheck interval of a RecheckedAlertRule.
+  Changes made while the listener runs are
+  evaluated once it returns.
+end note
+
+note right of Alert
+  FaultWatcher entering Raised calls raiseFault();
+  leaving Raised calls clearFault().
+  stopMonitoring() returns to Idle from any state.
+end note
+@enduml

@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Shared\Alert\Rule;
+namespace Shared\Threshold;
+
+use Stewart\Contracts\StateChangeStream;
+use Stewart\Contracts\Time\Duration;
 
 enum ThresholdDirection: string
 {
@@ -22,6 +25,18 @@ enum ThresholdDirection: string
         return match ($this) {
             self::Above => $value <= $threshold - $hysteresis,
             self::Below => $value >= $threshold + $hysteresis,
+        };
+    }
+
+    public function filterCrossings(
+        StateChangeStream $changes,
+        float $threshold,
+        ?Duration $holdDuration = null,
+        float $hysteresis = 0.0,
+    ): StateChangeStream {
+        return match ($this) {
+            self::Above => $changes->whenAbove($threshold, $holdDuration, hysteresis: $hysteresis),
+            self::Below => $changes->whenBelow($threshold, $holdDuration, hysteresis: $hysteresis),
         };
     }
 }

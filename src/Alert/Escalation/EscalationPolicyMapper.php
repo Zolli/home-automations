@@ -12,6 +12,7 @@ use Shared\Alert\Signal\SignalFactory;
 use Shared\Condition\AllOf;
 use Shared\Condition\ConditionFactory;
 use Shared\Condition\InvalidCondition;
+use Shared\Config\InvalidTypedOptions;
 use Shared\Notification\Collection\DestinationCollection;
 use Shared\Notification\Exception\InvalidNotificationPayload;
 use Shared\Notification\Importance;
@@ -47,7 +48,7 @@ final readonly class EscalationPolicyMapper
      */
     private function mapPolicy(string $name, array $policy): EscalationPolicy
     {
-        $steps = $policy['steps'] ?? null;
+        $steps                = $policy['steps'] ?? null;
         $acknowledgeOnDismiss = $policy['acknowledgeOnDismiss'] ?? false;
 
         if (!\is_array($steps)) {
@@ -65,7 +66,11 @@ final readonly class EscalationPolicyMapper
         }
 
         try {
-            return new EscalationPolicy($name, EscalationStepCollection::fromSteps($mappedSteps), $acknowledgeOnDismiss);
+            return new EscalationPolicy(
+                $name,
+                EscalationStepCollection::fromSteps($mappedSteps),
+                $acknowledgeOnDismiss,
+            );
         } catch (InvalidEscalationPolicy $e) {
             throw InvalidAlertConfig::forInvalidPolicy($name, $e->getMessage(), $e);
         }
@@ -77,20 +82,26 @@ final readonly class EscalationPolicyMapper
      */
     private function mapStep(string $policyName, int $index, array $step): EscalationStep
     {
-        $path = "steps[{$index}]";
+        $path       = "steps[{$index}]";
         $importance = $step['importance'] ?? Importance::Critical->value;
-        $signal = \array_key_exists('signal', $step) ? $this->mapSignal($policyName, "{$path}.signal", $step['signal']) : null;
+        $signal     = \array_key_exists('signal', $step)
+            ? $this->mapSignal($policyName, "{$path}.signal", $step['signal'])
+            : null;
         $destinations = $signal !== null && !\array_key_exists('destinations', $step)
             ? DestinationCollection::empty()
             : $this->mapDestinations($policyName, $index, $step['destinations'] ?? null);
 
         try {
             return new EscalationStep(
-                Duration::seconds($this->requireSeconds($policyName, "{$path}.afterSeconds", $step['afterSeconds'] ?? 0)),
+                Duration::seconds(
+                    $this->requireSeconds($policyName, "{$path}.afterSeconds", $step['afterSeconds'] ?? 0),
+                ),
                 $destinations,
                 (\is_string($importance) ? Importance::tryFrom($importance) : null)
                     ?? throw InvalidAlertConfig::forInvalidPolicy($policyName, "{$path}.importance is unknown."),
-                \array_key_exists('repeat', $step) ? $this->mapRepetition($policyName, "{$path}.repeat", $step['repeat']) : null,
+                \array_key_exists('repeat', $step)
+                    ? $this->mapRepetition($policyName, "{$path}.repeat", $step['repeat'])
+                    : null,
                 $signal,
             );
         } catch (InvalidEscalationPolicy $e) {
@@ -113,7 +124,7 @@ final readonly class EscalationPolicyMapper
     {
         try {
             return $this->signals->mapToSignal(\is_array($signal) ? $signal : []);
-        } catch (InvalidAlertConfig $e) {
+        } catch (InvalidTypedOptions $e) {
             throw InvalidAlertConfig::forInvalidPolicy($policyName, "{$path}: {$e->getMessage()}", $e);
         }
     }
@@ -131,8 +142,12 @@ final readonly class EscalationPolicyMapper
         $times = $repeat['times'] ?? null;
 
         return new StepRepetition(
-            Duration::seconds($this->requireSeconds($policyName, "{$path}.everySeconds", $repeat['everySeconds'] ?? null)),
-            $times === null || \is_int($times) ? $times : throw InvalidAlertConfig::forInvalidPolicy($policyName, "{$path}.times must be an integer."),
+            Duration::seconds(
+                $this->requireSeconds($policyName, "{$path}.everySeconds", $repeat['everySeconds'] ?? null),
+            ),
+            $times === null || \is_int($times)
+                ? $times
+                : throw InvalidAlertConfig::forInvalidPolicy($policyName, "{$path}.times must be an integer."),
             $this->mapConditions($policyName, "{$path}.while", $repeat['while'] ?? []),
         );
     }
@@ -149,7 +164,7 @@ final readonly class EscalationPolicyMapper
         foreach ($conditions as $condition) {
             try {
                 $mapped[] = $this->conditions->mapToCondition(\is_array($condition) ? $condition : []);
-            } catch (InvalidCondition $e) {
+            } catch (InvalidCondition|InvalidTypedOptions $e) {
                 throw InvalidAlertConfig::forInvalidPolicy($policyName, "{$path}: {$e->getMessage()}", $e);
             }
         }

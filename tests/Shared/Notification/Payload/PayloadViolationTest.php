@@ -18,6 +18,9 @@ final class PayloadViolationTest extends TestCase
 
     public function testNamesRootWithoutSegments(): void
     {
-        self::assertSame('payload must be of type object', PayloadViolation::atPath([], 'must be of type object')->toString());
+        self::assertSame(
+            'payload must be of type object',
+            PayloadViolation::atPath([], 'must be of type object')->toString(),
+        );
     }
 }

@@ -29,17 +29,23 @@ final class ChimeTtsSenderTest extends TestCase
         self::assertCount(1, $calls);
         self::assertSame([
             'service' => 'chime_tts.say',
-            'data' => ['message' => 'The laundry is done', 'chime_path' => 'bells', 'volume_level' => 0.5],
-            'target' => ['entity_id' => ['media_player.kitchen_speaker', 'media_player.living_room_speaker']],
+            'data'    => ['message' => 'The laundry is done', 'chime_path' => 'bells', 'volume_level' => 0.5],
+            'target'  => ['entity_id' => ['media_player.kitchen_speaker', 'media_player.living_room_speaker']],
         ], $calls->listValues()[0]->toLogContext());
     }
 
     public function testOptionsCanOverrideSpokenMessage(): void
     {
-        $destination = ChimeTtsSender::createDestination('media_player.kitchen_speaker', ['message' => 'Laundry!']);
-        $notification = NotificationBuilder::create()->withBody('The laundry is done')->withAppendedDestinations($destination)->buildNotification();
+        $destination  = ChimeTtsSender::createDestination('media_player.kitchen_speaker', ['message' => 'Laundry!']);
+        $notification = NotificationBuilder::create()
+            ->withBody('The laundry is done')
+            ->withAppendedDestinations($destination)
+            ->buildNotification();
 
-        self::assertSame(['message' => 'Laundry!'], new ChimeTtsSender()->buildServiceCalls($notification, $destination)->listValues()[0]->data);
+        self::assertSame(
+            ['message' => 'Laundry!'],
+            new ChimeTtsSender()->buildServiceCalls($notification, $destination)->listValues()[0]->data,
+        );
     }
 
     public function testRejectsTargetThatIsNotEntityId(): void

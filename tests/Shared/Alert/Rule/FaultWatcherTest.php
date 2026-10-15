@@ -13,22 +13,22 @@ use Shared\Alert\Rule\AlertRule;
 use Shared\Alert\Rule\FaultWatcher;
 use Shared\Alert\Rule\SilenceRule;
 use Shared\Alert\Rule\StateMatchRule;
-use Shared\Alert\Rule\ThresholdDirection;
 use Shared\Alert\Rule\ThresholdRule;
+use Shared\Threshold\ThresholdDirection;
 use Stewart\Contracts\Time\Duration;
 
 final class FaultWatcherTest extends TestCase
 {
     private const string LEAK_SENSOR = 'binary_sensor.kitchen_leak';
-
-    private const string DSMR_TOPIC = 'dsmr/reading/phase_voltage_l1';
+    private const string DSMR_TOPIC  = 'dsmr/reading/phase_voltage_l1';
 
     private AlertFixture $fixture;
+
     private FaultListenerRecorder $listener;
 
     protected function setUp(): void
     {
-        $this->fixture = new AlertFixture();
+        $this->fixture  = new AlertFixture();
         $this->listener = new FaultListenerRecorder();
     }
 
@@ -83,7 +83,13 @@ final class FaultWatcherTest extends TestCase
     public function testKeepsFaultUntilHysteresisRecovers(): void
     {
         $this->fixture->ha->pushState('sensor.relay_temperature', '70');
-        $rule = new ThresholdRule(ReadingFixture::createEntitySources('sensor.relay_temperature'), ThresholdDirection::Above, 75.0, 5.0, Duration::zero());
+        $rule = new ThresholdRule(
+            ReadingFixture::createEntitySources('sensor.relay_temperature'),
+            ThresholdDirection::Above,
+            75.0,
+            5.0,
+            Duration::zero(),
+        );
         $this->createWatcher($rule)->startWatching();
 
         $this->fixture->ha->pushState('sensor.relay_temperature', '76');
@@ -128,7 +134,10 @@ final class FaultWatcherTest extends TestCase
 
         $this->fixture->publishMqtt(self::DSMR_TOPIC, '230');
 
-        self::assertSame(['dsmr/reading/phase_voltage_l1 sent nothing for 66 s', 'cleared'], $this->listener->listReasons());
+        self::assertSame(
+            ['dsmr/reading/phase_voltage_l1 sent nothing for 66 s', 'cleared'],
+            $this->listener->listReasons(),
+        );
     }
 
     public function testStopWatchingCancelsRecheck(): void
@@ -146,16 +155,29 @@ final class FaultWatcherTest extends TestCase
 
     private function createSilenceRule(): SilenceRule
     {
-        return new SilenceRule(ReadingSourceCollection::fromSources([ReadingSource::forTopic(self::DSMR_TOPIC)]), Duration::seconds(60), Duration::zero());
+        return new SilenceRule(
+            ReadingSourceCollection::fromSources([ReadingSource::forTopic(self::DSMR_TOPIC)]),
+            Duration::seconds(60),
+            Duration::zero(),
+        );
     }
 
     private function watchLeak(Duration $hold): FaultWatcher
     {
-        return $this->createWatcher(new StateMatchRule(ReadingFixture::createEntitySources(self::LEAK_SENSOR), 'on', $hold));
+        return $this->createWatcher(new StateMatchRule(
+            ReadingFixture::createEntitySources(self::LEAK_SENSOR),
+            'on',
+            $hold,
+        ));
     }
 
     private function createWatcher(AlertRule $rule): FaultWatcher
     {
-        return new FaultWatcher($rule, new ReadingFeed($rule->listSources(), $this->fixture->createMonitoringContext()), $this->fixture->harness->scheduler, $this->listener);
+        return new FaultWatcher(
+            $rule,
+            new ReadingFeed($rule->listSources(), $this->fixture->createMonitoringContext()),
+            $this->fixture->harness->scheduler,
+            $this->listener,
+        );
     }
 }

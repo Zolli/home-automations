@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Shared\Alert\Signal;
 
-use Shared\Alert\Config\TypedOptions;
 use Shared\Alert\FaultLocator;
+use Shared\Config\TypedOptions;
 
 final readonly class LightEffectSignalType implements SignalType
 {
-    public function __construct(private FaultLocator $locator) {}
+    public function __construct(
+        private FaultLocator $locator,
+    ) {}
 
     public function getName(): string
     {

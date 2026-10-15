@@ -51,8 +51,8 @@ make run ONLY=hello DRY_RUN=1  # service calls are logged and answered as succee
 
 ### Shared components
 
-Code that several apps use lives in `src/` under the `Shared\` namespace and is registered in `services.php`, so apps
-receive it by type. `Shared\Condition` evaluates conditions against Home Assistant state; `Shared\Notification` sends
+Code that several apps use lives in `src/` under the `Shared\` namespace; `services.php` registers every class there, so
+apps receive it by type. `Shared\Condition` evaluates conditions against Home Assistant state; `Shared\Notification` sends
 notifications; `Shared\Alert` watches for serious faults and escalates them; `Shared\Template` renders `{name}`
 placeholders from a `TemplateVariableCollection`.
 
@@ -141,8 +141,7 @@ destination type. Each entry in `message.buttons` needs `action` and `title`; ot
 A new destination type is a case on `Shared\Notification\DestinationType` plus a class implementing
 `Shared\Notification\Sender\DestinationSender` that returns that case from `getSupportedType()`, rejects bad targets in `validateDestination()` and builds a `ServiceCallCollection` for a
 destination, with a static `createDestination()` shortcut for apps; a new condition type implements
-`Shared\Condition\ConditionType`. Register either in `services.php` with `$services->set(…)` and it is picked up by
-its interface.
+`Shared\Condition\ConditionType`. Either is registered from `src/` and picked up by its interface.
 
 ## Alerts
 
@@ -189,7 +188,30 @@ the fault that raised the alert.
 | `turn-off` | `valve.close_valve` for a `valve` entity, otherwise `homeassistant.turn_off` |
 
 A new rule implements `Shared\Alert\Rule\AlertRuleType`, a new mitigation `Shared\Alert\Mitigation\MitigationType`
-and a new signal `Shared\Alert\Signal\SignalType`; register it in `services.php` and it is picked up by its interface.
+and a new signal `Shared\Alert\Signal\SignalType`; each is registered from `src/` and picked up by its interface.
+Design and diagrams: [docs/alert](docs/alert/README.md).
+
+## House modes
+
+`day-night-mode` selects `day`/`night` on `input_select.house_day_night_mode` and `sleep-mode` turns
+`input_boolean.sleep_mode` on and off. Each publishes `{event, data: {cause}, meta: {producer}}` to its `topic`, the
+cause being the strategy that fired. Day/night always switches; sleep mode skips when it is already in that state.
+
+Each transition (`day`, `night`, `activation`, `deactivation`) lists named `strategies`; one is active at a time,
+picked in Home Assistant with a select Stewart exposes (`<transition> strategy`), starting from `defaultStrategy`
+(the first one when left out). `alwaysActive` strategies fire regardless of the selection. A `window` of `from` and
+`until` times drops firings outside it. Strategy names become entity keys: lowercase, digits and `_`, at most 40.
+
+| Strategy | Fires when |
+|---|---|
+| `fixed_time` | Daily at `time`; exposed as a time entity |
+| `state` | `entity` changes to `state` (default `on`) and holds it `forSeconds` |
+| `above`, `below` | `entity` crosses `threshold` and stays past it `forSeconds`; once per crossing, re-armed past `hysteresis`; the threshold is exposed as a number between `min` and `max` in `step`s with `unit` |
+| `sun` | At `event` (`sunrise`, `sunset`, `civil_dusk`, …) shifted by `offsetSeconds`, negative for before |
+
+Values in `stewart.yaml` seed the exposed entities only while Home Assistant has none; after that the values set in
+Home Assistant win. A new strategy type implements `Shared\HouseMode\Trigger\ModeTriggerType`, registered from `src/`
+and picked up by its interface. Design and diagrams: [docs/house-mode](docs/house-mode/README.md).
 
 ## Configuration
 

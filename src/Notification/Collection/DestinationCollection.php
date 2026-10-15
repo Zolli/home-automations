@@ -20,4 +20,9 @@ final readonly class DestinationCollection extends ListCollection
     {
         return self::fromDestinations([...$this, ...$destinations]);
     }
+
+    public function withoutSpokenDestinations(): self
+    {
+        return $this->filter(static fn(Destination $destination): bool => !$destination->type->isSpoken());
+    }
 }

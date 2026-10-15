@@ -54,7 +54,10 @@ final readonly class NotificationBuilder
 
     public function withAdditionalData(string $key, mixed $value): self
     {
-        return clone($this, ['additionalData' => ServiceData::mergeReplacingLists($this->additionalData, [$key => $value])]);
+        return clone(
+            $this,
+            ['additionalData' => ServiceData::mergeReplacingLists($this->additionalData, [$key => $value])],
+        );
     }
 
     public function withAppendedButtons(NotificationButton ...$buttons): self

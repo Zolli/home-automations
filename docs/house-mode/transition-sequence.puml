@@ -1,0 +1,48 @@
+@startuml house-mode-transition-sequence
+skinparam shadowing false
+autonumber
+
+participant "DayNightModeApp /\nSleepModeApp" as App
+participant ModeTransition
+participant TransitionContext
+participant "strategies /\nalwaysActive" as Triggers
+participant "Strategy select\n(Home Assistant)" as Select
+participant TransitionWindow
+participant "Home Assistant\n/ MQTT" as Out
+
+== initialize() ==
+App -> ModeTransition : startWatching(modeContext, whenFired)
+create TransitionContext
+ModeTransition -> TransitionContext : new(modeContext, name)
+ModeTransition -> Triggers : attachAll(context)
+ModeTransition -> Triggers : alwaysActive.armAll(context, fire)
+ModeTransition -> TransitionContext : exposeStrategySelect(names, default)
+TransitionContext -> Select : expose, reset unknown option
+ModeTransition -> Triggers : arm selected strategy (or default)
+ModeTransition -> Select : subscribe to commands
+
+== strategy changed in Home Assistant ==
+Select -> ModeTransition : SelectCommand(option)
+alt option not configured
+  ModeTransition --> Select : CommandException::rejected
+else
+  ModeTransition -> Triggers : disarm current, arm selected
+end
+
+== trigger fires ==
+Triggers -> ModeTransition : fire(strategyName)
+ModeTransition -> TransitionWindow : isOpen(clock)
+alt outside window
+  ModeTransition -> ModeTransition : log skip
+else
+  ModeTransition -> App : whenFired(strategyName)
+  note right of App : sleep mode returns here\nwhen already in that state
+  App -> Out : select option / turn switch on or off
+  App -> Out : publish {event, data: {cause}, meta: {producer}}
+end
+
+== dispose() ==
+App -> ModeTransition : stopWatching()
+ModeTransition -> Select : unsubscribe
+ModeTransition -> Triggers : detachAll()
+@enduml

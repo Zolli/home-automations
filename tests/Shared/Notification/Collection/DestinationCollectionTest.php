@@ -8,14 +8,15 @@ use PHPUnit\Framework\TestCase;
 use Shared\Notification\Collection\DestinationCollection;
 use Shared\Notification\Sender\ChimeTtsSender;
 use Shared\Notification\Sender\NotifyServiceSender;
+use Shared\Notification\Sender\PhoneTtsSender;
 
 final class DestinationCollectionTest extends TestCase
 {
     public function testAppendsDestinationsInOrder(): void
     {
-        $phone = NotifyServiceSender::createDestination('notify.mobile_app_phone');
+        $phone   = NotifyServiceSender::createDestination('notify.mobile_app_phone');
         $speaker = ChimeTtsSender::createDestination('media_player.kitchen');
-        $tablet = NotifyServiceSender::createDestination('notify.mobile_app_tablet');
+        $tablet  = NotifyServiceSender::createDestination('notify.mobile_app_tablet');
 
         $destinations = DestinationCollection::fromDestinations([$phone])->withAppendedDestinations($speaker, $tablet);
 
@@ -24,10 +25,24 @@ final class DestinationCollectionTest extends TestCase
 
     public function testAppendingKeepsOriginalUnchanged(): void
     {
-        $original = DestinationCollection::fromDestinations([ChimeTtsSender::createDestination('media_player.kitchen')]);
+        $original = DestinationCollection::fromDestinations(
+            [ChimeTtsSender::createDestination('media_player.kitchen')],
+        );
 
         $original->withAppendedDestinations(ChimeTtsSender::createDestination('media_player.office'));
 
         self::assertCount(1, $original);
+    }
+
+    public function testDropsSpokenDestinations(): void
+    {
+        $phone        = NotifyServiceSender::createDestination('notify.mobile_app_phone');
+        $destinations = DestinationCollection::fromDestinations([
+            ChimeTtsSender::createDestination('media_player.kitchen'),
+            $phone,
+            PhoneTtsSender::createDestination('notify.mobile_app_phone'),
+        ]);
+
+        self::assertSame([$phone], $destinations->withoutSpokenDestinations()->listValues());
     }
 }

@@ -10,15 +10,18 @@ use Shared\Condition\Collection\ConditionTypeCollection;
 use Shared\Condition\CompareCondition;
 use Shared\Condition\CompareConditionType;
 use Shared\Condition\ConditionFactory;
-use Shared\Condition\InvalidCondition;
 use Shared\Condition\Operator;
+use Shared\Config\InvalidTypedOptions;
 use Stewart\Contracts\Entity\EntityId;
 
 final class ConditionFactoryTest extends TestCase
 {
     public function testBuildsRegisteredTypes(): void
     {
-        $factory = new ConditionFactory(ConditionTypeCollection::keyedByName([new CompareConditionType(Operator::Gte), new AlwaysConditionType()]));
+        $factory = new ConditionFactory(ConditionTypeCollection::keyedByName([
+            new CompareConditionType(Operator::Gte),
+            new AlwaysConditionType(),
+        ]));
 
         self::assertInstanceOf(AlwaysCondition::class, $factory->mapToCondition(['type' => 'always']));
         self::assertEquals(
@@ -38,8 +41,9 @@ final class ConditionFactoryTest extends TestCase
     #[DataProvider('invalidDefinitions')]
     public function testRejectsInvalidDefinitions(array $definition): void
     {
-        $this->expectException(InvalidCondition::class);
+        $this->expectException(InvalidTypedOptions::class);
 
-        new ConditionFactory(ConditionTypeCollection::keyedByName([new AlwaysConditionType()]))->mapToCondition($definition);
+        new ConditionFactory(ConditionTypeCollection::keyedByName([new AlwaysConditionType()]))
+            ->mapToCondition($definition);
     }
 }

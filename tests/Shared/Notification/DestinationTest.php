@@ -17,7 +17,9 @@ final class DestinationTest extends TestCase
 {
     public function testNormalizesTargets(): void
     {
-        $destination = ChimeTtsSender::createDestination([' media_player.kitchen ', 'media_player.kitchen', '', 'media_player.bedroom']);
+        $destination = ChimeTtsSender::createDestination(
+            [' media_player.kitchen ', 'media_player.kitchen', '', 'media_player.bedroom'],
+        );
 
         self::assertSame(['media_player.kitchen', 'media_player.bedroom'], $destination->targets);
     }
@@ -31,9 +33,9 @@ final class DestinationTest extends TestCase
 
     public function testWithAppendedConditionsKeepsOriginalUnchanged(): void
     {
-        $a = CompareCondition::equals('input_boolean.a', 'on');
-        $b = CompareCondition::equals('input_boolean.b', 'on');
-        $c = CompareCondition::lessThan('sensor.c', 3);
+        $a        = CompareCondition::equals('input_boolean.a', 'on');
+        $b        = CompareCondition::equals('input_boolean.b', 'on');
+        $c        = CompareCondition::lessThan('sensor.c', 3);
         $original = NotifyServiceSender::createDestination('notify.notify')->withAppendedConditions($a);
         $extended = $original->withAppendedConditions($b, $c);
 

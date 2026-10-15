@@ -6,6 +6,7 @@ namespace Shared\Alert\Rule;
 
 use Shared\Alert\Reading\Collection\ReadingSourceCollection;
 use Shared\Alert\Reading\ReadingSnapshot;
+use Shared\Threshold\ThresholdDirection;
 use Stewart\Contracts\Time\Duration;
 
 final readonly class ThresholdRule implements AlertRule
@@ -46,7 +47,10 @@ final readonly class ThresholdRule implements AlertRule
             $value = $reading->readNumber($this->attribute);
 
             if ($value !== null && $this->direction->isBeyond($value, $this->threshold)) {
-                return Fault::fromReading($reading, \sprintf('%s is %s, %s %s', $reading->label, $value, $this->direction->value, $this->threshold));
+                return Fault::fromReading(
+                    $reading,
+                    \sprintf('%s is %s, %s %s', $reading->label, $value, $this->direction->value, $this->threshold),
+                );
             }
         }
 
@@ -86,7 +90,9 @@ final readonly class ThresholdRule implements AlertRule
 
     public function describe(): string
     {
-        $subject = $this->attribute === null ? $this->sources->describe() : "{$this->sources->describe()}[{$this->attribute}]";
+        $subject = $this->attribute === null
+            ? $this->sources->describe()
+            : "{$this->sources->describe()}[{$this->attribute}]";
         $unavailable = $this->unavailableIsFault ? ' or unavailable' : '';
 
         return "{$subject} {$this->direction->value} {$this->threshold}{$unavailable}";

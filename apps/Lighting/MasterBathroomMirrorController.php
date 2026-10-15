@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Lighting;
 
 use App\Generated\Entities;
@@ -22,36 +24,38 @@ class MasterBathroomMirrorController implements App
         private LoggerInterface $logger,
     ) {}
 
-
     public function initialize(): void
     {
-        $this->mqtt->watchMessages('test/in/#')->subscribe(function (MqttMessage $message) {
+        $this->mqtt->watchMessages('test/in/#')->subscribe(function (MqttMessage $message): void {
             $this->logger->info('MESSAGE ' . $message->payload);
             $this->mqtt->publish('test/out/a', $message->payload);
         });
 
-          $this
-              ->entities
-              ->event
-              ->getEntity('event.single_button_master_bathroom_mirror_action')
-              ->watchStateChanges()
-              ->subscribe($this->onWallButtonPress(...));
+        $this
+            ->entities
+            ->event
+            ->getEntity('event.single_button_master_bathroom_mirror_action')
+            ->watchStateChanges()
+            ->subscribe($this->onWallButtonPress(...));
 
-          $this
-              ->entities
-              ->light
-              ->getEntity('light.light_master_bathroom_ceiling')
-              ->watchStateChanges()
-              ->whenChangedTo('off')
-                ->subscribe(
-                  $this->whenCeilingLightTurnsOff(...)
-              );
+        $this
+            ->entities
+            ->light
+            ->getEntity('light.light_master_bathroom_ceiling')
+            ->watchStateChanges()
+            ->whenChangedTo('off')
+            ->subscribe(
+                $this->whenCeilingLightTurnsOff(...),
+            );
     }
+
+    public function dispose(): void {}
 
     private function onWallButtonPress(StateChange $change): void
     {
-        $eventType = $change->to?->getStringAttribute('event_type');
+        $eventType   = $change->to?->getStringAttribute('event_type');
         $mirrorLight = $this->entities->light->getEntity('light.master_bathroom_mirror_led_ch1');
+
         $mirrorLightAdaptiveBrightnessSwitch = $this
             ->entities
             ->switch
@@ -87,13 +91,8 @@ class MasterBathroomMirrorController implements App
 
         $mirrorLight->turnOn(brightnessPct: 10.0);
 
-        $this->scheduler->runAfter(Duration::seconds(15), static function () use ($mirrorLight) {
+        $this->scheduler->runAfter(Duration::seconds(15), static function () use ($mirrorLight): void {
             $mirrorLight->turnOff();
         });
     }
-
-    public function dispose(): void
-    {
-    }
-
 }
