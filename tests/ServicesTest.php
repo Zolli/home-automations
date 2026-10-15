@@ -14,6 +14,8 @@ use Shared\Alert\Rule\ThresholdRule;
 use Shared\Condition\ConditionFactory;
 use Shared\HouseMode\ModeTransitionMapper;
 use Shared\HouseMode\Payload\ModeEventPayloadMapper;
+use Shared\HouseMode\Trigger\ModeTriggerFactory;
+use Shared\HouseMode\Trigger\ThresholdTrigger;
 use Shared\Notification\Condition\ImportanceCondition;
 use Shared\Notification\NotificationBuilder;
 use Shared\Notification\Notifier;
@@ -101,13 +103,27 @@ final class ServicesTest extends TestCase
 
     public function testWiresHouseModeServices(): void
     {
-        $container = new ServiceContainer(ModeTransitionMapper::class, ModeEventPayloadMapper::class);
+        $container = new ServiceContainer(
+            ModeTriggerFactory::class,
+            ModeTransitionMapper::class,
+            ModeEventPayloadMapper::class,
+        );
 
         $transition = $container->getService(ModeTransitionMapper::class)->mapToTransition('day', [
             'strategies' => [['name' => 'sunrise', 'type' => 'sun', 'event' => 'sunrise']],
         ]);
 
         self::assertSame(['sunrise'], $transition->strategies->listNames());
+        self::assertInstanceOf(
+            ThresholdTrigger::class,
+            $container->getService(ModeTriggerFactory::class)->mapToTrigger([
+                'name'      => 'dark',
+                'type'      => 'below',
+                'entity'    => 'sensor.lux',
+                'threshold' => 50,
+                'max'       => 1_000,
+            ]),
+        );
         self::assertInstanceOf(ModeEventPayloadMapper::class, $container->getService(ModeEventPayloadMapper::class));
     }
 }

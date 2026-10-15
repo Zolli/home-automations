@@ -126,7 +126,7 @@ final class SleepModeAppTest extends TestCase
     {
         $fixture = new ModeFixture($startTime);
         $harness = $fixture->harness;
-        $harness->provideService(ModeTransitionMapper::class, new ModeTransitionMapper());
+        $harness->provideService(ModeTransitionMapper::class, $fixture->createTransitionMapper());
         $harness->provideService(ModeEventPayloadMapper::class, new ModeEventPayloadMapper());
 
         $harness->ha->pushState(self::SLEEP_SWITCH, $sleepMode);

@@ -1,0 +1,165 @@
+@startuml alert-structure
+hide empty members
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+package "App\Alert" {
+  class HomeAlertApp {
+    +initialize()
+    +dispose()
+  }
+}
+
+package "Shared\Alert" {
+  class AlertMonitor {
+    +startMonitoring(definition, context): MonitoredAlert
+  }
+  class AlertDefinition <<VO>> {
+    +id
+    +title: TextTemplate
+    +message: TextTemplate
+  }
+  class MonitoringContext <<VO>> {
+    +ha, scheduler, mqtt, clock
+  }
+  class MonitoredAlert {
+    +startMonitoring()
+    +stopMonitoring()
+    +getState(): AlertState
+  }
+  enum AlertState {
+    Idle
+    Raised
+    Acknowledged
+  }
+  class FaultLocator {
+    +findArea(fault, ha): ?Area
+  }
+}
+
+package "Shared\Alert\Rule" {
+  interface AlertRule {
+    +listSources()
+    +getHoldDuration()
+    +findFault(snapshot): ?Fault
+    +isRecovered(snapshot): bool
+  }
+  interface RecheckedAlertRule {
+    +getRecheckInterval()
+  }
+  class StateMatchRule
+  class ThresholdRule
+  class UnavailableRule
+  class SilenceRule
+  interface FaultListener {
+    +raiseFault(fault)
+    +clearFault()
+  }
+  class FaultWatcher {
+    +startWatching()
+    +stopWatching()
+  }
+  class Fault <<VO>> {
+    +source
+    +label
+    +reason
+  }
+}
+
+package "Shared\Alert\Reading" {
+  class ReadingFeed {
+    +startWatching(whenChanged)
+    +readSnapshot(): ReadingSnapshot
+  }
+  class ReadingSnapshot <<VO>>
+  class Reading <<VO>>
+  class ReadingSource <<VO>> {
+    entity or MQTT topic
+  }
+}
+
+package "Shared\Alert\Escalation" {
+  class EscalationPolicy <<VO>> {
+    +name
+    +acknowledgeOnDismiss
+  }
+  class EscalationStep <<VO>> {
+    +after
+    +destinations or signal
+    +importance
+  }
+  class StepRepetition <<VO>> {
+    +every
+    +maxTimes
+    +while: Condition
+  }
+  class Escalation {
+    +startEscalating()
+    +stopEscalating()
+    +sendFollowUp(body)
+  }
+  class StepRepeater
+  class Acknowledgement <<VO>>
+}
+
+package "Shared\Alert\Mitigation" {
+  interface Mitigation {
+    +mitigate(ha)
+  }
+  class TurnOffMitigation
+}
+
+package "Shared\Alert\Signal" {
+  interface Signal {
+    +emit(fault, ha)
+  }
+  class LightEffectSignal
+}
+
+package "Shared\Notification" {
+  interface Notifier
+}
+
+HomeAlertApp --> AlertMonitor
+HomeAlertApp --> "*" MonitoredAlert
+AlertMonitor ..> MonitoredAlert : creates
+MonitoredAlert --> AlertDefinition
+MonitoredAlert --> MonitoringContext
+MonitoredAlert --> AlertState
+MonitoredAlert ..|> FaultListener
+MonitoredAlert *-- FaultWatcher
+MonitoredAlert --> "0..1" Escalation : while raised
+MonitoredAlert --> FaultLocator
+
+AlertDefinition --> AlertRule
+AlertDefinition --> EscalationPolicy
+AlertDefinition --> "*" Mitigation
+
+FaultWatcher --> AlertRule
+FaultWatcher *-- ReadingFeed
+FaultWatcher --> FaultListener
+ReadingFeed ..> ReadingSnapshot : reads
+ReadingSnapshot --> "*" Reading
+Reading --> ReadingSource
+AlertRule --> "*" ReadingSource
+AlertRule ..> Fault : finds
+
+AlertRule <|-- RecheckedAlertRule
+AlertRule <|.. StateMatchRule
+AlertRule <|.. ThresholdRule
+AlertRule <|.. UnavailableRule
+RecheckedAlertRule <|.. SilenceRule
+
+EscalationPolicy *-- "1..*" EscalationStep
+EscalationStep --> "0..1" StepRepetition
+EscalationStep --> "0..1" Signal
+Escalation --> EscalationPolicy
+Escalation --> Fault
+Escalation --> Notifier
+Escalation *-- "*" StepRepeater
+Escalation ..> Acknowledgement : reports
+
+Mitigation <|.. TurnOffMitigation
+Signal <|.. LightEffectSignal
+LightEffectSignal --> FaultLocator
+@enduml

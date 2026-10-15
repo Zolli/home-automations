@@ -189,6 +189,7 @@ the fault that raised the alert.
 
 A new rule implements `Shared\Alert\Rule\AlertRuleType`, a new mitigation `Shared\Alert\Mitigation\MitigationType`
 and a new signal `Shared\Alert\Signal\SignalType`; each is registered from `src/` and picked up by its interface.
+Design and diagrams: [docs/alert](docs/alert/README.md).
 
 ## House modes
 
@@ -209,7 +210,8 @@ picked in Home Assistant with a select Stewart exposes (`<transition> strategy`)
 | `sun` | At `event` (`sunrise`, `sunset`, `civil_dusk`, …) shifted by `offsetSeconds`, negative for before |
 
 Values in `stewart.yaml` seed the exposed entities only while Home Assistant has none; after that the values set in
-Home Assistant win. A new strategy type is a `Shared\HouseMode\Trigger\ModeTrigger` mapped in `ModeTransitionMapper`.
+Home Assistant win. A new strategy type implements `Shared\HouseMode\Trigger\ModeTriggerType`, registered from `src/`
+and picked up by its interface. Design and diagrams: [docs/house-mode](docs/house-mode/README.md).
 
 ## Configuration
 

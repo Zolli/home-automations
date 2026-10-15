@@ -1,0 +1,115 @@
+@startuml house-mode-structure
+hide empty members
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+package "App\HouseMode" {
+  class DayNightModeApp
+  class SleepModeApp
+}
+
+package "Shared\HouseMode" {
+  class ModeTransitionMapper {
+    +mapToTransition(name, fields): ModeTransition
+  }
+  class ModeTransition {
+    +name
+    +defaultStrategyName
+    +startWatching(context, whenFired)
+    +stopWatching()
+  }
+  class TransitionWindow <<VO>> {
+    +from
+    +until
+    +isOpen(clock): bool
+  }
+  class ModeContext <<VO>> {
+    +ha, scheduler, clock
+    +exposure, device, logger
+  }
+  class TransitionContext <<VO>> {
+    +exposeStrategySelect()
+    +exposeTime()
+    +exposeThreshold()
+  }
+  class ModeTriggerCollection {
+    +attachAll(context)
+    +armAll(context, whenFired)
+    +detachAll()
+  }
+  class ModeEventPayloadMapper {
+    +mapToPayload(event, cause, producer)
+  }
+}
+
+package "Shared\HouseMode\Trigger" {
+  interface ModeTrigger {
+    +attach(context)
+    +arm(context, whenFired)
+    +disarm()
+    +detach()
+    +describe()
+  }
+  class FixedTimeTrigger
+  class StateTrigger
+  class ThresholdTrigger
+  class SunEventTrigger
+  class ThresholdRange <<VO>>
+
+  class ModeTriggerFactory {
+    +mapToTrigger(fields): ModeTrigger
+  }
+  class ModeTriggerTypeCollection
+  interface ModeTriggerType {
+    +mapToTrigger(name, options): ModeTrigger
+  }
+  class FixedTimeTriggerType
+  class StateTriggerType
+  class ThresholdTriggerType
+  class SunEventTriggerType
+}
+
+package "Shared\Config" {
+  interface NamedType
+  abstract class NamedTypeCollection<T>
+}
+
+note bottom of ThresholdTriggerType : one service per ThresholdDirection:\nabove, below
+
+DayNightModeApp --> "2" ModeTransition : day, night
+SleepModeApp --> "2" ModeTransition : activation, deactivation
+DayNightModeApp --> ModeTransitionMapper
+SleepModeApp --> ModeTransitionMapper
+DayNightModeApp --> ModeEventPayloadMapper
+SleepModeApp --> ModeEventPayloadMapper
+DayNightModeApp --> ModeContext
+SleepModeApp --> ModeContext
+
+ModeTransitionMapper ..> ModeTransition : creates
+ModeTransitionMapper --> ModeTriggerFactory
+ModeTransition *-- ModeTriggerCollection : strategies
+ModeTransition *-- ModeTriggerCollection : alwaysActive
+ModeTransition --> "0..1" TransitionWindow
+ModeTransition ..> TransitionContext : creates on start
+TransitionContext --> ModeContext
+ModeTriggerCollection o-- "*" ModeTrigger
+
+ModeTrigger <|.. FixedTimeTrigger
+ModeTrigger <|.. StateTrigger
+ModeTrigger <|.. ThresholdTrigger
+ModeTrigger <|.. SunEventTrigger
+ThresholdTrigger --> ThresholdRange
+
+ModeTriggerFactory --> ModeTriggerTypeCollection
+ModeTriggerTypeCollection o-- "*" ModeTriggerType : shared.mode_trigger_type
+NamedTypeCollection <|-- ModeTriggerTypeCollection
+NamedType <|-- ModeTriggerType
+ModeTriggerType <|.. FixedTimeTriggerType
+ModeTriggerType <|.. StateTriggerType
+ModeTriggerType <|.. ThresholdTriggerType
+ModeTriggerType <|.. SunEventTriggerType
+FixedTimeTriggerType ..> FixedTimeTrigger : creates
+StateTriggerType ..> StateTrigger : creates
+ThresholdTriggerType ..> ThresholdTrigger : creates
+SunEventTriggerType ..> SunEventTrigger : creates
+@enduml

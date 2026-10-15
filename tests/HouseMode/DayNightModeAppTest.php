@@ -49,7 +49,7 @@ final class DayNightModeAppTest extends TestCase
     {
         $this->fixture = new ModeFixture('2026-10-14 05:00');
         $harness       = $this->fixture->harness;
-        $harness->provideService(ModeTransitionMapper::class, new ModeTransitionMapper());
+        $harness->provideService(ModeTransitionMapper::class, $this->fixture->createTransitionMapper());
         $harness->provideService(ModeEventPayloadMapper::class, new ModeEventPayloadMapper());
         $harness->ha->pushState(self::MODE_SELECT, 'night');
         $harness->ha->pushState(self::COVERS, 'off');

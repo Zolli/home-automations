@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Shared\HouseMode;
 
+use App\Tests\ServiceContainer;
 use DateTimeImmutable;
 use DateTimeZone;
 use Shared\HouseMode\ModeContext;
+use Shared\HouseMode\ModeTransitionMapper;
 use Shared\HouseMode\TransitionContext;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Exposure\Command\NumberCommand;
@@ -41,6 +43,11 @@ final readonly class ModeFixture
             new DeviceInfo('house_mode', 'House mode'),
             $this->harness->logger,
         );
+    }
+
+    public function createTransitionMapper(): ModeTransitionMapper
+    {
+        return new ServiceContainer(ModeTransitionMapper::class)->getService(ModeTransitionMapper::class);
     }
 
     public function createTransitionContext(string $transitionName): TransitionContext

@@ -6,7 +6,6 @@ namespace App\Tests\Shared\HouseMode;
 
 use PHPUnit\Framework\TestCase;
 use Shared\HouseMode\ModeTransition;
-use Shared\HouseMode\ModeTransitionMapper;
 use Stewart\Contracts\Exception\CommandException;
 use Stewart\Contracts\Exposure\SelectConfig;
 use Stewart\Contracts\Time\Duration;
@@ -139,7 +138,7 @@ final class ModeTransitionTest extends TestCase
     /** @param array<string, string>|null $window */
     private function startWatching(?array $window = null): ModeTransition
     {
-        $transition = new ModeTransitionMapper()->mapToTransition('activation', [
+        $transition = $this->fixture->createTransitionMapper()->mapToTransition('activation', [
             'strategies'   => self::STRATEGIES,
             'alwaysActive' => self::ALWAYS_ACTIVE,
             'window'       => $window,
