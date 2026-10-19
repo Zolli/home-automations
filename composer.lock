@@ -2579,7 +2579,7 @@
         },
         {
             "name": "stewart-php/client",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/client.git",
@@ -2645,7 +2645,7 @@
         },
         {
             "name": "stewart-php/codegen",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/codegen.git",
@@ -2701,7 +2701,7 @@
         },
         {
             "name": "stewart-php/contracts",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/contracts.git",
@@ -2748,7 +2748,7 @@
         },
         {
             "name": "stewart-php/mqtt",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/mqtt.git",
@@ -2801,16 +2801,16 @@
         },
         {
             "name": "stewart-php/runtime",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/runtime.git",
-                "reference": "90dc3d78e9df09f5ffe091e117a5a2a36a7b40c3"
+                "reference": "48173b1d41c970305c3f4195f04f7ac1a466c11e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/runtime/zipball/90dc3d78e9df09f5ffe091e117a5a2a36a7b40c3",
-                "reference": "90dc3d78e9df09f5ffe091e117a5a2a36a7b40c3",
+                "url": "https://api.github.com/repos/stewart-php/runtime/zipball/48173b1d41c970305c3f4195f04f7ac1a466c11e",
+                "reference": "48173b1d41c970305c3f4195f04f7ac1a466c11e",
                 "shasum": ""
             },
             "require": {
@@ -2881,11 +2881,11 @@
                 "issues": "https://github.com/stewart-php/stewart/issues",
                 "source": "https://github.com/stewart-php/stewart"
             },
-            "time": "2026-10-18T21:11:44+00:00"
+            "time": "2026-10-19T16:31:25+00:00"
         },
         {
             "name": "stewart-php/store",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/store.git",
@@ -2936,7 +2936,7 @@
         },
         {
             "name": "stewart-php/store-redis",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/store-redis.git",
@@ -2994,7 +2994,7 @@
         },
         {
             "name": "stewart-php/sun",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/sun.git",
@@ -3040,7 +3040,7 @@
         },
         {
             "name": "stewart-php/support",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/support.git",
@@ -7611,7 +7611,7 @@
         },
         {
             "name": "stewart-php/testing",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/testing.git",
