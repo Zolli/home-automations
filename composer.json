@@ -7,18 +7,18 @@
         "php": ">=8.5",
         "opis/json-schema": "^2",
         "psr/log": "^3.0",
-        "stewart-php/codegen": "^1.0",
-        "stewart-php/contracts": "^1.0",
-        "stewart-php/mqtt": "^1.0",
-        "stewart-php/runtime": "^1.0",
-        "stewart-php/store-redis": "^1.0",
+        "stewart-php/codegen": "^1.2",
+        "stewart-php/contracts": "^1.2",
+        "stewart-php/mqtt": "^1.2",
+        "stewart-php/runtime": "^1.2",
+        "stewart-php/store-redis": "^1.2",
         "symfony/dependency-injection": "^7.4 || ^8.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.95",
         "phpstan/phpstan": "^2.2",
         "phpunit/phpunit": "^13.3",
-        "stewart-php/testing": "^1.0"
+        "stewart-php/testing": "^1.2"
     },
     "autoload": {
         "psr-4": {
