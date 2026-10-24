@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -103,21 +103,15 @@ final readonly class ButtonEntity implements TypedEntity
         'button.entry_master_wardrobe_door_1_battery_replaced' => true,
         'button.entry_master_wardrobe_door_2_battery_replaced' => true,
         'button.entry_master_wardrobe_door_3_battery_replaced' => true,
-        'button.entry_master_wardrobe_door_3_battery_replaced_2' => true,
-        'button.entry_mechanical_room_door_battery_replaced' => true,
         'button.entry_mechanical_room_door_battery_replaced_2' => true,
         'button.entry_mechanical_room_window_battery_replaced' => true,
         'button.entry_pantry_cabinet_1_battery_replaced' => true,
         'button.entry_pantry_cabinet_1_battery_replaced_2' => true,
         'button.entry_pantry_cabinet_1_channel_2_battery_replaced' => true,
         'button.entry_pantry_cabinet_1_top_battery_replaced' => true,
-        'button.entry_pantry_cabinet_1_top_battery_replaced_2' => true,
         'button.entry_pantry_cabinet_2_battery_replaced' => true,
-        'button.entry_pantry_cabinet_2_battery_replaced_2' => true,
         'button.entry_pantry_cabinet_2_top_battery_replaced' => true,
-        'button.entry_pantry_cabinet_2_top_battery_replaced_2' => true,
         'button.entry_shed_door_battery_replaced' => true,
-        'button.entry_shed_door_battery_replaced_2' => true,
         'button.esphome_rf_bridge_reset_manual_override' => true,
         'button.everything_presence_lite_209ab0_esp_reboot' => true,
         'button.front_door_battery_replaced' => true,
@@ -151,12 +145,10 @@ final readonly class ButtonEntity implements TypedEntity
         'button.laundry_room_bosch_washer_pause' => true,
         'button.laundry_room_bosch_washer_poweroff' => true,
         'button.laundry_room_bosch_washer_resume' => true,
-        'button.leak_bathroom_sink_battery_replaced' => true,
         'button.leak_bathtub_battery_replaced' => true,
         'button.leak_kitchen_cabinet_battery_replaced' => true,
         'button.leak_laundry_room_battery_replaced' => true,
         'button.leak_master_bathroom_sink_battery_replaced' => true,
-        'button.leak_mechanical_room_battery_replaced' => true,
         'button.leak_mechanical_room_battery_replaced_2' => true,
         'button.led_controller_master_wardrobe_reboot' => true,
         'button.led_controller_pantry_reboot' => true,
@@ -395,7 +387,6 @@ final readonly class ButtonEntity implements TypedEntity
         'button.test_display_menu_up' => true,
         'button.thermostat_living_room_battery_replaced' => true,
         'button.thermostat_living_room_identify' => true,
-        'button.timmerflotte_temp_hmd_sensor_battery_replaced' => true,
         'button.valetudo_dusty_reset_main_brush_consumable' => true,
         'button.valetudo_dusty_reset_main_filter_consumable' => true,
         'button.valetudo_dusty_reset_right_brush_consumable' => true,
@@ -506,13 +497,13 @@ final readonly class ButtonEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     public function press(): EventContext
     {
-        return $this->entity->callService('press');
+        return $this->entity->callAction('press');
     }
 }

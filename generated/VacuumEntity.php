@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -107,9 +107,9 @@ final readonly class VacuumEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     /**
@@ -117,29 +117,29 @@ final readonly class VacuumEntity implements TypedEntity
      */
     public function cleanArea(array $cleaningAreaId): EventContext
     {
-        return $this->entity->callService('clean_area', [
+        return $this->entity->callAction('clean_area', [
             'cleaning_area_id' => $cleaningAreaId,
         ]);
     }
 
     public function cleanSpot(): EventContext
     {
-        return $this->entity->callService('clean_spot');
+        return $this->entity->callAction('clean_spot');
     }
 
     public function locate(): EventContext
     {
-        return $this->entity->callService('locate');
+        return $this->entity->callAction('locate');
     }
 
     public function pause(): EventContext
     {
-        return $this->entity->callService('pause');
+        return $this->entity->callAction('pause');
     }
 
     public function returnToBase(): EventContext
     {
-        return $this->entity->callService('return_to_base');
+        return $this->entity->callAction('return_to_base');
     }
 
     /**
@@ -147,7 +147,7 @@ final readonly class VacuumEntity implements TypedEntity
      */
     public function sendCommand(string|int|float $command, ?array $params = null): EventContext
     {
-        return $this->entity->callService('send_command', [
+        return $this->entity->callAction('send_command', [
             'command' => $command,
             'params' => $params,
         ]);
@@ -155,18 +155,18 @@ final readonly class VacuumEntity implements TypedEntity
 
     public function setFanSpeed(string $fanSpeed): EventContext
     {
-        return $this->entity->callService('set_fan_speed', [
+        return $this->entity->callAction('set_fan_speed', [
             'fan_speed' => $fanSpeed,
         ]);
     }
 
     public function start(): EventContext
     {
-        return $this->entity->callService('start');
+        return $this->entity->callAction('start');
     }
 
     public function stop(): EventContext
     {
-        return $this->entity->callService('stop');
+        return $this->entity->callAction('stop');
     }
 }

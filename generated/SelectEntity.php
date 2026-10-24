@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -62,6 +62,10 @@ final readonly class SelectEntity implements TypedEntity
         'select.bosch_washer_power_state' => true,
         'select.bosch_washer_selected_program' => true,
         'select.carport_gate_lock_rule' => true,
+        'select.day_night_mode_day_strategy' => true,
+        'select.day_night_mode_day_strategy_2' => true,
+        'select.day_night_mode_night_strategy' => true,
+        'select.day_night_mode_night_strategy_2' => true,
         'select.dusty_auto_empty_mode' => true,
         'select.dusty_auto_lds_coverage' => true,
         'select.dusty_auto_recleaning' => true,
@@ -310,6 +314,8 @@ final readonly class SelectEntity implements TypedEntity
         'select.room_thermostat_bedroom_2_operating_mode' => true,
         'select.room_thermostat_bedroom_2_regulation_mode' => true,
         'select.room_thermostat_bedroom_2_temperature_display' => true,
+        'select.sleep_mode_activation_strategy' => true,
+        'select.sleep_mode_deactivation_strategy' => true,
         'select.solcast_pv_forecast_use_forecast_field' => true,
         'select.switch_bedroom_2_desk_segment_1_power_on_behavior' => true,
         'select.temperature_sensor_bathroom_temperature_display_mode' => true,
@@ -413,38 +419,38 @@ final readonly class SelectEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     public function selectFirst(): EventContext
     {
-        return $this->entity->callService('select_first');
+        return $this->entity->callAction('select_first');
     }
 
     public function selectLast(): EventContext
     {
-        return $this->entity->callService('select_last');
+        return $this->entity->callAction('select_last');
     }
 
     public function selectNext(?bool $cycle = null): EventContext
     {
-        return $this->entity->callService('select_next', [
+        return $this->entity->callAction('select_next', [
             'cycle' => $cycle,
         ]);
     }
 
     public function selectOption(string $option): EventContext
     {
-        return $this->entity->callService('select_option', [
+        return $this->entity->callAction('select_option', [
             'option' => $option,
         ]);
     }
 
     public function selectPrevious(?bool $cycle = null): EventContext
     {
-        return $this->entity->callService('select_previous', [
+        return $this->entity->callAction('select_previous', [
             'cycle' => $cycle,
         ]);
     }

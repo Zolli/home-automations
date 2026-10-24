@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -107,14 +107,14 @@ final readonly class TimerEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     public function cancel(): EventContext
     {
-        return $this->entity->callService('cancel');
+        return $this->entity->callAction('cancel');
     }
 
     /**
@@ -122,19 +122,19 @@ final readonly class TimerEntity implements TypedEntity
      */
     public function change(array|string|int|float $duration): EventContext
     {
-        return $this->entity->callService('change', [
+        return $this->entity->callAction('change', [
             'duration' => $duration,
         ]);
     }
 
     public function finish(): EventContext
     {
-        return $this->entity->callService('finish');
+        return $this->entity->callAction('finish');
     }
 
     public function pause(): EventContext
     {
-        return $this->entity->callService('pause');
+        return $this->entity->callAction('pause');
     }
 
     /**
@@ -142,7 +142,7 @@ final readonly class TimerEntity implements TypedEntity
      */
     public function start(array|string|int|float|null $duration = null): EventContext
     {
-        return $this->entity->callService('start', [
+        return $this->entity->callAction('start', [
             'duration' => $duration,
         ]);
     }

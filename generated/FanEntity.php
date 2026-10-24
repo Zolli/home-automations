@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -107,9 +107,9 @@ final readonly class FanEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     /**
@@ -117,7 +117,7 @@ final readonly class FanEntity implements TypedEntity
      */
     public function decreaseSpeed(int|float|null $percentageStep = null): EventContext
     {
-        return $this->entity->callService('decrease_speed', [
+        return $this->entity->callAction('decrease_speed', [
             'percentage_step' => $percentageStep,
         ]);
     }
@@ -127,14 +127,14 @@ final readonly class FanEntity implements TypedEntity
      */
     public function increaseSpeed(int|float|null $percentageStep = null): EventContext
     {
-        return $this->entity->callService('increase_speed', [
+        return $this->entity->callAction('increase_speed', [
             'percentage_step' => $percentageStep,
         ]);
     }
 
     public function oscillate(bool $oscillating): EventContext
     {
-        return $this->entity->callService('oscillate', [
+        return $this->entity->callAction('oscillate', [
             'oscillating' => $oscillating,
         ]);
     }
@@ -144,7 +144,7 @@ final readonly class FanEntity implements TypedEntity
      */
     public function setDirection(string $direction): EventContext
     {
-        return $this->entity->callService('set_direction', [
+        return $this->entity->callAction('set_direction', [
             'direction' => $direction,
         ]);
     }
@@ -154,26 +154,26 @@ final readonly class FanEntity implements TypedEntity
      */
     public function setPercentage(int|float $percentage): EventContext
     {
-        return $this->entity->callService('set_percentage', [
+        return $this->entity->callAction('set_percentage', [
             'percentage' => $percentage,
         ]);
     }
 
     public function setPresetMode(string $presetMode): EventContext
     {
-        return $this->entity->callService('set_preset_mode', [
+        return $this->entity->callAction('set_preset_mode', [
             'preset_mode' => $presetMode,
         ]);
     }
 
     public function toggle(): EventContext
     {
-        return $this->entity->callService('toggle');
+        return $this->entity->callAction('toggle');
     }
 
     public function turnOff(): EventContext
     {
-        return $this->entity->callService('turn_off');
+        return $this->entity->callAction('turn_off');
     }
 
     /**
@@ -181,7 +181,7 @@ final readonly class FanEntity implements TypedEntity
      */
     public function turnOn(int|float|null $percentage = null, ?string $presetMode = null): EventContext
     {
-        return $this->entity->callService('turn_on', [
+        return $this->entity->callAction('turn_on', [
             'percentage' => $percentage,
             'preset_mode' => $presetMode,
         ]);

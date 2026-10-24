@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -110,9 +110,9 @@ final readonly class AssistSatelliteEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     /**
@@ -125,7 +125,7 @@ final readonly class AssistSatelliteEntity implements TypedEntity
         ?bool $preannounce = null,
         ?array $preannounceMediaId = null,
     ): EventContext {
-        return $this->entity->callService('announce', [
+        return $this->entity->callAction('announce', [
             'media_id' => $mediaId,
             'message' => $message,
             'preannounce' => $preannounce,
@@ -144,7 +144,7 @@ final readonly class AssistSatelliteEntity implements TypedEntity
         ?array $startMediaId = null,
         string|int|float|null $startMessage = null,
     ): EventContext {
-        return $this->entity->callService('start_conversation', [
+        return $this->entity->callAction('start_conversation', [
             'extra_system_prompt' => $extraSystemPrompt,
             'preannounce' => $preannounce,
             'preannounce_media_id' => $preannounceMediaId,

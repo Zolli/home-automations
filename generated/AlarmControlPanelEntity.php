@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -107,56 +107,56 @@ final readonly class AlarmControlPanelEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     public function alarmArmAway(string|int|float|null $code = null): EventContext
     {
-        return $this->entity->callService('alarm_arm_away', [
+        return $this->entity->callAction('alarm_arm_away', [
             'code' => $code,
         ]);
     }
 
     public function alarmArmCustomBypass(string|int|float|null $code = null): EventContext
     {
-        return $this->entity->callService('alarm_arm_custom_bypass', [
+        return $this->entity->callAction('alarm_arm_custom_bypass', [
             'code' => $code,
         ]);
     }
 
     public function alarmArmHome(string|int|float|null $code = null): EventContext
     {
-        return $this->entity->callService('alarm_arm_home', [
+        return $this->entity->callAction('alarm_arm_home', [
             'code' => $code,
         ]);
     }
 
     public function alarmArmNight(string|int|float|null $code = null): EventContext
     {
-        return $this->entity->callService('alarm_arm_night', [
+        return $this->entity->callAction('alarm_arm_night', [
             'code' => $code,
         ]);
     }
 
     public function alarmArmVacation(string|int|float|null $code = null): EventContext
     {
-        return $this->entity->callService('alarm_arm_vacation', [
+        return $this->entity->callAction('alarm_arm_vacation', [
             'code' => $code,
         ]);
     }
 
     public function alarmDisarm(string|int|float|null $code = null): EventContext
     {
-        return $this->entity->callService('alarm_disarm', [
+        return $this->entity->callAction('alarm_disarm', [
             'code' => $code,
         ]);
     }
 
     public function alarmTrigger(string|int|float|null $code = null): EventContext
     {
-        return $this->entity->callService('alarm_trigger', [
+        return $this->entity->callAction('alarm_trigger', [
             'code' => $code,
         ]);
     }

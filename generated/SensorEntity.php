@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
 
@@ -386,17 +386,11 @@ final readonly class SensorEntity implements TypedEntity
         'sensor.entry_master_wardrobe_door_2_battery_plus' => true,
         'sensor.entry_master_wardrobe_door_2_battery_type' => true,
         'sensor.entry_master_wardrobe_door_3_battery_last_replaced' => true,
-        'sensor.entry_master_wardrobe_door_3_battery_last_replaced_2' => true,
         'sensor.entry_master_wardrobe_door_3_battery_plus' => true,
-        'sensor.entry_master_wardrobe_door_3_battery_plus_2' => true,
         'sensor.entry_master_wardrobe_door_3_battery_type' => true,
-        'sensor.entry_master_wardrobe_door_3_battery_type_3' => true,
-        'sensor.entry_mechanical_room_door_battery_last_replaced' => true,
         'sensor.entry_mechanical_room_door_battery_last_replaced_2' => true,
         'sensor.entry_mechanical_room_door_battery_plus' => true,
-        'sensor.entry_mechanical_room_door_battery_plus_2' => true,
         'sensor.entry_mechanical_room_door_battery_type_2' => true,
-        'sensor.entry_mechanical_room_door_battery_type_3' => true,
         'sensor.entry_mechanical_room_window_battery' => true,
         'sensor.entry_mechanical_room_window_battery_last_replaced' => true,
         'sensor.entry_mechanical_room_window_battery_plus' => true,
@@ -411,29 +405,17 @@ final readonly class SensorEntity implements TypedEntity
         'sensor.entry_pantry_cabinet_1_channel_2_battery_plus' => true,
         'sensor.entry_pantry_cabinet_1_channel_2_battery_type' => true,
         'sensor.entry_pantry_cabinet_1_top_battery_last_replaced' => true,
-        'sensor.entry_pantry_cabinet_1_top_battery_last_replaced_2' => true,
         'sensor.entry_pantry_cabinet_1_top_battery_plus' => true,
-        'sensor.entry_pantry_cabinet_1_top_battery_plus_2' => true,
         'sensor.entry_pantry_cabinet_1_top_battery_type' => true,
-        'sensor.entry_pantry_cabinet_1_top_battery_type_3' => true,
         'sensor.entry_pantry_cabinet_2_battery_last_replaced' => true,
-        'sensor.entry_pantry_cabinet_2_battery_last_replaced_2' => true,
         'sensor.entry_pantry_cabinet_2_battery_plus' => true,
-        'sensor.entry_pantry_cabinet_2_battery_plus_2' => true,
         'sensor.entry_pantry_cabinet_2_battery_type' => true,
-        'sensor.entry_pantry_cabinet_2_battery_type_3' => true,
         'sensor.entry_pantry_cabinet_2_top_battery_last_replaced' => true,
-        'sensor.entry_pantry_cabinet_2_top_battery_last_replaced_2' => true,
         'sensor.entry_pantry_cabinet_2_top_battery_plus' => true,
-        'sensor.entry_pantry_cabinet_2_top_battery_plus_2' => true,
         'sensor.entry_pantry_cabinet_2_top_battery_type' => true,
-        'sensor.entry_pantry_cabinet_2_top_battery_type_3' => true,
         'sensor.entry_shed_door_battery_last_replaced' => true,
-        'sensor.entry_shed_door_battery_last_replaced_2' => true,
         'sensor.entry_shed_door_battery_plus' => true,
-        'sensor.entry_shed_door_battery_plus_2' => true,
         'sensor.entry_shed_door_battery_type' => true,
-        'sensor.entry_shed_door_battery_type_3' => true,
         'sensor.esp_bridge_prestige_zsuzsi_version' => true,
         'sensor.esp_bridge_version' => true,
         'sensor.esphome_rf_bridge_control_status' => true,
@@ -579,9 +561,6 @@ final readonly class SensorEntity implements TypedEntity
         'sensor.laundry_room_bosch_dryer_load_recommendation' => true,
         'sensor.laundry_room_bosch_washer_finish_in' => true,
         'sensor.laundry_room_bosch_washer_load_recommendation' => true,
-        'sensor.leak_bathroom_sink_battery_last_replaced' => true,
-        'sensor.leak_bathroom_sink_battery_plus' => true,
-        'sensor.leak_bathroom_sink_battery_type_2' => true,
         'sensor.leak_bathtub_battery' => true,
         'sensor.leak_bathtub_battery_last_replaced' => true,
         'sensor.leak_bathtub_battery_plus' => true,
@@ -598,10 +577,7 @@ final readonly class SensorEntity implements TypedEntity
         'sensor.leak_master_bathroom_sink_battery_last_replaced' => true,
         'sensor.leak_master_bathroom_sink_battery_plus' => true,
         'sensor.leak_master_bathroom_sink_battery_type' => true,
-        'sensor.leak_mechanical_room_battery_last_replaced' => true,
         'sensor.leak_mechanical_room_battery_last_replaced_2' => true,
-        'sensor.leak_mechanical_room_battery_plus' => true,
-        'sensor.leak_mechanical_room_battery_type_2' => true,
         'sensor.leak_mechanical_room_battery_type_3' => true,
         'sensor.led_controller_master_wardrobe_channel_1_energy' => true,
         'sensor.led_controller_master_wardrobe_channel_1_power' => true,
@@ -1532,9 +1508,6 @@ final readonly class SensorEntity implements TypedEntity
         'sensor.thermostat_living_room_battery_plus' => true,
         'sensor.thermostat_living_room_battery_type' => true,
         'sensor.thermostat_living_room_humidity' => true,
-        'sensor.timmerflotte_temp_hmd_sensor_battery_last_replaced' => true,
-        'sensor.timmerflotte_temp_hmd_sensor_battery_plus' => true,
-        'sensor.timmerflotte_temp_hmd_sensor_battery_type_2' => true,
         'sensor.tomorrow_condition' => true,
         'sensor.tomorrow_high' => true,
         'sensor.tomorrow_low' => true,
@@ -1956,8 +1929,8 @@ final readonly class SensorEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 }

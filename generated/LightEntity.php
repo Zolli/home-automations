@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -293,9 +293,9 @@ final readonly class LightEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     /**
@@ -328,7 +328,7 @@ final readonly class LightEntity implements TypedEntity
         ?bool $white = null,
         ?array $xyColor = null,
     ): EventContext {
-        return $this->entity->callService('toggle', [
+        return $this->entity->callAction('toggle', [
             'brightness' => $brightness,
             'brightness_pct' => $brightnessPct,
             'color_name' => $colorName,
@@ -352,7 +352,7 @@ final readonly class LightEntity implements TypedEntity
      */
     public function turnOff(?string $flash = null, int|float|null $transition = null): EventContext
     {
-        return $this->entity->callService('turn_off', [
+        return $this->entity->callAction('turn_off', [
             'flash' => $flash,
             'transition' => $transition,
         ]);
@@ -392,7 +392,7 @@ final readonly class LightEntity implements TypedEntity
         ?bool $white = null,
         ?array $xyColor = null,
     ): EventContext {
-        return $this->entity->callService('turn_on', [
+        return $this->entity->callAction('turn_on', [
             'brightness' => $brightness,
             'brightness_pct' => $brightnessPct,
             'brightness_step' => $brightnessStep,

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -31,10 +31,15 @@ use Stewart\Contracts\Time\Duration;
 final readonly class TimeEntity implements TypedEntity
 {
     private const array GENERATED_ENTITY_IDS = [
+        'time.day_night_mode_day_fixed_time' => true,
+        'time.day_night_mode_day_fixed_time_2' => true,
+        'time.day_night_mode_night_fixed_time' => true,
+        'time.day_night_mode_night_fixed_time_2' => true,
         'time.dusty_dnd_end' => true,
         'time.dusty_dnd_start' => true,
         'time.dusty_off_peak_charging_end' => true,
         'time.dusty_off_peak_charging_start' => true,
+        'time.sleep_mode_activation_forced_activation' => true,
         'time.timeout' => true,
     ];
 
@@ -113,14 +118,14 @@ final readonly class TimeEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     public function setValue(string $time): EventContext
     {
-        return $this->entity->callService('set_value', [
+        return $this->entity->callAction('set_value', [
             'time' => $time,
         ]);
     }

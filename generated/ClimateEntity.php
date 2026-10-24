@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -117,14 +117,14 @@ final readonly class ClimateEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     public function setFanMode(string $fanMode): EventContext
     {
-        return $this->entity->callService('set_fan_mode', [
+        return $this->entity->callAction('set_fan_mode', [
             'fan_mode' => $fanMode,
         ]);
     }
@@ -134,35 +134,35 @@ final readonly class ClimateEntity implements TypedEntity
      */
     public function setHumidity(int|float $humidity): EventContext
     {
-        return $this->entity->callService('set_humidity', [
+        return $this->entity->callAction('set_humidity', [
             'humidity' => $humidity,
         ]);
     }
 
     public function setHvacMode(?string $hvacMode = null): EventContext
     {
-        return $this->entity->callService('set_hvac_mode', [
+        return $this->entity->callAction('set_hvac_mode', [
             'hvac_mode' => $hvacMode,
         ]);
     }
 
     public function setPresetMode(string $presetMode): EventContext
     {
-        return $this->entity->callService('set_preset_mode', [
+        return $this->entity->callAction('set_preset_mode', [
             'preset_mode' => $presetMode,
         ]);
     }
 
     public function setSwingHorizontalMode(string $swingHorizontalMode): EventContext
     {
-        return $this->entity->callService('set_swing_horizontal_mode', [
+        return $this->entity->callAction('set_swing_horizontal_mode', [
             'swing_horizontal_mode' => $swingHorizontalMode,
         ]);
     }
 
     public function setSwingMode(string $swingMode): EventContext
     {
-        return $this->entity->callService('set_swing_mode', [
+        return $this->entity->callAction('set_swing_mode', [
             'swing_mode' => $swingMode,
         ]);
     }
@@ -178,7 +178,7 @@ final readonly class ClimateEntity implements TypedEntity
         int|float|null $targetTempLow = null,
         int|float|null $temperature = null,
     ): EventContext {
-        return $this->entity->callService('set_temperature', [
+        return $this->entity->callAction('set_temperature', [
             'hvac_mode' => $hvacMode,
             'target_temp_high' => $targetTempHigh,
             'target_temp_low' => $targetTempLow,
@@ -188,16 +188,16 @@ final readonly class ClimateEntity implements TypedEntity
 
     public function toggle(): EventContext
     {
-        return $this->entity->callService('toggle');
+        return $this->entity->callAction('toggle');
     }
 
     public function turnOff(): EventContext
     {
-        return $this->entity->callService('turn_off');
+        return $this->entity->callAction('turn_off');
     }
 
     public function turnOn(): EventContext
     {
-        return $this->entity->callService('turn_on');
+        return $this->entity->callAction('turn_on');
     }
 }

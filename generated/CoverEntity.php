@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -128,33 +128,33 @@ final readonly class CoverEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     public function closeCover(?string $speed = null): EventContext
     {
-        return $this->entity->callService('close_cover', [
+        return $this->entity->callAction('close_cover', [
             'speed' => $speed,
         ]);
     }
 
     public function closeCoverTilt(): EventContext
     {
-        return $this->entity->callService('close_cover_tilt');
+        return $this->entity->callAction('close_cover_tilt');
     }
 
     public function openCover(?string $speed = null): EventContext
     {
-        return $this->entity->callService('open_cover', [
+        return $this->entity->callAction('open_cover', [
             'speed' => $speed,
         ]);
     }
 
     public function openCoverTilt(): EventContext
     {
-        return $this->entity->callService('open_cover_tilt');
+        return $this->entity->callAction('open_cover_tilt');
     }
 
     /**
@@ -162,7 +162,7 @@ final readonly class CoverEntity implements TypedEntity
      */
     public function setCoverPosition(int|float $position, ?string $speed = null): EventContext
     {
-        return $this->entity->callService('set_cover_position', [
+        return $this->entity->callAction('set_cover_position', [
             'position' => $position,
             'speed' => $speed,
         ]);
@@ -173,28 +173,28 @@ final readonly class CoverEntity implements TypedEntity
      */
     public function setCoverTiltPosition(int|float $tiltPosition): EventContext
     {
-        return $this->entity->callService('set_cover_tilt_position', [
+        return $this->entity->callAction('set_cover_tilt_position', [
             'tilt_position' => $tiltPosition,
         ]);
     }
 
     public function stopCover(): EventContext
     {
-        return $this->entity->callService('stop_cover');
+        return $this->entity->callAction('stop_cover');
     }
 
     public function stopCoverTilt(): EventContext
     {
-        return $this->entity->callService('stop_cover_tilt');
+        return $this->entity->callAction('stop_cover_tilt');
     }
 
     public function toggle(): EventContext
     {
-        return $this->entity->callService('toggle');
+        return $this->entity->callAction('toggle');
     }
 
     public function toggleCoverTilt(): EventContext
     {
-        return $this->entity->callService('toggle_cover_tilt');
+        return $this->entity->callAction('toggle_cover_tilt');
     }
 }
