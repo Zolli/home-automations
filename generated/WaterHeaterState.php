@@ -49,6 +49,11 @@ final readonly class WaterHeaterState
         return $this->raw->getFloatAttribute('current_temperature');
     }
 
+    public function getIcon(): ?string
+    {
+        return $this->raw->getStringAttribute('icon');
+    }
+
     public function getMaxTemp(): ?float
     {
         return $this->raw->getFloatAttribute('max_temp');
@@ -70,6 +75,11 @@ final readonly class WaterHeaterState
     public function getOperationMode(): ?string
     {
         return $this->raw->getStringAttribute('operation_mode');
+    }
+
+    public function getSupportedFeatures(): ?float
+    {
+        return $this->raw->getFloatAttribute('supported_features');
     }
 
     public function getTargetTempHigh(): ?float

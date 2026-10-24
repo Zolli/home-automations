@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
 
@@ -144,9 +144,7 @@ final readonly class BinarySensorEntity implements TypedEntity
         'binary_sensor.entry_master_wardrobe_door_1_battery_plus_low' => true,
         'binary_sensor.entry_master_wardrobe_door_2_battery_plus_low' => true,
         'binary_sensor.entry_master_wardrobe_door_3_battery_plus_low' => true,
-        'binary_sensor.entry_master_wardrobe_door_3_battery_plus_low_2' => true,
         'binary_sensor.entry_mechanical_room_door_battery_plus_low' => true,
-        'binary_sensor.entry_mechanical_room_door_battery_plus_low_2' => true,
         'binary_sensor.entry_mechanical_room_window_battery_low' => true,
         'binary_sensor.entry_mechanical_room_window_battery_plus_low' => true,
         'binary_sensor.entry_mechanical_room_window_contact' => true,
@@ -154,13 +152,9 @@ final readonly class BinarySensorEntity implements TypedEntity
         'binary_sensor.entry_pantry_cabinet_1_battery_plus_low_2' => true,
         'binary_sensor.entry_pantry_cabinet_1_channel_2_battery_plus_low' => true,
         'binary_sensor.entry_pantry_cabinet_1_top_battery_plus_low' => true,
-        'binary_sensor.entry_pantry_cabinet_1_top_battery_plus_low_2' => true,
         'binary_sensor.entry_pantry_cabinet_2_battery_plus_low' => true,
-        'binary_sensor.entry_pantry_cabinet_2_battery_plus_low_2' => true,
         'binary_sensor.entry_pantry_cabinet_2_top_battery_plus_low' => true,
-        'binary_sensor.entry_pantry_cabinet_2_top_battery_plus_low_2' => true,
         'binary_sensor.entry_shed_door_battery_plus_low' => true,
-        'binary_sensor.entry_shed_door_battery_plus_low_2' => true,
         'binary_sensor.esp_bridge_ble_connected' => true,
         'binary_sensor.esp_bridge_esp_bridge' => true,
         'binary_sensor.esp_bridge_prestige_zsuzsi_ble_connected' => true,
@@ -219,7 +213,6 @@ final readonly class BinarySensorEntity implements TypedEntity
         'binary_sensor.laundry_room_bosch_washer_i_dos_2_low' => true,
         'binary_sensor.laundry_room_bosch_washer_i_dos_open_tray' => true,
         'binary_sensor.laundry_room_bosch_washer_program_finished' => true,
-        'binary_sensor.leak_bathroom_sink_battery_plus_low' => true,
         'binary_sensor.leak_bathtub_battery_low' => true,
         'binary_sensor.leak_bathtub_battery_low_2' => true,
         'binary_sensor.leak_bathtub_water_leak' => true,
@@ -233,7 +226,6 @@ final readonly class BinarySensorEntity implements TypedEntity
         'binary_sensor.leak_master_bathroom_sink_battery_low_2' => true,
         'binary_sensor.leak_master_bathroom_sink_tamper' => true,
         'binary_sensor.leak_master_bathroom_sink_water_leak' => true,
-        'binary_sensor.leak_mechanical_room_battery_plus_low' => true,
         'binary_sensor.led_controller_master_wardrobe_overpowering' => true,
         'binary_sensor.led_controller_pantry_overpowering' => true,
         'binary_sensor.light_mechanical_room_overheat_detected' => true,
@@ -366,7 +358,6 @@ final readonly class BinarySensorEntity implements TypedEntity
         'binary_sensor.temperature_sensor_master_wardrobe_battery_low' => true,
         'binary_sensor.thermostat_living_room_battery_plus_low' => true,
         'binary_sensor.thermostat_living_room_low_battery_level' => true,
-        'binary_sensor.timmerflotte_temp_hmd_sensor_battery_plus_low' => true,
         'binary_sensor.valetudo_dusty_mop_attachment' => true,
         'binary_sensor.valetudo_dusty_water_tank_attachment' => true,
         'binary_sensor.wall_socket_coffee_machine_over_current_detected' => true,
@@ -492,8 +483,8 @@ final readonly class BinarySensorEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 }

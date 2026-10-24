@@ -84,7 +84,7 @@ final class NotificationPayloadMapperTest extends TestCase
         self::assertCount(2, $notification->destinations);
 
         [$zoli, $zsuzsi] = $notification->destinations->listValues();
-        self::assertEquals(DestinationType::NotifyService, $zoli->type);
+        self::assertEquals(DestinationType::NotifyAction, $zoli->type);
         self::assertSame(['notify.mobile_app_zoli_phone'], $zoli->targets);
         self::assertEquals(
             new AllOf(new ImportanceCondition(new EntityId('input_select.zoli_notification_level'))),

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -114,19 +114,19 @@ final readonly class CameraEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     public function disableMotionDetection(): EventContext
     {
-        return $this->entity->callService('disable_motion_detection');
+        return $this->entity->callAction('disable_motion_detection');
     }
 
     public function enableMotionDetection(): EventContext
     {
-        return $this->entity->callService('enable_motion_detection');
+        return $this->entity->callAction('enable_motion_detection');
     }
 
     /**
@@ -134,7 +134,7 @@ final readonly class CameraEntity implements TypedEntity
      */
     public function playStream(string $mediaPlayer, ?string $format = null): EventContext
     {
-        return $this->entity->callService('play_stream', [
+        return $this->entity->callAction('play_stream', [
             'media_player' => $mediaPlayer,
             'format' => $format,
         ]);
@@ -149,7 +149,7 @@ final readonly class CameraEntity implements TypedEntity
         int|float|null $duration = null,
         int|float|null $lookback = null,
     ): EventContext {
-        return $this->entity->callService('record', [
+        return $this->entity->callAction('record', [
             'filename' => $filename,
             'duration' => $duration,
             'lookback' => $lookback,
@@ -158,18 +158,18 @@ final readonly class CameraEntity implements TypedEntity
 
     public function snapshot(string|int|float $filename): EventContext
     {
-        return $this->entity->callService('snapshot', [
+        return $this->entity->callAction('snapshot', [
             'filename' => $filename,
         ]);
     }
 
     public function turnOff(): EventContext
     {
-        return $this->entity->callService('turn_off');
+        return $this->entity->callAction('turn_off');
     }
 
     public function turnOn(): EventContext
     {
-        return $this->entity->callService('turn_on');
+        return $this->entity->callAction('turn_on');
     }
 }

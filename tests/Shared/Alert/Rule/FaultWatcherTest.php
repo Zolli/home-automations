@@ -111,7 +111,7 @@ final class FaultWatcherTest extends TestCase
         $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
         $this->fixture->advanceTime(Duration::seconds(10));
 
-        self::assertSame(0, $this->fixture->countPendingTimers());
+        self::assertSame(0, $this->fixture->countActiveTasks());
         self::assertSame([], $this->listener->signals);
     }
 
@@ -149,7 +149,7 @@ final class FaultWatcherTest extends TestCase
         $this->fixture->publishMqtt(self::DSMR_TOPIC, '230');
         $this->fixture->advanceTime(Duration::seconds(90));
 
-        self::assertSame(0, $this->fixture->countPendingTimers());
+        self::assertSame(0, $this->fixture->countActiveTasks());
         self::assertSame([], $this->listener->signals);
     }
 
@@ -176,7 +176,7 @@ final class FaultWatcherTest extends TestCase
         return new FaultWatcher(
             $rule,
             new ReadingFeed($rule->listSources(), $this->fixture->createMonitoringContext()),
-            $this->fixture->harness->scheduler,
+            $this->fixture->scheduler,
             $this->listener,
         );
     }

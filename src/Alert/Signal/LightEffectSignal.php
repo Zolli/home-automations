@@ -6,9 +6,9 @@ namespace Shared\Alert\Signal;
 
 use Shared\Alert\FaultLocator;
 use Shared\Alert\Rule\Fault;
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Registry\EntityFilter;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EntityState;
 
 final readonly class LightEffectSignal implements Signal
@@ -38,11 +38,10 @@ final readonly class LightEffectSignal implements Signal
             ->mapToList(static fn(EntityState $light) => $light->entityId);
 
         if ($lightIds !== []) {
-            $ha->callService(
-                self::LIGHT_DOMAIN,
-                'turn_on',
+            $ha->callAction(
+                'light.turn_on',
                 ['effect' => $this->effect],
-                ServiceTarget::forEntities(...$lightIds),
+                ActionTarget::forEntities(...$lightIds),
             );
         }
     }

@@ -8,16 +8,16 @@ use PHPUnit\Framework\TestCase;
 use Shared\Notification\DestinationType;
 use Shared\Notification\Exception\InvalidDestinationSenders;
 use Shared\Notification\Sender\Collection\DestinationSenderCollection;
-use Shared\Notification\Sender\NotifyServiceSender;
+use Shared\Notification\Sender\NotifyActionSender;
 
 final class DestinationSenderCollectionTest extends TestCase
 {
     public function testFindsSenderByDestinationType(): void
     {
-        $notify  = new NotifyServiceSender();
+        $notify  = new NotifyActionSender();
         $senders = DestinationSenderCollection::keyedByDestinationType([$notify]);
 
-        self::assertSame($notify, $senders->find(DestinationType::NotifyService));
+        self::assertSame($notify, $senders->find(DestinationType::NotifyAction));
         self::assertNull($senders->find(DestinationType::Tts));
     }
 
@@ -25,6 +25,6 @@ final class DestinationSenderCollectionTest extends TestCase
     {
         $this->expectException(InvalidDestinationSenders::class);
 
-        DestinationSenderCollection::keyedByDestinationType([new NotifyServiceSender(), new NotifyServiceSender()]);
+        DestinationSenderCollection::keyedByDestinationType([new NotifyActionSender(), new NotifyActionSender()]);
     }
 }

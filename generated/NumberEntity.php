@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -51,6 +51,10 @@ final readonly class NumberEntity implements TypedEntity
         'number.bosch_washer_duration' => true,
         'number.bosch_washer_i_dos_dosing_volume_detergent' => true,
         'number.bosch_washer_i_dos_dosing_volume_detergent_or_softener' => true,
+        'number.day_night_mode_day_light_level' => true,
+        'number.day_night_mode_day_light_level_2' => true,
+        'number.day_night_mode_night_light_level' => true,
+        'number.day_night_mode_night_light_level_2' => true,
         'number.dusty_camera_light_brightness' => true,
         'number.dusty_room_10_wetness_level' => true,
         'number.dusty_room_11_wetness_level' => true,
@@ -346,14 +350,14 @@ final readonly class NumberEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     public function setValue(string|int|float $value): EventContext
     {
-        return $this->entity->callService('set_value', [
+        return $this->entity->callAction('set_value', [
             'value' => $value,
         ]);
     }

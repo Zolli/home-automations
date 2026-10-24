@@ -20,9 +20,6 @@ final class TimedLightApp implements App
     /** @var list<TimedLightConfig> */
     private readonly array $configuration;
 
-    /** @var array<string, TimedLightComponent> */
-    private array $timedLightComponentsByName = [];
-
     /** @param list<array<string, mixed>> $configuration */
     public function __construct(
         private readonly HaContext $context,
@@ -59,15 +56,7 @@ final class TimedLightApp implements App
                 );
             }
 
-            $this->timedLightComponentsByName[$config->name] = $timeLightComponent;
             $this->logger->info('[TIMED-LIGHT] Initialization done for: ' . $config->name);
-        }
-    }
-
-    public function dispose(): void
-    {
-        foreach ($this->timedLightComponentsByName as $component) {
-            $component->dispose();
         }
     }
 }

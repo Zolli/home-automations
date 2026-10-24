@@ -4,25 +4,26 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Generated\Actions;
 use App\Generated\Entities;
-use App\Generated\Services;
 use Psr\Log\LoggerInterface;
 use Stewart\Contracts\App;
 use Stewart\Contracts\Automation;
+use Stewart\Contracts\Disposable;
 use Stewart\Contracts\Schedule\ScheduledTask;
 use Stewart\Contracts\Schedule\Scheduler;
 use Stewart\Contracts\State\StateChange;
 use Stewart\Contracts\Time\Duration;
 
 #[Automation(id: 'cover-event-handlers')]
-class CoverEventHandlersApp implements App
+class CoverEventHandlersApp implements App, Disposable
 {
     private ?ScheduledTask $lightTurnOnDelay = null;
 
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly Entities $entities,
-        private readonly Services $services,
+        private readonly Actions $actions,
         private readonly Scheduler $scheduler,
     ) {}
 
@@ -59,7 +60,7 @@ class CoverEventHandlersApp implements App
         $this->lightTurnOnDelay = $this->scheduler->runAfter(
             Duration::seconds(20),
             function (): void {
-                $this->services->light->turnOn(
+                $this->actions->light->turnOn(
                     $this->entities->light->getEntity('light.light_kitchen_all'),
                     brightnessPct: 40,
                 );

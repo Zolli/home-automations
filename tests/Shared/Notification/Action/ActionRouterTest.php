@@ -17,7 +17,7 @@ use Shared\Notification\NotificationBuilder;
 use Shared\Notification\NotificationDispatcher;
 use Shared\Notification\NotificationId;
 use Shared\Notification\Sender\Collection\DestinationSenderCollection;
-use Shared\Notification\Sender\NotifyServiceSender;
+use Shared\Notification\Sender\NotifyActionSender;
 use Shared\Notification\SentNotification;
 use Stewart\Contracts\Time\Duration;
 
@@ -33,7 +33,7 @@ final class ActionRouterTest extends TestCase
     {
         $this->fixture  = new NotificationFixture();
         $this->notifier = new NotificationDispatcher(
-            DestinationSenderCollection::keyedByDestinationType([new NotifyServiceSender()]),
+            DestinationSenderCollection::keyedByDestinationType([new NotifyActionSender()]),
             $this->fixture->ha,
             $this->fixture->createActionRouter(),
             new NullLogger(),
@@ -197,7 +197,7 @@ final class ActionRouterTest extends TestCase
             ->withBody('Hi')
             ->withAppendedButtons(new NotificationButton('DONE', 'Done'))
             ->withAppendedDestinations(
-                NotifyServiceSender::createDestination('notify.notify')
+                NotifyActionSender::createDestination('notify.notify')
                     ->withAppendedConditions(CompareCondition::equals('input_boolean.away', 'on')),
             )
             ->buildNotification());
@@ -222,7 +222,7 @@ final class ActionRouterTest extends TestCase
             ->withBody('Hi')
             ->withId(NotificationId::fromString($id))
             ->withAppendedButtons(new NotificationButton('DONE', 'Done'))
-            ->withAppendedDestinations(NotifyServiceSender::createDestination('notify.notify'))
+            ->withAppendedDestinations(NotifyActionSender::createDestination('notify.notify'))
             ->buildNotification());
     }
 }

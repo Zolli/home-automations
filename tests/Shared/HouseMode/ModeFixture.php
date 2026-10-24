@@ -22,7 +22,7 @@ use Stewart\Contracts\Schedule\TimeOfDay;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\Time\Duration;
 use Stewart\Testing\App\AppHarness;
-use Stewart\Testing\HaContext\RecordedServiceCall;
+use Stewart\Testing\HaContext\RecordedActionCall;
 
 final readonly class ModeFixture
 {
@@ -81,10 +81,10 @@ final readonly class ModeFixture
     }
 
     /** @return list<string> */
-    public function listCalledServices(): array
+    public function listCalledActions(): array
     {
         return $this->harness->ha->calls->mapToList(
-            static fn(RecordedServiceCall $call): string => $call->getServiceName(),
+            static fn(RecordedActionCall $call): string => $call->getActionName(),
         );
     }
 

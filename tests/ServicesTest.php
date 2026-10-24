@@ -64,7 +64,7 @@ final class ServicesTest extends TestCase
         );
 
         self::assertCount(1, $harness->ha->calls);
-        self::assertSame('chime_tts.say', $harness->ha->getLastCall()->getServiceName());
+        self::assertSame('chime_tts.say', $harness->ha->getLastCall()->getActionName());
     }
 
     public function testWiresAlertConfigServices(): void

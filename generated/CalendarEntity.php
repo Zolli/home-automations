@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionResponse;
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,8 +22,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceResponse;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -126,9 +126,9 @@ final readonly class CalendarEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     public function createEvent(
@@ -141,7 +141,7 @@ final readonly class CalendarEntity implements TypedEntity
         ?string $startDate = null,
         ?string $startDateTime = null,
     ): EventContext {
-        return $this->entity->callService('create_event', [
+        return $this->entity->callAction('create_event', [
             'summary' => $summary,
             'description' => $description,
             'end_date' => $endDate,
@@ -160,8 +160,8 @@ final readonly class CalendarEntity implements TypedEntity
         array|string|int|float|null $duration = null,
         ?string $endDateTime = null,
         ?string $startDateTime = null,
-    ): ServiceResponse {
-        return $this->entity->callServiceForResponse('get_events', [
+    ): ActionResponse {
+        return $this->entity->callActionForResponse('get_events', [
             'duration' => $duration,
             'end_date_time' => $endDateTime,
             'start_date_time' => $startDateTime,

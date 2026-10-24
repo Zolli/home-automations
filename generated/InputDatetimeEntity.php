@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -112,9 +112,9 @@ final readonly class InputDatetimeEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     /**
@@ -126,7 +126,7 @@ final readonly class InputDatetimeEntity implements TypedEntity
         ?string $time = null,
         int|float|null $timestamp = null,
     ): EventContext {
-        return $this->entity->callService('set_datetime', [
+        return $this->entity->callAction('set_datetime', [
             'date' => $date,
             'datetime' => $datetime,
             'time' => $time,

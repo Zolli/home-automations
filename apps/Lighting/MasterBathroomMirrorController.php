@@ -49,8 +49,6 @@ class MasterBathroomMirrorController implements App
             );
     }
 
-    public function dispose(): void {}
-
     private function onWallButtonPress(StateChange $change): void
     {
         $eventType   = $change->to?->getStringAttribute('event_type');

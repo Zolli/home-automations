@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -232,6 +232,7 @@ final readonly class UpdateEntity implements TypedEntity
         'update.socket_cat_house_warmpad' => true,
         'update.solcast_pv_forecast_update' => true,
         'update.sonos_card_update' => true,
+        'update.stewart_update' => true,
         'update.sun2_update' => true,
         'update.switch_bedroom_2_desk_1' => true,
         'update.switch_cover_bathroom' => true,
@@ -361,19 +362,19 @@ final readonly class UpdateEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     public function clearSkipped(): EventContext
     {
-        return $this->entity->callService('clear_skipped');
+        return $this->entity->callAction('clear_skipped');
     }
 
     public function install(?bool $backup = null, string|int|float|null $version = null): EventContext
     {
-        return $this->entity->callService('install', [
+        return $this->entity->callAction('install', [
             'backup' => $backup,
             'version' => $version,
         ]);
@@ -381,6 +382,6 @@ final readonly class UpdateEntity implements TypedEntity
 
     public function skip(): EventContext
     {
-        return $this->entity->callService('skip');
+        return $this->entity->callAction('skip');
     }
 }

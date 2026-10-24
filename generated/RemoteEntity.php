@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -107,9 +107,9 @@ final readonly class RemoteEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     /**
@@ -117,7 +117,7 @@ final readonly class RemoteEntity implements TypedEntity
      */
     public function deleteCommand(array $command, string|int|float|null $device = null): EventContext
     {
-        return $this->entity->callService('delete_command', [
+        return $this->entity->callAction('delete_command', [
             'command' => $command,
             'device' => $device,
         ]);
@@ -135,7 +135,7 @@ final readonly class RemoteEntity implements TypedEntity
         string|int|float|null $device = null,
         int|float|null $timeout = null,
     ): EventContext {
-        return $this->entity->callService('learn_command', [
+        return $this->entity->callAction('learn_command', [
             'alternative' => $alternative,
             'command' => $command,
             'command_type' => $commandType,
@@ -157,7 +157,7 @@ final readonly class RemoteEntity implements TypedEntity
         int|float|null $holdSecs = null,
         int|float|null $numRepeats = null,
     ): EventContext {
-        return $this->entity->callService('send_command', [
+        return $this->entity->callAction('send_command', [
             'command' => $command,
             'delay_secs' => $delaySecs,
             'device' => $device,
@@ -168,17 +168,17 @@ final readonly class RemoteEntity implements TypedEntity
 
     public function toggle(): EventContext
     {
-        return $this->entity->callService('toggle');
+        return $this->entity->callAction('toggle');
     }
 
     public function turnOff(): EventContext
     {
-        return $this->entity->callService('turn_off');
+        return $this->entity->callAction('turn_off');
     }
 
     public function turnOn(string|int|float|null $activity = null): EventContext
     {
-        return $this->entity->callService('turn_on', [
+        return $this->entity->callAction('turn_on', [
             'activity' => $activity,
         ]);
     }

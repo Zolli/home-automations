@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Shared\Notification\Sender;
+
+use Stewart\Contracts\Action\ActionName;
+use Stewart\Contracts\Action\ActionTarget;
+
+final readonly class DeliveryCall
+{
+    /** @param array<string, mixed> $data */
+    public function __construct(
+        public ActionName $action,
+        public array $data = [],
+        public ?ActionTarget $target = null,
+    ) {}
+
+    /** @return array<string, mixed> */
+    public function toLogContext(): array
+    {
+        return array_filter([
+            'action' => $this->action->value,
+            'data'   => $this->data,
+            'target' => $this->target?->toArray(),
+        ], static fn(mixed $value) => $value !== null);
+    }
+}

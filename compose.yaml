@@ -1,7 +1,7 @@
 # Runs this checkout in the published runtime image: `make up` locally or on a server, `make deploy` after a push.
 services:
   stewart:
-    image: ghcr.io/stewart-php/runtime:1
+    image: ghcr.io/stewart-php/runtime:2
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
       - .:/app
@@ -10,6 +10,8 @@ services:
         required: false
     environment:
       STEWART_BOOT_COMPOSER: auto
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       valkey:
         condition: service_healthy

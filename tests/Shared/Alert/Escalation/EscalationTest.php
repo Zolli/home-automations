@@ -24,7 +24,7 @@ use Shared\Notification\Importance;
 use Shared\Notification\Notification;
 use Shared\Notification\NotificationBuilder;
 use Shared\Notification\Sender\ChimeTtsSender;
-use Shared\Notification\Sender\NotifyServiceSender;
+use Shared\Notification\Sender\NotifyActionSender;
 use Shared\Notification\Sender\PhoneTtsSender;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Time\Duration;
@@ -41,7 +41,7 @@ final class EscalationTest extends TestCase
     protected function setUp(): void
     {
         $this->fixture  = new AlertFixture();
-        $this->notifier = new NotifierRecorder(new ActionRouter($this->fixture->harness->scheduler, new NullLogger()));
+        $this->notifier = new NotifierRecorder(new ActionRouter($this->fixture->scheduler, new NullLogger()));
     }
 
     public function testSendsStepsOnSchedule(): void
@@ -86,7 +86,7 @@ final class EscalationTest extends TestCase
         $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertSame(['notify.phone'], $this->listSentTargets());
-        self::assertSame(0, $this->fixture->countPendingTimers());
+        self::assertSame(0, $this->fixture->countActiveTasks());
     }
 
     public function testDismissalAcknowledgesWhenPolicyAllows(): void
@@ -119,7 +119,7 @@ final class EscalationTest extends TestCase
         $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertSame(['notify.phone'], $this->listSentTargets());
-        self::assertSame(0, $this->fixture->countPendingTimers());
+        self::assertSame(0, $this->fixture->countActiveTasks());
         self::assertSame([], $this->acknowledged);
     }
 
@@ -195,7 +195,7 @@ final class EscalationTest extends TestCase
         $this->createEscalation(new EscalationPolicy('signalling', EscalationStepCollection::fromSteps([
             new EscalationStep(
                 Duration::zero(),
-                DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')]),
+                DestinationCollection::fromDestinations([NotifyActionSender::createDestination('notify.phone')]),
             ),
             EscalationStep::forSignal(
                 Duration::seconds(2),
@@ -221,7 +221,7 @@ final class EscalationTest extends TestCase
             EscalationStep::forSignal(Duration::zero(), $signal),
             new EscalationStep(
                 Duration::seconds(5),
-                DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')]),
+                DestinationCollection::fromDestinations([NotifyActionSender::createDestination('notify.phone')]),
             ),
         ])))->startEscalating();
 
@@ -235,7 +235,7 @@ final class EscalationTest extends TestCase
         $policy = new EscalationPolicy('delayed', EscalationStepCollection::fromSteps([
             new EscalationStep(
                 Duration::seconds(60),
-                DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')]),
+                DestinationCollection::fromDestinations([NotifyActionSender::createDestination('notify.phone')]),
             ),
         ]));
         $escalation = $this->createEscalation($policy);
@@ -253,7 +253,7 @@ final class EscalationTest extends TestCase
             EscalationStepCollection::fromSteps([
                 new EscalationStep(
                     Duration::zero(),
-                    DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')]),
+                    DestinationCollection::fromDestinations([NotifyActionSender::createDestination('notify.phone')]),
                 ),
                 new EscalationStep(
                     Duration::seconds(120),
@@ -293,7 +293,7 @@ final class EscalationTest extends TestCase
                 $this->acknowledged[] = $acknowledgement;
             },
             $this->notifier,
-            $this->fixture->harness->scheduler,
+            $this->fixture->scheduler,
             $this->fixture->ha,
             new NullLogger(),
         );

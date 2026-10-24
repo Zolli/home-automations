@@ -17,9 +17,12 @@ make setup        # pull the images, create .env with a control token, install, 
 Fill in `STEWART_HOME_ASSISTANT__URL` and `STEWART_HOME_ASSISTANT__TOKEN` in `.env`, then:
 
 ```bash
-make generate     # typed entity and service classes from your Home Assistant, into generated/
+make generate     # typed entity and action classes from your Home Assistant, into generated/
+make doctor       # the connection to Home Assistant, the token's rights and the store
+make check        # the configuration loads and every app can be built; lists the apps and their workers
 make run          # run in the foreground; Ctrl-C stops it
-make status       # from another terminal
+make watch        # the same, and every saved change reloads the apps
+make status       # from another terminal; APP=hello for one app, WATCH=1 to keep it updated
 ```
 
 `make help` lists every target.
@@ -42,11 +45,12 @@ name your entities, so keep this repository private if that matters to you.
 ### Developing next to a running production daemon
 
 Both would run every automation against the same Home Assistant. While developing, run only the app you are working
-on, and keep service calls from reaching Home Assistant:
+on, and keep action calls from reaching Home Assistant:
 
 ```bash
 make run ONLY=hello            # only these apps, even if disabled in stewart.yaml
-make run ONLY=hello DRY_RUN=1  # service calls are logged and answered as succeeded, never sent
+make run ONLY=hello DRY_RUN=1  # action calls are logged and answered as succeeded, never sent
+make run TRACE=hello           # log what reaches the app and what it does with it
 ```
 
 ### Shared components
@@ -67,10 +71,10 @@ $this->notifier->send(
     NotificationBuilder::create()
         ->withBody('Dusty is full of debris, please empty it')
         ->withTitle('Empty the vacuum bin')
-        ->withServiceData(['notification_icon' => 'mdi:robot-vacuum-variant', 'color' => '#f47100'])
+        ->withPlatformData(['notification_icon' => 'mdi:robot-vacuum-variant', 'color' => '#f47100'])
         ->withAppendedButtons(new NotificationButton('DONE', 'Done'), new NotificationButton('NEXT', 'Next time'))
         ->withImportance(Importance::Low)
-        ->withAppendedDestinations(NotifyServiceSender::createDestination('notify.mobile_app_zoli_phone')
+        ->withAppendedDestinations(NotifyActionSender::createDestination('notify.mobile_app_zoli_phone')
             ->withAppendedConditions(new ImportanceCondition(new EntityId('input_select.zoli_notification_level'))))
         ->withAppendedDestinations(ChimeTtsSender::createDestination('media_player.kitchen_speaker', ['chime_path' => 'bells'])
             ->withAppendedConditions(CompareCondition::equals('input_boolean.guest_mode', 'off')))
@@ -78,18 +82,18 @@ $this->notifier->send(
 )->listenForActions($this->ha)->onAction('DONE', fn(NotificationAction $action) => $this->resetBinCounter());
 ```
 
-| Destination type | Service call |
+| Destination type | Action call |
 |---|---|
-| `notify_service` | `notify.<service>` per target, with `message`, `title`, then `additionalData` and `options` merged in. Phones, the TV (`notify.lg_webos_*`) and `notify.persistent_notification` are all this type |
+| `notify_service` | `notify.<action>` per target, with `message`, `title`, then `additionalData` and `options` merged in. Phones, the TV (`notify.lg_webos_*`) and `notify.persistent_notification` are all this type |
 | `tts` | One `chime_tts.say` for all target `media_player` entities, with `message` and `options` (`chime_path`, `volume_level`, `announce`, …) |
-| `phone_tts` | `notify.<service>` per target with `message: TTS`; the Companion app speaks the body (`data.tts_text`) on `alarm_stream_max` unless `options.media_stream` says otherwise. Other `options` go under `data` |
+| `phone_tts` | `notify.<action>` per target with `message: TTS`; the Companion app speaks the body (`data.tts_text`) on `alarm_stream_max` unless `options.media_stream` says otherwise. Other `options` go under `data` |
 
 | Condition | Satisfied when |
 |---|---|
 | `eq`, `neq`, `gt`, `gte`, `lt`, `lte` | The entity's state, or its `attribute`, compares to `value`. Numeric values compare as numbers; `gt`…`lte` are never satisfied by non-numeric values; a missing entity never satisfies |
 | `importance` | The notification's importance (`low` < `normal` < `high` < `critical`) is at least the level held by `field`, e.g. an `input_select`. An unknown or unavailable level lets the notification through |
 
-`meta.debug` logs every destination: sent with its service call, or skipped with its conditions.
+`meta.debug` logs every destination: sent with its action call, or skipped with its conditions.
 
 ### Buttons
 
@@ -132,14 +136,14 @@ options in `stewart.yaml`.
 
 Only `message.body` and `destinations` (each with `type` and `target`) are required; `type` must be a registered
 destination type. Each entry in `message.buttons` needs `action` and `title`; other keys are passed on as button options.
-`message.additionalData` is merged into the service call data as is. Payloads are checked against
+`message.additionalData` is merged into the action call data as is. Payloads are checked against
 [`notification.schema.json`](src/Notification/Payload/notification.schema.json): unknown keys are rejected,
 `meta.importance` is lowercase, and every violation is logged with its path, e.g. `destinations[0].target is required`.
 
 ### Extending
 
 A new destination type is a case on `Shared\Notification\DestinationType` plus a class implementing
-`Shared\Notification\Sender\DestinationSender` that returns that case from `getSupportedType()`, rejects bad targets in `validateDestination()` and builds a `ServiceCallCollection` for a
+`Shared\Notification\Sender\DestinationSender` that returns that case from `getSupportedType()`, rejects bad targets in `validateDestination()` and builds a `DeliveryCallCollection` for a
 destination, with a static `createDestination()` shortcut for apps; a new condition type implements
 `Shared\Condition\ConditionType`. Either is registered from `src/` and picked up by its interface.
 
@@ -234,7 +238,7 @@ framework version always comes from your `composer.lock`.
 git clone <this repository> my-home && cd my-home
 cp .env.example .env    # fill it in
 make up                 # installs dependencies on start, then runs
-make deploy             # later: git pull, restart; changed dependencies are installed on start
+make deploy             # later: git pull, install, stewart check, then restart
 ```
 
 ### An image built by CI

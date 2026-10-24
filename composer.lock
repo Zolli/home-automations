@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2d269fbe01ad94dbc20dac372aad3dd7",
+    "content-hash": "a3c853d2093085c5889646e2e0f27d55",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1447,16 +1447,16 @@
         },
         {
             "name": "dragonmantank/cron-expression",
-            "version": "v3.6.0",
+            "version": "v3.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dragonmantank/cron-expression.git",
-                "reference": "d61a8a9604ec1f8c3d150d09db6ce98b32675013"
+                "reference": "4189372ffeff09bf14f731f67a9de90c7b413ebe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/d61a8a9604ec1f8c3d150d09db6ce98b32675013",
-                "reference": "d61a8a9604ec1f8c3d150d09db6ce98b32675013",
+                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/4189372ffeff09bf14f731f67a9de90c7b413ebe",
+                "reference": "4189372ffeff09bf14f731f67a9de90c7b413ebe",
                 "shasum": ""
             },
             "require": {
@@ -1467,8 +1467,8 @@
             },
             "require-dev": {
                 "phpstan/extension-installer": "^1.4.3",
-                "phpstan/phpstan": "^1.12.32|^2.1.31",
-                "phpunit/phpunit": "^8.5.48|^9.0"
+                "phpstan/phpstan": "^2.1.31",
+                "phpunit/phpunit": "^11.5.43 || ^12.4"
             },
             "type": "library",
             "extra": {
@@ -1499,7 +1499,7 @@
             ],
             "support": {
                 "issues": "https://github.com/dragonmantank/cron-expression/issues",
-                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.6.0"
+                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.6.1"
             },
             "funding": [
                 {
@@ -1507,7 +1507,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-31T18:51:33+00:00"
+            "time": "2026-10-19T17:53:57+00:00"
         },
         {
             "name": "kelunik/certificate",
@@ -1941,21 +1941,21 @@
         },
         {
             "name": "nette/php-generator",
-            "version": "v4.2.2",
+            "version": "v4.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/php-generator.git",
-                "reference": "0d7060926f5c3e8c488b9b9ced42d857f12a34b5"
+                "reference": "abdfd4c22f9077af10daa7391d14e83fc36ba809"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/php-generator/zipball/0d7060926f5c3e8c488b9b9ced42d857f12a34b5",
-                "reference": "0d7060926f5c3e8c488b9b9ced42d857f12a34b5",
+                "url": "https://api.github.com/repos/nette/php-generator/zipball/abdfd4c22f9077af10daa7391d14e83fc36ba809",
+                "reference": "abdfd4c22f9077af10daa7391d14e83fc36ba809",
                 "shasum": ""
             },
             "require": {
                 "nette/utils": "^4.0.6",
-                "php": "8.1 - 8.5"
+                "php": "8.1 - 8.6"
             },
             "require-dev": {
                 "jetbrains/phpstorm-attributes": "^1.2",
@@ -1993,42 +1993,39 @@
                 {
                     "name": "David Grudl",
                     "homepage": "https://davidgrudl.com"
-                },
-                {
-                    "name": "Nette Community",
-                    "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "🐘 Nette PHP Generator: generates neat PHP code for you. Supports new PHP 8.5 features.",
-            "homepage": "https://nette.org",
+            "description": "🐘 Nette PHP Generator: generates PHP code from objects. Classes, enums, functions and whole files, with namespaces resolved for you, and always up to date with the latest PHP.",
+            "homepage": "https://doc.nette.org/php-generator",
             "keywords": [
-                "code",
+                "code generation",
+                "code generator",
+                "codegen",
                 "nette",
-                "php",
                 "scaffolding"
             ],
             "support": {
                 "issues": "https://github.com/nette/php-generator/issues",
-                "source": "https://github.com/nette/php-generator/tree/v4.2.2"
+                "source": "https://github.com/nette/php-generator/tree/v4.2.3"
             },
-            "time": "2026-02-26T00:58:33+00:00"
+            "time": "2026-10-22T01:12:52+00:00"
         },
         {
             "name": "nette/utils",
-            "version": "v4.1.5",
+            "version": "v4.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "b043439dbdf954e6c28b5ea7e34b0100f83165e0"
+                "reference": "6bf24518accf32cf845bca305e0b92078700fd01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/b043439dbdf954e6c28b5ea7e34b0100f83165e0",
-                "reference": "b043439dbdf954e6c28b5ea7e34b0100f83165e0",
+                "url": "https://api.github.com/repos/nette/utils/zipball/6bf24518accf32cf845bca305e0b92078700fd01",
+                "reference": "6bf24518accf32cf845bca305e0b92078700fd01",
                 "shasum": ""
             },
             "require": {
-                "php": "8.2 - 8.5"
+                "php": "8.2 - 8.6"
             },
             "conflict": {
                 "nette/finder": "<3",
@@ -2100,9 +2097,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/utils/issues",
-                "source": "https://github.com/nette/utils/tree/v4.1.5"
+                "source": "https://github.com/nette/utils/tree/v4.1.6"
             },
-            "time": "2026-07-17T23:02:45+00:00"
+            "time": "2026-10-20T17:07:56+00:00"
         },
         {
             "name": "opis/json-schema",
@@ -2579,16 +2576,16 @@
         },
         {
             "name": "stewart-php/client",
-            "version": "v1.2.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/client.git",
-                "reference": "4fd58b61eaef12d2baa483473e8c032f9b9352ff"
+                "reference": "1dad51d308512b38f0d8516aadb2bc7e9818b20a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/client/zipball/4fd58b61eaef12d2baa483473e8c032f9b9352ff",
-                "reference": "4fd58b61eaef12d2baa483473e8c032f9b9352ff",
+                "url": "https://api.github.com/repos/stewart-php/client/zipball/1dad51d308512b38f0d8516aadb2bc7e9818b20a",
+                "reference": "1dad51d308512b38f0d8516aadb2bc7e9818b20a",
                 "shasum": ""
             },
             "require": {
@@ -2597,7 +2594,7 @@
                 "amphp/websocket": "^2.0.4",
                 "amphp/websocket-client": "^2.0.2",
                 "ext-json": "*",
-                "php": ">=8.5",
+                "php": ">=8.5.12",
                 "psr/log": "^3.0",
                 "stewart-php/contracts": "self.version",
                 "stewart-php/support": "self.version"
@@ -2622,7 +2619,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.x-dev"
+                    "dev-main": "2.x-dev"
                 }
             },
             "autoload": {
@@ -2641,27 +2638,27 @@
                 "issues": "https://github.com/stewart-php/stewart/issues",
                 "source": "https://github.com/stewart-php/stewart"
             },
-            "time": "2026-10-18T20:34:45+00:00"
+            "time": "2026-10-23T19:27:13+00:00"
         },
         {
             "name": "stewart-php/codegen",
-            "version": "v1.2.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/codegen.git",
-                "reference": "f34b2f5d1f395c1c7dc7718c5eedd34492e69e68"
+                "reference": "d1f10470c7e33063d4b9d823d39696c50af39b8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/codegen/zipball/f34b2f5d1f395c1c7dc7718c5eedd34492e69e68",
-                "reference": "f34b2f5d1f395c1c7dc7718c5eedd34492e69e68",
+                "url": "https://api.github.com/repos/stewart-php/codegen/zipball/d1f10470c7e33063d4b9d823d39696c50af39b8e",
+                "reference": "d1f10470c7e33063d4b9d823d39696c50af39b8e",
                 "shasum": ""
             },
             "require": {
                 "ext-ctype": "*",
                 "ext-json": "*",
                 "nette/php-generator": "^4.2.2",
-                "php": ">=8.5",
+                "php": ">=8.5.12",
                 "psr/log": "^3.0",
                 "stewart-php/client": "self.version",
                 "stewart-php/contracts": "self.version",
@@ -2678,7 +2675,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.x-dev"
+                    "dev-main": "2.x-dev"
                 }
             },
             "autoload": {
@@ -2690,32 +2687,32 @@
             "license": [
                 "MIT"
             ],
-            "description": "Generates typed entity and service classes from a Home Assistant instance",
+            "description": "Generates typed entity and action classes from a Home Assistant instance",
             "homepage": "https://github.com/stewart-php/stewart",
             "support": {
                 "docs": "https://stewart-php.github.io/docs/",
                 "issues": "https://github.com/stewart-php/stewart/issues",
                 "source": "https://github.com/stewart-php/stewart"
             },
-            "time": "2026-10-13T17:48:28+00:00"
+            "time": "2026-10-23T21:48:51+00:00"
         },
         {
             "name": "stewart-php/contracts",
-            "version": "v1.2.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/contracts.git",
-                "reference": "57f05364c048633a70186caa2a6e2d81d35fd4f0"
+                "reference": "e0a84ea2b0f2e572089f1a5cf0f65c5a5fa634c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/contracts/zipball/57f05364c048633a70186caa2a6e2d81d35fd4f0",
-                "reference": "57f05364c048633a70186caa2a6e2d81d35fd4f0",
+                "url": "https://api.github.com/repos/stewart-php/contracts/zipball/e0a84ea2b0f2e572089f1a5cf0f65c5a5fa634c9",
+                "reference": "e0a84ea2b0f2e572089f1a5cf0f65c5a5fa634c9",
                 "shasum": ""
             },
             "require": {
                 "ext-filter": "*",
-                "php": ">=8.5"
+                "php": ">=8.5.12"
             },
             "require-dev": {
                 "amphp/amp": "^3.1.1",
@@ -2725,7 +2722,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.x-dev"
+                    "dev-main": "2.x-dev"
                 }
             },
             "autoload": {
@@ -2744,27 +2741,27 @@
                 "issues": "https://github.com/stewart-php/stewart/issues",
                 "source": "https://github.com/stewart-php/stewart"
             },
-            "time": "2026-10-13T17:48:39+00:00"
+            "time": "2026-10-23T21:30:59+00:00"
         },
         {
             "name": "stewart-php/mqtt",
-            "version": "v1.2.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/mqtt.git",
-                "reference": "7504f5ad6207916a3893cfd41590e6c0cbd0e672"
+                "reference": "1eb0477d11f33e3b5f4effcaa7a2122c8558e4bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/mqtt/zipball/7504f5ad6207916a3893cfd41590e6c0cbd0e672",
-                "reference": "7504f5ad6207916a3893cfd41590e6c0cbd0e672",
+                "url": "https://api.github.com/repos/stewart-php/mqtt/zipball/1eb0477d11f33e3b5f4effcaa7a2122c8558e4bf",
+                "reference": "1eb0477d11f33e3b5f4effcaa7a2122c8558e4bf",
                 "shasum": ""
             },
             "require": {
                 "amphp/amp": "^3.1.1",
                 "amphp/byte-stream": "^2.1",
                 "amphp/socket": "^2.4",
-                "php": ">=8.5",
+                "php": ">=8.5.12",
                 "psr/log": "^3.0",
                 "stewart-php/contracts": "self.version",
                 "stewart-php/runtime": "self.version",
@@ -2778,7 +2775,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.x-dev"
+                    "dev-main": "2.x-dev"
                 }
             },
             "autoload": {
@@ -2797,20 +2794,20 @@
                 "issues": "https://github.com/stewart-php/stewart/issues",
                 "source": "https://github.com/stewart-php/stewart"
             },
-            "time": "2026-10-19T14:45:58+00:00"
+            "time": "2026-10-23T21:15:38+00:00"
         },
         {
             "name": "stewart-php/runtime",
-            "version": "v1.2.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/runtime.git",
-                "reference": "48173b1d41c970305c3f4195f04f7ac1a466c11e"
+                "reference": "da94d81daa987a492f9be07a31622a42fba92de5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/runtime/zipball/48173b1d41c970305c3f4195f04f7ac1a466c11e",
-                "reference": "48173b1d41c970305c3f4195f04f7ac1a466c11e",
+                "url": "https://api.github.com/repos/stewart-php/runtime/zipball/da94d81daa987a492f9be07a31622a42fba92de5",
+                "reference": "da94d81daa987a492f9be07a31622a42fba92de5",
                 "shasum": ""
             },
             "require": {
@@ -2827,8 +2824,9 @@
                 "ext-filter": "*",
                 "ext-json": "*",
                 "ext-pcntl": "*",
+                "ext-posix": "*",
                 "monolog/monolog": "^3.12",
-                "php": ">=8.5",
+                "php": ">=8.5.12",
                 "psr/log": "^3.0",
                 "revolt/event-loop": "^1.0.9",
                 "stewart-php/client": "self.version",
@@ -2846,7 +2844,6 @@
                 "symfony/yaml": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "ext-posix": "*",
                 "phpunit/phpunit": "^13.3",
                 "psr/container": "^2.0",
                 "stewart-php/store-redis": "self.version",
@@ -2862,7 +2859,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.x-dev"
+                    "dev-main": "2.x-dev"
                 }
             },
             "autoload": {
@@ -2881,25 +2878,25 @@
                 "issues": "https://github.com/stewart-php/stewart/issues",
                 "source": "https://github.com/stewart-php/stewart"
             },
-            "time": "2026-10-19T16:31:25+00:00"
+            "time": "2026-10-23T21:48:55+00:00"
         },
         {
             "name": "stewart-php/store",
-            "version": "v1.2.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/store.git",
-                "reference": "6761d53ec6a07c1ef31dcec808d68506b6a49833"
+                "reference": "860b76b5eff36995f84d73d7df74e14aacc8c71c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/store/zipball/6761d53ec6a07c1ef31dcec808d68506b6a49833",
-                "reference": "6761d53ec6a07c1ef31dcec808d68506b6a49833",
+                "url": "https://api.github.com/repos/stewart-php/store/zipball/860b76b5eff36995f84d73d7df74e14aacc8c71c",
+                "reference": "860b76b5eff36995f84d73d7df74e14aacc8c71c",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=8.5",
+                "php": ">=8.5.12",
                 "stewart-php/contracts": "self.version",
                 "stewart-php/support": "self.version"
             },
@@ -2913,7 +2910,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.x-dev"
+                    "dev-main": "2.x-dev"
                 }
             },
             "autoload": {
@@ -2932,27 +2929,27 @@
                 "issues": "https://github.com/stewart-php/stewart/issues",
                 "source": "https://github.com/stewart-php/stewart"
             },
-            "time": "2026-10-13T17:48:26+00:00"
+            "time": "2026-10-23T18:20:24+00:00"
         },
         {
             "name": "stewart-php/store-redis",
-            "version": "v1.2.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/store-redis.git",
-                "reference": "3f9d3cd4c15a2373135eb61f5d92a7dbe92532fc"
+                "reference": "51c7cda042ef1737cdac4e7d7f87d8cb6225fc15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/store-redis/zipball/3f9d3cd4c15a2373135eb61f5d92a7dbe92532fc",
-                "reference": "3f9d3cd4c15a2373135eb61f5d92a7dbe92532fc",
+                "url": "https://api.github.com/repos/stewart-php/store-redis/zipball/51c7cda042ef1737cdac4e7d7f87d8cb6225fc15",
+                "reference": "51c7cda042ef1737cdac4e7d7f87d8cb6225fc15",
                 "shasum": ""
             },
             "require": {
                 "amphp/amp": "^3.1.1",
                 "amphp/redis": "^2.0.4",
                 "amphp/socket": "^2.4",
-                "php": ">=8.5",
+                "php": ">=8.5.12",
                 "stewart-php/contracts": "self.version",
                 "stewart-php/store": "self.version",
                 "stewart-php/support": "self.version",
@@ -2971,7 +2968,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.x-dev"
+                    "dev-main": "2.x-dev"
                 }
             },
             "autoload": {
@@ -2990,24 +2987,24 @@
                 "issues": "https://github.com/stewart-php/stewart/issues",
                 "source": "https://github.com/stewart-php/stewart"
             },
-            "time": "2026-10-16T14:34:40+00:00"
+            "time": "2026-10-23T18:20:22+00:00"
         },
         {
             "name": "stewart-php/sun",
-            "version": "v1.2.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/sun.git",
-                "reference": "0a0cab5239eb8a0f06ea34f1739862a24eb3d922"
+                "reference": "19f9b4bcf4cfbba80f606001069c6d32307edd20"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/sun/zipball/0a0cab5239eb8a0f06ea34f1739862a24eb3d922",
-                "reference": "0a0cab5239eb8a0f06ea34f1739862a24eb3d922",
+                "url": "https://api.github.com/repos/stewart-php/sun/zipball/19f9b4bcf4cfbba80f606001069c6d32307edd20",
+                "reference": "19f9b4bcf4cfbba80f606001069c6d32307edd20",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.5",
+                "php": ">=8.5.12",
                 "stewart-php/contracts": "self.version"
             },
             "require-dev": {
@@ -3017,7 +3014,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.x-dev"
+                    "dev-main": "2.x-dev"
                 }
             },
             "autoload": {
@@ -3036,27 +3033,27 @@
                 "issues": "https://github.com/stewart-php/stewart/issues",
                 "source": "https://github.com/stewart-php/stewart"
             },
-            "time": "2026-10-13T17:48:39+00:00"
+            "time": "2026-10-23T18:20:31+00:00"
         },
         {
             "name": "stewart-php/support",
-            "version": "v1.2.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stewart-php/support.git",
-                "reference": "71aa95e493e9854d4700fb190deac3dbc61ff8ee"
+                "reference": "514dbd59ddd8f9928a932b559fad34f7f0e671ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/support/zipball/71aa95e493e9854d4700fb190deac3dbc61ff8ee",
-                "reference": "71aa95e493e9854d4700fb190deac3dbc61ff8ee",
+                "url": "https://api.github.com/repos/stewart-php/support/zipball/514dbd59ddd8f9928a932b559fad34f7f0e671ee",
+                "reference": "514dbd59ddd8f9928a932b559fad34f7f0e671ee",
                 "shasum": ""
             },
             "require": {
                 "amphp/amp": "^3.1.1",
                 "dragonmantank/cron-expression": "^3.4",
                 "ext-json": "*",
-                "php": ">=8.5",
+                "php": ">=8.5.12",
                 "revolt/event-loop": "^1.0.9",
                 "stewart-php/contracts": "self.version"
             },
@@ -3067,7 +3064,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.x-dev"
+                    "dev-main": "2.x-dev"
                 }
             },
             "autoload": {
@@ -3086,7 +3083,7 @@
                 "issues": "https://github.com/stewart-php/stewart/issues",
                 "source": "https://github.com/stewart-php/stewart"
             },
-            "time": "2026-10-18T20:34:38+00:00"
+            "time": "2026-10-23T21:30:57+00:00"
         },
         {
             "name": "symfony/config",
@@ -5337,12 +5334,60 @@
             "time": "2022-02-21T01:04:05+00:00"
         },
         {
-            "name": "phpstan/phpstan",
-            "version": "2.2.16",
+            "name": "phpstan/extension-installer",
+            "version": "1.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/extension-installer.git",
+                "reference": "85e90b3942d06b2326fba0403ec24fe912372936"
+            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/46a6d9060e5a7763adfcc21ebcb8b504ebdbcb92",
-                "reference": "46a6d9060e5a7763adfcc21ebcb8b504ebdbcb92",
+                "url": "https://api.github.com/repos/phpstan/extension-installer/zipball/85e90b3942d06b2326fba0403ec24fe912372936",
+                "reference": "85e90b3942d06b2326fba0403ec24fe912372936",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^2.0",
+                "php": "^7.2 || ^8.0",
+                "phpstan/phpstan": "^1.9.0 || ^2.0"
+            },
+            "require-dev": {
+                "composer/composer": "^2.0",
+                "php-parallel-lint/php-parallel-lint": "^1.2.0",
+                "phpstan/phpstan-strict-rules": "^0.11 || ^0.12 || ^1.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "PHPStan\\ExtensionInstaller\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\ExtensionInstaller\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Composer plugin for automatic installation of PHPStan extensions",
+            "keywords": [
+                "dev",
+                "static analysis"
+            ],
+            "support": {
+                "issues": "https://github.com/phpstan/extension-installer/issues",
+                "source": "https://github.com/phpstan/extension-installer/tree/1.4.3"
+            },
+            "time": "2024-09-04T20:21:43+00:00"
+        },
+        {
+            "name": "phpstan/phpstan",
+            "version": "2.3.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/6155239b488e95d26d1ebd95c6b4bb294d7f09db",
+                "reference": "6155239b488e95d26d1ebd95c6b4bb294d7f09db",
                 "shasum": ""
             },
             "require": {
@@ -5398,7 +5443,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-25T09:31:51+00:00"
+            "time": "2026-10-08T21:09:11+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -6998,28 +7043,28 @@
         },
         {
             "name": "sebastian/git-state",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/git-state.git",
-                "reference": "792a952e0eba55b6960a48aeceb9f371aad1f76b"
+                "reference": "31a565f463686f0eefa85f899549256bf5805985"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/git-state/zipball/792a952e0eba55b6960a48aeceb9f371aad1f76b",
-                "reference": "792a952e0eba55b6960a48aeceb9f371aad1f76b",
+                "url": "https://api.github.com/repos/sebastianbergmann/git-state/zipball/31a565f463686f0eefa85f899549256bf5805985",
+                "reference": "31a565f463686f0eefa85f899549256bf5805985",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "^13.0"
+                "phpunit/phpunit": "^13.4.3"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.0-dev"
+                    "dev-main": "1.1-dev"
                 }
             },
             "autoload": {
@@ -7043,7 +7088,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/git-state/issues",
                 "security": "https://github.com/sebastianbergmann/git-state/security/policy",
-                "source": "https://github.com/sebastianbergmann/git-state/tree/1.0.0"
+                "source": "https://github.com/sebastianbergmann/git-state/tree/1.1.0"
             },
             "funding": [
                 {
@@ -7063,7 +7108,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-03-21T12:54:28+00:00"
+            "time": "2026-10-21T05:59:52+00:00"
         },
         {
             "name": "sebastian/global-state",
@@ -7610,17 +7655,70 @@
             "time": "2024-10-20T05:08:20+00:00"
         },
         {
-            "name": "stewart-php/testing",
-            "version": "v1.2.1",
+            "name": "stewart-php/phpstan",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/stewart-php/testing.git",
-                "reference": "9a970abce7e08141b2a8765b76e2231f1538f3d3"
+                "url": "https://github.com/stewart-php/phpstan.git",
+                "reference": "d72160050e79addd1c2f49a864d77c6fde1ce78a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stewart-php/testing/zipball/9a970abce7e08141b2a8765b76e2231f1538f3d3",
-                "reference": "9a970abce7e08141b2a8765b76e2231f1538f3d3",
+                "url": "https://api.github.com/repos/stewart-php/phpstan/zipball/d72160050e79addd1c2f49a864d77c6fde1ce78a",
+                "reference": "d72160050e79addd1c2f49a864d77c6fde1ce78a",
+                "shasum": ""
+            },
+            "require": {
+                "composer-runtime-api": "^2.2",
+                "php": ">=8.5.12",
+                "phpstan/phpstan": "^2.3",
+                "stewart-php/contracts": "self.version",
+                "stewart-php/support": "self.version"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.3"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "extension.neon"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stewart\\PHPStan\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan rules that check Home Assistant entity IDs and action names against a Stewart project's generated classes",
+            "homepage": "https://github.com/stewart-php/stewart",
+            "support": {
+                "docs": "https://stewart-php.github.io/docs/",
+                "issues": "https://github.com/stewart-php/stewart/issues",
+                "source": "https://github.com/stewart-php/stewart"
+            },
+            "time": "2026-10-23T21:48:53+00:00"
+        },
+        {
+            "name": "stewart-php/testing",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stewart-php/testing.git",
+                "reference": "2445b079567f33bbd19d240497f7f68b8720baac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stewart-php/testing/zipball/2445b079567f33bbd19d240497f7f68b8720baac",
+                "reference": "2445b079567f33bbd19d240497f7f68b8720baac",
                 "shasum": ""
             },
             "require": {
@@ -7630,7 +7728,7 @@
                 "amphp/socket": "^2.4",
                 "amphp/websocket": "^2.0.4",
                 "amphp/websocket-client": "^2.0.2",
-                "php": ">=8.5",
+                "php": ">=8.5.12",
                 "phpunit/phpunit": "^13.3",
                 "psr/log": "^3.0",
                 "stewart-php/contracts": "self.version",
@@ -7645,7 +7743,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.x-dev"
+                    "dev-main": "2.x-dev"
                 }
             },
             "autoload": {
@@ -7664,7 +7762,7 @@
                 "issues": "https://github.com/stewart-php/stewart/issues",
                 "source": "https://github.com/stewart-php/stewart"
             },
-            "time": "2026-10-19T14:45:57+00:00"
+            "time": "2026-10-23T21:31:05+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -8270,7 +8368,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.5"
+        "php": ">=8.5.12"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"

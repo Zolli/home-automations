@@ -11,7 +11,7 @@ use Shared\Notification\Destination;
 use Shared\Notification\DestinationType;
 use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\Sender\ChimeTtsSender;
-use Shared\Notification\Sender\NotifyServiceSender;
+use Shared\Notification\Sender\NotifyActionSender;
 
 final class DestinationTest extends TestCase
 {
@@ -36,7 +36,7 @@ final class DestinationTest extends TestCase
         $a        = CompareCondition::equals('input_boolean.a', 'on');
         $b        = CompareCondition::equals('input_boolean.b', 'on');
         $c        = CompareCondition::lessThan('sensor.c', 3);
-        $original = NotifyServiceSender::createDestination('notify.notify')->withAppendedConditions($a);
+        $original = NotifyActionSender::createDestination('notify.notify')->withAppendedConditions($a);
         $extended = $original->withAppendedConditions($b, $c);
 
         self::assertEquals(new AllOf($a), $original->condition);

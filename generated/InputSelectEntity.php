@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Generated;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\Entity;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Entity\TypedEntity;
@@ -20,7 +21,6 @@ use Stewart\Contracts\Exception\WaitException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\History\EntityStateHistory;
 use Stewart\Contracts\History\HistoryQuery;
-use Stewart\Contracts\Service\ServiceTarget;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\StateChangeStream;
 use Stewart\Contracts\Time\Duration;
@@ -130,38 +130,38 @@ final readonly class InputSelectEntity implements TypedEntity
         return $this->entity;
     }
 
-    public function toServiceTarget(): ServiceTarget
+    public function toActionTarget(): ActionTarget
     {
-        return $this->entity->toServiceTarget();
+        return $this->entity->toActionTarget();
     }
 
     public function selectFirst(): EventContext
     {
-        return $this->entity->callService('select_first');
+        return $this->entity->callAction('select_first');
     }
 
     public function selectLast(): EventContext
     {
-        return $this->entity->callService('select_last');
+        return $this->entity->callAction('select_last');
     }
 
     public function selectNext(?bool $cycle = null): EventContext
     {
-        return $this->entity->callService('select_next', [
+        return $this->entity->callAction('select_next', [
             'cycle' => $cycle,
         ]);
     }
 
     public function selectOption(string $option): EventContext
     {
-        return $this->entity->callService('select_option', [
+        return $this->entity->callAction('select_option', [
             'option' => $option,
         ]);
     }
 
     public function selectPrevious(?bool $cycle = null): EventContext
     {
-        return $this->entity->callService('select_previous', [
+        return $this->entity->callAction('select_previous', [
             'cycle' => $cycle,
         ]);
     }
@@ -171,7 +171,7 @@ final readonly class InputSelectEntity implements TypedEntity
      */
     public function setOptions(array $options): EventContext
     {
-        return $this->entity->callService('set_options', [
+        return $this->entity->callAction('set_options', [
             'options' => $options,
         ]);
     }
