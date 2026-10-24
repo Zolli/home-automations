@@ -18,8 +18,11 @@ Fill in `STEWART_HOME_ASSISTANT__URL` and `STEWART_HOME_ASSISTANT__TOKEN` in `.e
 
 ```bash
 make generate     # typed entity and action classes from your Home Assistant, into generated/
+make doctor       # the connection to Home Assistant, the token's rights and the store
+make check        # the configuration loads and every app can be built; lists the apps and their workers
 make run          # run in the foreground; Ctrl-C stops it
-make status       # from another terminal
+make watch        # the same, and every saved change reloads the apps
+make status       # from another terminal; APP=hello for one app, WATCH=1 to keep it updated
 ```
 
 `make help` lists every target.
@@ -47,6 +50,7 @@ on, and keep action calls from reaching Home Assistant:
 ```bash
 make run ONLY=hello            # only these apps, even if disabled in stewart.yaml
 make run ONLY=hello DRY_RUN=1  # action calls are logged and answered as succeeded, never sent
+make run TRACE=hello           # log what reaches the app and what it does with it
 ```
 
 ### Shared components
@@ -234,7 +238,7 @@ framework version always comes from your `composer.lock`.
 git clone <this repository> my-home && cd my-home
 cp .env.example .env    # fill it in
 make up                 # installs dependencies on start, then runs
-make deploy             # later: git pull, restart; changed dependencies are installed on start
+make deploy             # later: git pull, install, stewart check, then restart
 ```
 
 ### An image built by CI
