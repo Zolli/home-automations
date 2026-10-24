@@ -8,15 +8,15 @@ use Shared\Notification\Destination;
 use Shared\Notification\DestinationType;
 use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\Notification;
-use Shared\Notification\Sender\Collection\ServiceCallCollection;
+use Shared\Notification\Sender\Collection\DeliveryCallCollection;
+use Stewart\Contracts\Action\ActionName;
 use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\EntityId;
 
 final readonly class ChimeTtsSender implements DestinationSender
 {
     private const string SPEAKER_DOMAIN = 'media_player';
-    private const string SERVICE_DOMAIN = 'chime_tts';
-    private const string SERVICE        = 'say';
+    private const string SAY_ACTION     = 'chime_tts.say';
 
     /**
      * @param string|list<string> $speakers
@@ -41,11 +41,10 @@ final readonly class ChimeTtsSender implements DestinationSender
         }
     }
 
-    public function buildServiceCalls(Notification $notification, Destination $destination): ServiceCallCollection
+    public function buildDeliveryCalls(Notification $notification, Destination $destination): DeliveryCallCollection
     {
-        return ServiceCallCollection::fromServiceCalls([new ServiceCall(
-            self::SERVICE_DOMAIN,
-            self::SERVICE,
+        return DeliveryCallCollection::fromDeliveryCalls([new DeliveryCall(
+            new ActionName(self::SAY_ACTION),
             ['message' => $notification->message->body, ...$destination->options],
             ActionTarget::forEntities(...$destination->targets),
         )]);

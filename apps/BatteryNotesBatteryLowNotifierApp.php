@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 use Shared\Notification\Importance;
 use Shared\Notification\NotificationBuilder;
 use Shared\Notification\Notifier;
-use Shared\Notification\Sender\NotifyServiceSender;
+use Shared\Notification\Sender\NotifyActionSender;
 use Stewart\Contracts\App;
 use Stewart\Contracts\Automation;
 use Stewart\Contracts\Event\HaEvent;
@@ -51,13 +51,13 @@ final class BatteryNotesBatteryLowNotifierApp implements App
                     ->withTitle('Battery alert')
                     ->withBody($body)
                     ->withImportance(Importance::High)
-                    ->withServiceData([
+                    ->withPlatformData([
                         'visibility'        => 'public',
                         'notification_icon' => 'mdi:battery-arrow-down-outline',
                         'color'             => '#D32F2F',
                     ])
                     ->withAppendedDestinations(
-                        NotifyServiceSender::createDestination('notify.mobile_app_zoli_phone'),
+                        NotifyActionSender::createDestination('notify.mobile_app_zoli_phone'),
                     )
                     ->withDebug()
                     ->buildNotification(),

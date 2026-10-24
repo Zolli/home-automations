@@ -14,7 +14,7 @@ use Shared\Notification\NotificationBuilder;
 use Shared\Notification\NotificationDispatcher;
 use Shared\Notification\Sender\ChimeTtsSender;
 use Shared\Notification\Sender\Collection\DestinationSenderCollection;
-use Shared\Notification\Sender\NotifyServiceSender;
+use Shared\Notification\Sender\NotifyActionSender;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Testing\Logging\RecordingLogger;
 
@@ -31,11 +31,11 @@ final class NotificationDispatcherTest extends TestCase
             ->withBody('Empty the vacuum bin')
             ->withImportance(Importance::Normal)
             ->withAppendedDestinations(
-                NotifyServiceSender::createDestination('notify.mobile_app_zoli_phone')
+                NotifyActionSender::createDestination('notify.mobile_app_zoli_phone')
                     ->withAppendedConditions(
                         new ImportanceCondition(new EntityId('input_select.zoli_notification_level')),
                     ),
-                NotifyServiceSender::createDestination('notify.mobile_app_zsuzsi_phone')
+                NotifyActionSender::createDestination('notify.mobile_app_zsuzsi_phone')
                     ->withAppendedConditions(
                         new ImportanceCondition(new EntityId('input_select.zsuzsi_notification_level')),
                     ),
@@ -52,7 +52,7 @@ final class NotificationDispatcherTest extends TestCase
         $fixture      = new NotificationFixture();
         $notification = NotificationBuilder::create()
             ->withBody('Hi')
-            ->withAppendedDestinations(NotifyServiceSender::createDestination('notify.notify'))
+            ->withAppendedDestinations(NotifyActionSender::createDestination('notify.notify'))
             ->buildNotification();
 
         self::assertSame($notification, $this->dispatcher($fixture)->send($notification)->notification);
@@ -62,7 +62,7 @@ final class NotificationDispatcherTest extends TestCase
     {
         $fixture    = new NotificationFixture();
         $dispatcher = new NotificationDispatcher(
-            DestinationSenderCollection::keyedByDestinationType([new NotifyServiceSender()]),
+            DestinationSenderCollection::keyedByDestinationType([new NotifyActionSender()]),
             $fixture->ha,
             $fixture->createActionRouter(),
             new NullLogger(),
@@ -72,7 +72,7 @@ final class NotificationDispatcherTest extends TestCase
             $dispatcher->send(NotificationBuilder::create()
                 ->withBody('Hi')
                 ->withAppendedDestinations(
-                    NotifyServiceSender::createDestination('notify.notify'),
+                    NotifyActionSender::createDestination('notify.notify'),
                     ChimeTtsSender::createDestination('media_player.kitchen_speaker'),
                 )
                 ->buildNotification());
@@ -91,7 +91,7 @@ final class NotificationDispatcherTest extends TestCase
                 ->withBody('Hi')
                 ->withAppendedDestinations(
                     ChimeTtsSender::createDestination('media_player.kitchen_speaker'),
-                    NotifyServiceSender::createDestination('media_player.not_a_notify_service'),
+                    NotifyActionSender::createDestination('media_player.not_a_notify_service'),
                 )
                 ->buildNotification());
             self::fail('Expected InvalidDestination');
@@ -106,7 +106,7 @@ final class NotificationDispatcherTest extends TestCase
         $fixture->ha->seedState('input_boolean.guest_mode', 'on');
         $logger     = new RecordingLogger();
         $dispatcher = new NotificationDispatcher(
-            DestinationSenderCollection::keyedByDestinationType([new NotifyServiceSender()]),
+            DestinationSenderCollection::keyedByDestinationType([new NotifyActionSender()]),
             $fixture->ha,
             $fixture->createActionRouter(),
             $logger,
@@ -116,8 +116,8 @@ final class NotificationDispatcherTest extends TestCase
             ->withBody('Hi')
             ->withDebug()
             ->withAppendedDestinations(
-                NotifyServiceSender::createDestination('notify.notify'),
-                NotifyServiceSender::createDestination('notify.tv')
+                NotifyActionSender::createDestination('notify.notify'),
+                NotifyActionSender::createDestination('notify.tv')
                     ->withAppendedConditions(CompareCondition::equals('input_boolean.guest_mode', 'off')),
             )
             ->buildNotification());
@@ -131,7 +131,7 @@ final class NotificationDispatcherTest extends TestCase
     private function dispatcher(NotificationFixture $fixture): NotificationDispatcher
     {
         return new NotificationDispatcher(
-            DestinationSenderCollection::keyedByDestinationType([new NotifyServiceSender(), new ChimeTtsSender()]),
+            DestinationSenderCollection::keyedByDestinationType([new NotifyActionSender(), new ChimeTtsSender()]),
             $fixture->ha,
             $fixture->createActionRouter(),
             new NullLogger(),

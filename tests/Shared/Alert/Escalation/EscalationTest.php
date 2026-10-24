@@ -24,7 +24,7 @@ use Shared\Notification\Importance;
 use Shared\Notification\Notification;
 use Shared\Notification\NotificationBuilder;
 use Shared\Notification\Sender\ChimeTtsSender;
-use Shared\Notification\Sender\NotifyServiceSender;
+use Shared\Notification\Sender\NotifyActionSender;
 use Shared\Notification\Sender\PhoneTtsSender;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\Time\Duration;
@@ -195,7 +195,7 @@ final class EscalationTest extends TestCase
         $this->createEscalation(new EscalationPolicy('signalling', EscalationStepCollection::fromSteps([
             new EscalationStep(
                 Duration::zero(),
-                DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')]),
+                DestinationCollection::fromDestinations([NotifyActionSender::createDestination('notify.phone')]),
             ),
             EscalationStep::forSignal(
                 Duration::seconds(2),
@@ -221,7 +221,7 @@ final class EscalationTest extends TestCase
             EscalationStep::forSignal(Duration::zero(), $signal),
             new EscalationStep(
                 Duration::seconds(5),
-                DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')]),
+                DestinationCollection::fromDestinations([NotifyActionSender::createDestination('notify.phone')]),
             ),
         ])))->startEscalating();
 
@@ -235,7 +235,7 @@ final class EscalationTest extends TestCase
         $policy = new EscalationPolicy('delayed', EscalationStepCollection::fromSteps([
             new EscalationStep(
                 Duration::seconds(60),
-                DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')]),
+                DestinationCollection::fromDestinations([NotifyActionSender::createDestination('notify.phone')]),
             ),
         ]));
         $escalation = $this->createEscalation($policy);
@@ -253,7 +253,7 @@ final class EscalationTest extends TestCase
             EscalationStepCollection::fromSteps([
                 new EscalationStep(
                     Duration::zero(),
-                    DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')]),
+                    DestinationCollection::fromDestinations([NotifyActionSender::createDestination('notify.phone')]),
                 ),
                 new EscalationStep(
                     Duration::seconds(120),

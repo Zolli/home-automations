@@ -8,7 +8,7 @@ use Shared\Notification\Destination;
 use Shared\Notification\DestinationType;
 use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\Notification;
-use Shared\Notification\Sender\Collection\ServiceCallCollection;
+use Shared\Notification\Sender\Collection\DeliveryCallCollection;
 
 interface DestinationSender
 {
@@ -17,5 +17,5 @@ interface DestinationSender
     /** @throws InvalidDestination */
     public function validateDestination(Destination $destination): void;
 
-    public function buildServiceCalls(Notification $notification, Destination $destination): ServiceCallCollection;
+    public function buildDeliveryCalls(Notification $notification, Destination $destination): DeliveryCallCollection;
 }

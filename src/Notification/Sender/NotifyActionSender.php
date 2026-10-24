@@ -6,28 +6,29 @@ namespace Shared\Notification\Sender;
 
 use Shared\Notification\Action\ActionKey;
 use Shared\Notification\Action\NotificationButton;
+use Shared\Notification\DeliveryData;
 use Shared\Notification\Destination;
 use Shared\Notification\DestinationType;
 use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\Notification;
 use Shared\Notification\NotificationId;
-use Shared\Notification\Sender\Collection\ServiceCallCollection;
-use Shared\Notification\ServiceData;
+use Shared\Notification\Sender\Collection\DeliveryCallCollection;
+use Stewart\Contracts\Action\ActionName;
 use Stewart\Contracts\Entity\EntityId;
 
-final readonly class NotifyServiceSender implements DestinationSender
+final readonly class NotifyActionSender implements DestinationSender
 {
     private const string NOTIFY_DOMAIN = 'notify';
 
     /** @param array<string, mixed> $options */
-    public static function createDestination(string $service, array $options = []): Destination
+    public static function createDestination(string $action, array $options = []): Destination
     {
-        return new Destination(DestinationType::NotifyService, $service, options: $options);
+        return new Destination(DestinationType::NotifyAction, $action, options: $options);
     }
 
     public function getSupportedType(): DestinationType
     {
-        return DestinationType::NotifyService;
+        return DestinationType::NotifyAction;
     }
 
     public function validateDestination(Destination $destination): void
@@ -39,9 +40,9 @@ final readonly class NotifyServiceSender implements DestinationSender
         }
     }
 
-    public function buildServiceCalls(Notification $notification, Destination $destination): ServiceCallCollection
+    public function buildDeliveryCalls(Notification $notification, Destination $destination): DeliveryCallCollection
     {
-        $data = ServiceData::mergeReplacingLists(
+        $data = DeliveryData::mergeReplacingLists(
             array_filter([
                 'message' => $notification->message->body,
                 'title'   => $notification->message->title,
@@ -59,8 +60,8 @@ final readonly class NotifyServiceSender implements DestinationSender
             $data['data'] = $platformData;
         }
 
-        return ServiceCallCollection::fromServiceCalls(array_map(
-            static fn(string $target) => new ServiceCall(self::NOTIFY_DOMAIN, new EntityId($target)->objectId, $data),
+        return DeliveryCallCollection::fromDeliveryCalls(array_map(
+            static fn(string $target) => new DeliveryCall(new ActionName($target), $data),
             $destination->targets,
         ));
     }

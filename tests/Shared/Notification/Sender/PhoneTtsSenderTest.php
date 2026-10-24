@@ -22,17 +22,17 @@ final class PhoneTtsSenderTest extends TestCase
             ->withAppendedDestinations($destination)
             ->buildNotification();
 
-        $calls = new PhoneTtsSender()->buildServiceCalls($notification, $destination)->listValues();
+        $calls = new PhoneTtsSender()->buildDeliveryCalls($notification, $destination)->listValues();
 
         self::assertCount(2, $calls);
         self::assertSame([
-            'service' => 'notify.mobile_app_zoli_phone',
-            'data'    => [
+            'action' => 'notify.mobile_app_zoli_phone',
+            'data'   => [
                 'message' => 'TTS',
                 'data'    => ['tts_text' => 'Smoke alarm in the Kitchen', 'media_stream' => 'alarm_stream_max'],
             ],
         ], $calls[0]->toLogContext());
-        self::assertSame('mobile_app_other_phone', $calls[1]->service);
+        self::assertSame('notify.mobile_app_other_phone', $calls[1]->action->value);
     }
 
     public function testOptionsOverrideMediaStream(): void
@@ -46,7 +46,7 @@ final class PhoneTtsSenderTest extends TestCase
             ->withAppendedDestinations($destination)
             ->buildNotification();
 
-        $data = new PhoneTtsSender()->buildServiceCalls($notification, $destination)->listValues()[0]->data;
+        $data = new PhoneTtsSender()->buildDeliveryCalls($notification, $destination)->listValues()[0]->data;
 
         self::assertSame(['tts_text' => 'Hi', 'media_stream' => 'alarm_stream'], $data['data'] ?? null);
     }

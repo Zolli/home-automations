@@ -11,21 +11,22 @@ use Shared\Notification\DestinationType;
 use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\NotificationBuilder;
 use Shared\Notification\NotificationId;
-use Shared\Notification\Sender\NotifyServiceSender;
-use Shared\Notification\Sender\ServiceCall;
+use Shared\Notification\Sender\DeliveryCall;
+use Shared\Notification\Sender\NotifyActionSender;
+use Stewart\Contracts\Action\ActionName;
 
-final class NotifyServiceSenderTest extends TestCase
+final class NotifyActionSenderTest extends TestCase
 {
     public function testBuildsOneNotifyCallPerTarget(): void
     {
         $destination = new Destination(
-            DestinationType::NotifyService,
+            DestinationType::NotifyAction,
             ['notify.mobile_app_zoli_phone', 'notify.persistent_notification'],
         );
         $notification = NotificationBuilder::create()
             ->withBody('Dusty is full')
             ->withTitle('Empty the vacuum bin')
-            ->withServiceData(['color' => '#f47100'])
+            ->withPlatformData(['color' => '#f47100'])
             ->withAppendedButtons(new NotificationButton('DONE', 'Done'))
             ->withAppendedButtons(
                 new NotificationButton(NotificationButton::URI_ACTION, 'Open', ['uri' => '/lovelace/vacuum']),
@@ -48,32 +49,32 @@ final class NotifyServiceSenderTest extends TestCase
         ];
 
         self::assertEquals([
-            new ServiceCall('notify', 'mobile_app_zoli_phone', $data),
-            new ServiceCall('notify', 'persistent_notification', $data),
-        ], new NotifyServiceSender()->buildServiceCalls($notification, $destination)->listValues());
+            new DeliveryCall(new ActionName('notify.mobile_app_zoli_phone'), $data),
+            new DeliveryCall(new ActionName('notify.persistent_notification'), $data),
+        ], new NotifyActionSender()->buildDeliveryCalls($notification, $destination)->listValues());
     }
 
     public function testDestinationOptionsWin(): void
     {
-        $destination = NotifyServiceSender::createDestination(
+        $destination = NotifyActionSender::createDestination(
             'notify.persistent_notification',
             ['data' => ['notification_id' => 'vacuum']],
         );
         $notification = NotificationBuilder::create()
             ->withBody('Dusty is full')
-            ->withServiceData(['color' => 'red'])
+            ->withPlatformData(['color' => 'red'])
             ->withAppendedDestinations($destination)
             ->buildNotification();
 
         self::assertSame(
             ['message' => 'Dusty is full', 'data' => ['color' => 'red', 'notification_id' => 'vacuum']],
-            new NotifyServiceSender()->buildServiceCalls($notification, $destination)->listValues()[0]->data,
+            new NotifyActionSender()->buildDeliveryCalls($notification, $destination)->listValues()[0]->data,
         );
     }
 
     public function testDestinationOptionsReplaceLists(): void
     {
-        $destination  = NotifyServiceSender::createDestination('notify.notify', ['target' => ['device_3']]);
+        $destination  = NotifyActionSender::createDestination('notify.notify', ['target' => ['device_3']]);
         $notification = NotificationBuilder::create()
             ->withBody('Hi')
             ->withAdditionalData('target', ['device_1', 'device_2'])
@@ -82,22 +83,22 @@ final class NotifyServiceSenderTest extends TestCase
 
         self::assertSame(
             ['message' => 'Hi', 'target' => ['device_3']],
-            new NotifyServiceSender()->buildServiceCalls($notification, $destination)->listValues()[0]->data,
+            new NotifyActionSender()->buildDeliveryCalls($notification, $destination)->listValues()[0]->data,
         );
     }
 
     public function testKeepsExplicitTag(): void
     {
-        $destination  = NotifyServiceSender::createDestination('notify.mobile_app_zoli_phone');
+        $destination  = NotifyActionSender::createDestination('notify.mobile_app_zoli_phone');
         $notification = NotificationBuilder::create()
             ->withBody('Hi')
-            ->withServiceData(['tag' => 'mine'])
+            ->withPlatformData(['tag' => 'mine'])
             ->withAppendedButtons(new NotificationButton('OK', 'Ok'))
             ->withAppendedDestinations($destination)
             ->buildNotification();
 
-        $data = new NotifyServiceSender()
-            ->buildServiceCalls($notification, $destination)
+        $data = new NotifyActionSender()
+            ->buildDeliveryCalls($notification, $destination)
             ->listValues()[0]->data['data'] ?? null;
 
         self::assertIsArray($data);
@@ -108,20 +109,20 @@ final class NotifyServiceSenderTest extends TestCase
     {
         $this->expectException(InvalidDestination::class);
 
-        new NotifyServiceSender()->validateDestination(NotifyServiceSender::createDestination('media_player.kitchen'));
+        new NotifyActionSender()->validateDestination(NotifyActionSender::createDestination('media_player.kitchen'));
     }
 
     public function testValidatesEveryTarget(): void
     {
         $this->expectException(InvalidDestination::class);
 
-        new NotifyServiceSender()->validateDestination(
-            new Destination(DestinationType::NotifyService, ['notify.mobile_app_zoli_phone', 'notify.']),
+        new NotifyActionSender()->validateDestination(
+            new Destination(DestinationType::NotifyAction, ['notify.mobile_app_zoli_phone', 'notify.']),
         );
     }
 
-    public function testSupportsNotifyServiceType(): void
+    public function testSupportsNotifyActionType(): void
     {
-        self::assertSame('notify_service', new NotifyServiceSender()->getSupportedType()->value);
+        self::assertSame('notify_service', new NotifyActionSender()->getSupportedType()->value);
     }
 }

@@ -7,16 +7,16 @@ namespace App\Tests\Shared\Notification\Collection;
 use PHPUnit\Framework\TestCase;
 use Shared\Notification\Collection\DestinationCollection;
 use Shared\Notification\Sender\ChimeTtsSender;
-use Shared\Notification\Sender\NotifyServiceSender;
+use Shared\Notification\Sender\NotifyActionSender;
 use Shared\Notification\Sender\PhoneTtsSender;
 
 final class DestinationCollectionTest extends TestCase
 {
     public function testAppendsDestinationsInOrder(): void
     {
-        $phone   = NotifyServiceSender::createDestination('notify.mobile_app_phone');
+        $phone   = NotifyActionSender::createDestination('notify.mobile_app_phone');
         $speaker = ChimeTtsSender::createDestination('media_player.kitchen');
-        $tablet  = NotifyServiceSender::createDestination('notify.mobile_app_tablet');
+        $tablet  = NotifyActionSender::createDestination('notify.mobile_app_tablet');
 
         $destinations = DestinationCollection::fromDestinations([$phone])->withAppendedDestinations($speaker, $tablet);
 
@@ -36,7 +36,7 @@ final class DestinationCollectionTest extends TestCase
 
     public function testDropsSpokenDestinations(): void
     {
-        $phone        = NotifyServiceSender::createDestination('notify.mobile_app_phone');
+        $phone        = NotifyActionSender::createDestination('notify.mobile_app_phone');
         $destinations = DestinationCollection::fromDestinations([
             ChimeTtsSender::createDestination('media_player.kitchen'),
             $phone,

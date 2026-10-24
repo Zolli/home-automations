@@ -67,10 +67,10 @@ $this->notifier->send(
     NotificationBuilder::create()
         ->withBody('Dusty is full of debris, please empty it')
         ->withTitle('Empty the vacuum bin')
-        ->withServiceData(['notification_icon' => 'mdi:robot-vacuum-variant', 'color' => '#f47100'])
+        ->withPlatformData(['notification_icon' => 'mdi:robot-vacuum-variant', 'color' => '#f47100'])
         ->withAppendedButtons(new NotificationButton('DONE', 'Done'), new NotificationButton('NEXT', 'Next time'))
         ->withImportance(Importance::Low)
-        ->withAppendedDestinations(NotifyServiceSender::createDestination('notify.mobile_app_zoli_phone')
+        ->withAppendedDestinations(NotifyActionSender::createDestination('notify.mobile_app_zoli_phone')
             ->withAppendedConditions(new ImportanceCondition(new EntityId('input_select.zoli_notification_level'))))
         ->withAppendedDestinations(ChimeTtsSender::createDestination('media_player.kitchen_speaker', ['chime_path' => 'bells'])
             ->withAppendedConditions(CompareCondition::equals('input_boolean.guest_mode', 'off')))
@@ -78,18 +78,18 @@ $this->notifier->send(
 )->listenForActions($this->ha)->onAction('DONE', fn(NotificationAction $action) => $this->resetBinCounter());
 ```
 
-| Destination type | Service call |
+| Destination type | Action call |
 |---|---|
-| `notify_service` | `notify.<service>` per target, with `message`, `title`, then `additionalData` and `options` merged in. Phones, the TV (`notify.lg_webos_*`) and `notify.persistent_notification` are all this type |
+| `notify_service` | `notify.<action>` per target, with `message`, `title`, then `additionalData` and `options` merged in. Phones, the TV (`notify.lg_webos_*`) and `notify.persistent_notification` are all this type |
 | `tts` | One `chime_tts.say` for all target `media_player` entities, with `message` and `options` (`chime_path`, `volume_level`, `announce`, …) |
-| `phone_tts` | `notify.<service>` per target with `message: TTS`; the Companion app speaks the body (`data.tts_text`) on `alarm_stream_max` unless `options.media_stream` says otherwise. Other `options` go under `data` |
+| `phone_tts` | `notify.<action>` per target with `message: TTS`; the Companion app speaks the body (`data.tts_text`) on `alarm_stream_max` unless `options.media_stream` says otherwise. Other `options` go under `data` |
 
 | Condition | Satisfied when |
 |---|---|
 | `eq`, `neq`, `gt`, `gte`, `lt`, `lte` | The entity's state, or its `attribute`, compares to `value`. Numeric values compare as numbers; `gt`…`lte` are never satisfied by non-numeric values; a missing entity never satisfies |
 | `importance` | The notification's importance (`low` < `normal` < `high` < `critical`) is at least the level held by `field`, e.g. an `input_select`. An unknown or unavailable level lets the notification through |
 
-`meta.debug` logs every destination: sent with its service call, or skipped with its conditions.
+`meta.debug` logs every destination: sent with its action call, or skipped with its conditions.
 
 ### Buttons
 
@@ -132,14 +132,14 @@ options in `stewart.yaml`.
 
 Only `message.body` and `destinations` (each with `type` and `target`) are required; `type` must be a registered
 destination type. Each entry in `message.buttons` needs `action` and `title`; other keys are passed on as button options.
-`message.additionalData` is merged into the service call data as is. Payloads are checked against
+`message.additionalData` is merged into the action call data as is. Payloads are checked against
 [`notification.schema.json`](src/Notification/Payload/notification.schema.json): unknown keys are rejected,
 `meta.importance` is lowercase, and every violation is logged with its path, e.g. `destinations[0].target is required`.
 
 ### Extending
 
 A new destination type is a case on `Shared\Notification\DestinationType` plus a class implementing
-`Shared\Notification\Sender\DestinationSender` that returns that case from `getSupportedType()`, rejects bad targets in `validateDestination()` and builds a `ServiceCallCollection` for a
+`Shared\Notification\Sender\DestinationSender` that returns that case from `getSupportedType()`, rejects bad targets in `validateDestination()` and builds a `DeliveryCallCollection` for a
 destination, with a static `createDestination()` shortcut for apps; a new condition type implements
 `Shared\Condition\ConditionType`. Either is registered from `src/` and picked up by its interface.
 

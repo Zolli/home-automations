@@ -8,7 +8,8 @@ use Shared\Notification\Destination;
 use Shared\Notification\DestinationType;
 use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\Notification;
-use Shared\Notification\Sender\Collection\ServiceCallCollection;
+use Shared\Notification\Sender\Collection\DeliveryCallCollection;
+use Stewart\Contracts\Action\ActionName;
 use Stewart\Contracts\Entity\EntityId;
 
 final readonly class PhoneTtsSender implements DestinationSender
@@ -18,12 +19,12 @@ final readonly class PhoneTtsSender implements DestinationSender
     private const string DEFAULT_MEDIA_STREAM = 'alarm_stream_max';
 
     /**
-     * @param string|list<string> $phoneServices
+     * @param string|list<string> $notifyActions
      * @param array<string, mixed> $options
      */
-    public static function createDestination(string|array $phoneServices, array $options = []): Destination
+    public static function createDestination(string|array $notifyActions, array $options = []): Destination
     {
-        return new Destination(DestinationType::PhoneTts, $phoneServices, options: $options);
+        return new Destination(DestinationType::PhoneTts, $notifyActions, options: $options);
     }
 
     public function getSupportedType(): DestinationType
@@ -40,7 +41,7 @@ final readonly class PhoneTtsSender implements DestinationSender
         }
     }
 
-    public function buildServiceCalls(Notification $notification, Destination $destination): ServiceCallCollection
+    public function buildDeliveryCalls(Notification $notification, Destination $destination): DeliveryCallCollection
     {
         $data = [
             'message' => self::TTS_COMMAND,
@@ -51,8 +52,8 @@ final readonly class PhoneTtsSender implements DestinationSender
             ],
         ];
 
-        return ServiceCallCollection::fromServiceCalls(array_map(
-            static fn(string $target) => new ServiceCall(self::NOTIFY_DOMAIN, new EntityId($target)->objectId, $data),
+        return DeliveryCallCollection::fromDeliveryCalls(array_map(
+            static fn(string $target) => new DeliveryCall(new ActionName($target), $data),
             $destination->targets,
         ));
     }

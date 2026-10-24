@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Tests\Shared\Notification;
 
 use PHPUnit\Framework\TestCase;
-use Shared\Notification\ServiceData;
+use Shared\Notification\DeliveryData;
 
-final class ServiceDataTest extends TestCase
+final class DeliveryDataTest extends TestCase
 {
     public function testMergesNestedMaps(): void
     {
         self::assertSame(
             ['data' => ['color' => 'red', 'tag' => 'hello'], 'title' => 'Hi'],
-            ServiceData::mergeReplacingLists(
+            DeliveryData::mergeReplacingLists(
                 ['data' => ['color' => 'red'], 'title' => 'Hi'],
                 ['data' => ['tag' => 'hello']],
             ),
@@ -24,7 +24,7 @@ final class ServiceDataTest extends TestCase
     {
         self::assertSame(
             ['target' => ['device_3']],
-            ServiceData::mergeReplacingLists(['target' => ['device_1', 'device_2']], ['target' => ['device_3']]),
+            DeliveryData::mergeReplacingLists(['target' => ['device_1', 'device_2']], ['target' => ['device_3']]),
         );
     }
 
@@ -32,7 +32,7 @@ final class ServiceDataTest extends TestCase
     {
         self::assertSame(
             ['data' => ['color' => 'blue']],
-            ServiceData::mergeReplacingLists(
+            DeliveryData::mergeReplacingLists(
                 ['data' => ['color' => 'red']],
                 ['data' => ['color' => 'green']],
                 ['data' => ['color' => 'blue']],

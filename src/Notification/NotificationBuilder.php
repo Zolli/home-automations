@@ -47,7 +47,7 @@ final readonly class NotificationBuilder
     }
 
     /** @param array<string, mixed> $data */
-    public function withServiceData(array $data): self
+    public function withPlatformData(array $data): self
     {
         return $this->withAdditionalData('data', $data);
     }
@@ -56,7 +56,7 @@ final readonly class NotificationBuilder
     {
         return clone(
             $this,
-            ['additionalData' => ServiceData::mergeReplacingLists($this->additionalData, [$key => $value])],
+            ['additionalData' => DeliveryData::mergeReplacingLists($this->additionalData, [$key => $value])],
         );
     }
 

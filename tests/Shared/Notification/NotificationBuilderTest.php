@@ -16,7 +16,7 @@ use Shared\Notification\Importance;
 use Shared\Notification\NotificationBuilder;
 use Shared\Notification\NotificationId;
 use Shared\Notification\Sender\ChimeTtsSender;
-use Shared\Notification\Sender\NotifyServiceSender;
+use Shared\Notification\Sender\NotifyActionSender;
 use Stewart\Contracts\Entity\EntityId;
 
 final class NotificationBuilderTest extends TestCase
@@ -26,13 +26,13 @@ final class NotificationBuilderTest extends TestCase
         $notification = NotificationBuilder::create()
             ->withBody('Dusty is full of debris, please empty it')
             ->withTitle('Empty the vacuum bin')
-            ->withServiceData(['notification_icon' => 'mdi:robot-vacuum-variant', 'color' => '#f47100'])
+            ->withPlatformData(['notification_icon' => 'mdi:robot-vacuum-variant', 'color' => '#f47100'])
             ->withAppendedButtons(new NotificationButton('DONE', 'Done'), new NotificationButton('NEXT', 'Next time'))
             ->withImportance(Importance::Low)
             ->withDebug()
             ->withId(NotificationId::fromString('vacuum-bin'))
             ->withAppendedDestinations(
-                NotifyServiceSender::createDestination('notify.mobile_app_zoli_phone')
+                NotifyActionSender::createDestination('notify.mobile_app_zoli_phone')
                     ->withAppendedConditions(
                         new ImportanceCondition(new EntityId('input_select.zoli_notification_level')),
                     ),
@@ -56,7 +56,7 @@ final class NotificationBuilderTest extends TestCase
         self::assertSame('vacuum-bin', $notification->meta->id->value);
 
         [$phone, $speaker] = $notification->destinations->listValues();
-        self::assertEquals(DestinationType::NotifyService, $phone->type);
+        self::assertEquals(DestinationType::NotifyAction, $phone->type);
         self::assertSame(['notify.mobile_app_zoli_phone'], $phone->targets);
         self::assertEquals(
             new AllOf(new ImportanceCondition(new EntityId('input_select.zoli_notification_level'))),
@@ -70,7 +70,7 @@ final class NotificationBuilderTest extends TestCase
     {
         $notification = NotificationBuilder::create()
             ->withBody('Hi')
-            ->withAppendedDestinations(NotifyServiceSender::createDestination('notify.notify'))
+            ->withAppendedDestinations(NotifyActionSender::createDestination('notify.notify'))
             ->buildNotification();
 
         self::assertNull($notification->message->title);
@@ -86,8 +86,8 @@ final class NotificationBuilderTest extends TestCase
         $notification = NotificationBuilder::create()
             ->withBody('Hi')
             ->withAppendedButtons(new NotificationButton('OPEN', 'Open', ['uri' => '/lovelace/0']))
-            ->withServiceData(['tag' => 'hello'])
-            ->withAppendedDestinations(NotifyServiceSender::createDestination('notify.notify'))
+            ->withPlatformData(['tag' => 'hello'])
+            ->withAppendedDestinations(NotifyActionSender::createDestination('notify.notify'))
             ->buildNotification();
 
         self::assertSame(['data' => ['tag' => 'hello']], $notification->message->additionalData);
@@ -97,14 +97,14 @@ final class NotificationBuilderTest extends TestCase
         );
     }
 
-    public function testMergesAdditionalDataWithServiceData(): void
+    public function testMergesAdditionalDataWithPlatformData(): void
     {
         $notification = NotificationBuilder::create()
             ->withBody('Hi')
-            ->withServiceData(['color' => 'red'])
+            ->withPlatformData(['color' => 'red'])
             ->withAdditionalData('data', ['tag' => 'hello'])
             ->withAdditionalData('target', ['device_1'])
-            ->withAppendedDestinations(NotifyServiceSender::createDestination('notify.notify'))
+            ->withAppendedDestinations(NotifyActionSender::createDestination('notify.notify'))
             ->buildNotification();
 
         self::assertSame(
@@ -119,7 +119,7 @@ final class NotificationBuilderTest extends TestCase
             ->withBody('Hi')
             ->withAdditionalData('target', ['device_1', 'device_2'])
             ->withAdditionalData('target', ['device_3'])
-            ->withAppendedDestinations(NotifyServiceSender::createDestination('notify.notify'))
+            ->withAppendedDestinations(NotifyActionSender::createDestination('notify.notify'))
             ->buildNotification();
 
         self::assertSame(['target' => ['device_3']], $notification->message->additionalData);
@@ -132,18 +132,18 @@ final class NotificationBuilderTest extends TestCase
         NotificationBuilder::create()
             ->withBody(' ')
             ->withTitle('Hi')
-            ->withAppendedDestinations(NotifyServiceSender::createDestination('notify.notify'))
+            ->withAppendedDestinations(NotifyActionSender::createDestination('notify.notify'))
             ->buildNotification();
     }
 
-    public function testRejectsRawActionsInServiceData(): void
+    public function testRejectsRawActionsInPlatformData(): void
     {
         $this->expectException(InvalidMessage::class);
 
         NotificationBuilder::create()
             ->withBody('Hi')
-            ->withServiceData(['actions' => [['action' => 'OK', 'title' => 'Ok']]])
-            ->withAppendedDestinations(NotifyServiceSender::createDestination('notify.notify'))
+            ->withPlatformData(['actions' => [['action' => 'OK', 'title' => 'Ok']]])
+            ->withAppendedDestinations(NotifyActionSender::createDestination('notify.notify'))
             ->buildNotification();
     }
 
@@ -152,7 +152,7 @@ final class NotificationBuilderTest extends TestCase
         $this->expectException(InvalidMessage::class);
 
         NotificationBuilder::create()
-            ->withAppendedDestinations(NotifyServiceSender::createDestination('notify.notify'))
+            ->withAppendedDestinations(NotifyActionSender::createDestination('notify.notify'))
             ->buildNotification();
     }
 

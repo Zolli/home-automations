@@ -25,7 +25,7 @@ use Shared\Alert\Rule\StateMatchRule;
 use Shared\Notification\Action\ActionRouter;
 use Shared\Notification\Collection\DestinationCollection;
 use Shared\Notification\Notification;
-use Shared\Notification\Sender\NotifyServiceSender;
+use Shared\Notification\Sender\NotifyActionSender;
 use Shared\Template\TextTemplate;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\HaContext;
@@ -199,7 +199,7 @@ final class MonitoredAlertTest extends TestCase
             EscalationStepCollection::fromSteps([
                 new EscalationStep(
                     Duration::zero(),
-                    DestinationCollection::fromDestinations([NotifyServiceSender::createDestination('notify.phone')]),
+                    DestinationCollection::fromDestinations([NotifyActionSender::createDestination('notify.phone')]),
                     repetition: new StepRepetition(Duration::minutes(5)),
                 ),
             ]),

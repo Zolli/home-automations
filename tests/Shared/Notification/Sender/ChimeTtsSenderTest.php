@@ -20,17 +20,17 @@ final class ChimeTtsSenderTest extends TestCase
         $notification = NotificationBuilder::create()
             ->withBody('The laundry is done')
             ->withTitle('Ignored')
-            ->withServiceData(['color' => 'ignored'])
+            ->withPlatformData(['color' => 'ignored'])
             ->withAppendedDestinations($destination)
             ->buildNotification();
 
-        $calls = new ChimeTtsSender()->buildServiceCalls($notification, $destination);
+        $calls = new ChimeTtsSender()->buildDeliveryCalls($notification, $destination);
 
         self::assertCount(1, $calls);
         self::assertSame([
-            'service' => 'chime_tts.say',
-            'data'    => ['message' => 'The laundry is done', 'chime_path' => 'bells', 'volume_level' => 0.5],
-            'target'  => ['entity_id' => ['media_player.kitchen_speaker', 'media_player.living_room_speaker']],
+            'action' => 'chime_tts.say',
+            'data'   => ['message' => 'The laundry is done', 'chime_path' => 'bells', 'volume_level' => 0.5],
+            'target' => ['entity_id' => ['media_player.kitchen_speaker', 'media_player.living_room_speaker']],
         ], $calls->listValues()[0]->toLogContext());
     }
 
@@ -44,7 +44,7 @@ final class ChimeTtsSenderTest extends TestCase
 
         self::assertSame(
             ['message' => 'Laundry!'],
-            new ChimeTtsSender()->buildServiceCalls($notification, $destination)->listValues()[0]->data,
+            new ChimeTtsSender()->buildDeliveryCalls($notification, $destination)->listValues()[0]->data,
         );
     }
 

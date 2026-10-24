@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Shared\Notification\Sender;
 
+use Stewart\Contracts\Action\ActionName;
 use Stewart\Contracts\Action\ActionTarget;
 
-final readonly class ServiceCall
+final readonly class DeliveryCall
 {
     /** @param array<string, mixed> $data */
     public function __construct(
-        public string $domain,
-        public string $service,
+        public ActionName $action,
         public array $data = [],
         public ?ActionTarget $target = null,
     ) {}
@@ -20,9 +20,9 @@ final readonly class ServiceCall
     public function toLogContext(): array
     {
         return array_filter([
-            'service' => "{$this->domain}.{$this->service}",
-            'data'    => $this->data,
-            'target'  => $this->target?->toArray(),
+            'action' => $this->action->value,
+            'data'   => $this->data,
+            'target' => $this->target?->toArray(),
         ], static fn(mixed $value) => $value !== null);
     }
 }

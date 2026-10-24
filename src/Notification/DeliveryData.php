@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Shared\Notification;
 
-final class ServiceData
+final class DeliveryData
 {
     /**
      * @param array<array-key, mixed> $base
