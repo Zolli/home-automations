@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Shared\Alert;
 
+use App\Tests\SchedulerRecorder;
 use Shared\Alert\MonitoringContext;
 use Shared\Notification\Action\ActionRouter;
 use Stewart\Contracts\Entity\EntityId;
@@ -15,7 +16,7 @@ use Stewart\Contracts\Registry\RegisteredEntity;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\Time\Duration;
 use Stewart\Testing\App\AppHarness;
-use Stewart\Testing\HaContext\RecordedServiceCall;
+use Stewart\Testing\HaContext\RecordedActionCall;
 use Stewart\Testing\HaContext\RecordingHaContext;
 
 final readonly class AlertFixture
@@ -26,15 +27,18 @@ final readonly class AlertFixture
 
     public RecordingHaContext $ha;
 
+    public SchedulerRecorder $scheduler;
+
     public function __construct()
     {
-        $this->harness = new AppHarness();
-        $this->ha      = $this->harness->ha;
+        $this->harness   = new AppHarness();
+        $this->ha        = $this->harness->ha;
+        $this->scheduler = new SchedulerRecorder($this->harness->scheduler);
     }
 
     public function createMonitoringContext(): MonitoringContext
     {
-        return new MonitoringContext($this->ha, $this->harness->scheduler, $this->harness->mqtt, $this->harness->clock);
+        return new MonitoringContext($this->ha, $this->scheduler, $this->harness->mqtt, $this->harness->clock);
     }
 
     public function placeInArea(string $entityId, string $areaId, string $areaName): void
@@ -68,9 +72,9 @@ final readonly class AlertFixture
     }
 
     /** @return list<string> */
-    public function listCalledServices(): array
+    public function listCalledActions(): array
     {
-        return $this->ha->calls->mapToList(static fn(RecordedServiceCall $call): string => $call->getServiceName());
+        return $this->ha->calls->mapToList(static fn(RecordedActionCall $call): string => $call->getActionName());
     }
 
     public function advanceTime(Duration $duration): void
@@ -78,8 +82,8 @@ final readonly class AlertFixture
         $this->harness->advanceTime($duration);
     }
 
-    public function countPendingTimers(): int
+    public function countActiveTasks(): int
     {
-        return $this->harness->timers->countPendingTimers();
+        return $this->scheduler->countActiveTasks();
     }
 }

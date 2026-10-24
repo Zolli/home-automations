@@ -41,7 +41,7 @@ final class EscalationTest extends TestCase
     protected function setUp(): void
     {
         $this->fixture  = new AlertFixture();
-        $this->notifier = new NotifierRecorder(new ActionRouter($this->fixture->harness->scheduler, new NullLogger()));
+        $this->notifier = new NotifierRecorder(new ActionRouter($this->fixture->scheduler, new NullLogger()));
     }
 
     public function testSendsStepsOnSchedule(): void
@@ -86,7 +86,7 @@ final class EscalationTest extends TestCase
         $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertSame(['notify.phone'], $this->listSentTargets());
-        self::assertSame(0, $this->fixture->countPendingTimers());
+        self::assertSame(0, $this->fixture->countActiveTasks());
     }
 
     public function testDismissalAcknowledgesWhenPolicyAllows(): void
@@ -119,7 +119,7 @@ final class EscalationTest extends TestCase
         $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertSame(['notify.phone'], $this->listSentTargets());
-        self::assertSame(0, $this->fixture->countPendingTimers());
+        self::assertSame(0, $this->fixture->countActiveTasks());
         self::assertSame([], $this->acknowledged);
     }
 
@@ -293,7 +293,7 @@ final class EscalationTest extends TestCase
                 $this->acknowledged[] = $acknowledgement;
             },
             $this->notifier,
-            $this->fixture->harness->scheduler,
+            $this->fixture->scheduler,
             $this->fixture->ha,
             new NullLogger(),
         );

@@ -9,8 +9,8 @@ use Shared\Notification\DestinationType;
 use Shared\Notification\Exception\InvalidDestination;
 use Shared\Notification\Notification;
 use Shared\Notification\Sender\Collection\ServiceCallCollection;
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\EntityId;
-use Stewart\Contracts\Service\ServiceTarget;
 
 final readonly class ChimeTtsSender implements DestinationSender
 {
@@ -47,7 +47,7 @@ final readonly class ChimeTtsSender implements DestinationSender
             self::SERVICE_DOMAIN,
             self::SERVICE,
             ['message' => $notification->message->body, ...$destination->options],
-            ServiceTarget::forEntities(...$destination->targets),
+            ActionTarget::forEntities(...$destination->targets),
         )]);
     }
 }

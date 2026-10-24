@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Shared\Notification\Sender;
 
-use Stewart\Contracts\Service\ServiceTarget;
+use Stewart\Contracts\Action\ActionTarget;
 
 final readonly class ServiceCall
 {
@@ -13,7 +13,7 @@ final readonly class ServiceCall
         public string $domain,
         public string $service,
         public array $data = [],
-        public ?ServiceTarget $target = null,
+        public ?ActionTarget $target = null,
     ) {}
 
     /** @return array<string, mixed> */

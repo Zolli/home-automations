@@ -14,13 +14,14 @@ use Shared\Alert\Config\InvalidAlertConfig;
 use Shared\Alert\MonitoringContext;
 use Stewart\Contracts\App;
 use Stewart\Contracts\Automation;
+use Stewart\Contracts\Disposable;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Mqtt\Mqtt;
 use Stewart\Contracts\Schedule\Scheduler;
 use Stewart\Contracts\Time\Clock;
 
 #[Automation(id: 'home-alert')]
-final class HomeAlertApp implements App
+final class HomeAlertApp implements App, Disposable
 {
     private readonly AlertDefinitionCollection $definitions;
 

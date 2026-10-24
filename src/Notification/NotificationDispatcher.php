@@ -59,7 +59,7 @@ final readonly class NotificationDispatcher implements Notifier
             }
 
             foreach ($this->findSender($destination->type)->buildServiceCalls($notification, $destination) as $call) {
-                $this->ha->callService($call->domain, $call->service, $call->data, $call->target);
+                $this->ha->callAction("{$call->domain}.{$call->service}", $call->data, $call->target);
                 $delivered = true;
                 $this->logWhenDebugging($notification, 'Sent', $log + ['call' => $call->toLogContext()]);
             }

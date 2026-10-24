@@ -54,11 +54,11 @@ final class SleepModeAppTest extends TestCase
 
         $fixture->harness->ha->pushState(self::BED_FULL, 'on');
         $fixture->advanceTime(Duration::minutes(29));
-        self::assertSame([], $fixture->listCalledServices());
+        self::assertSame([], $fixture->listCalledActions());
 
         $fixture->advanceTime(Duration::minutes(1));
 
-        self::assertSame(['input_boolean.turn_on'], $fixture->listCalledServices());
+        self::assertSame(['input_boolean.turn_on'], $fixture->listCalledActions());
         self::assertSame(
             [[self::TOPIC, [
                 'event' => 'sleep',
@@ -76,7 +76,7 @@ final class SleepModeAppTest extends TestCase
         $fixture->harness->ha->pushState(self::BED_FULL, 'on');
         $fixture->advanceTime(Duration::minutes(30));
 
-        self::assertSame([], $fixture->listCalledServices());
+        self::assertSame([], $fixture->listCalledActions());
         self::assertSame([], $fixture->listPublishedMessages());
     }
 
@@ -87,7 +87,7 @@ final class SleepModeAppTest extends TestCase
         $fixture->harness->ha->pushState(self::BED_FULL, 'on');
         $fixture->advanceTime(Duration::minutes(30));
 
-        self::assertSame([], $fixture->listCalledServices());
+        self::assertSame([], $fixture->listCalledActions());
     }
 
     public function testForcedActivationFiresBesideSelection(): void
@@ -96,7 +96,7 @@ final class SleepModeAppTest extends TestCase
 
         $fixture->advanceTime(Duration::hours(1));
 
-        self::assertSame(['input_boolean.turn_on'], $fixture->listCalledServices());
+        self::assertSame(['input_boolean.turn_on'], $fixture->listCalledActions());
         self::assertSame('forced_activation', $this->readPublishedCause($fixture));
     }
 
@@ -108,7 +108,7 @@ final class SleepModeAppTest extends TestCase
         $fixture->harness->ha->pushState(self::BEDROOM_COVERS, 'open');
         $fixture->advanceTime(Duration::minutes(2));
 
-        self::assertSame(['input_boolean.turn_off'], $fixture->listCalledServices());
+        self::assertSame(['input_boolean.turn_off'], $fixture->listCalledActions());
         self::assertSame('covers_opened', $this->readPublishedCause($fixture));
     }
 
@@ -119,7 +119,7 @@ final class SleepModeAppTest extends TestCase
         $fixture->harness->ha->pushState(self::BED_PARTIAL, 'off');
         $fixture->advanceTime(Duration::minutes(10));
 
-        self::assertSame([], $fixture->listCalledServices());
+        self::assertSame([], $fixture->listCalledActions());
     }
 
     private function createFixture(string $startTime, string $sleepMode): ModeFixture

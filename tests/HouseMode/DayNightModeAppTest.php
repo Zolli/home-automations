@@ -61,7 +61,7 @@ final class DayNightModeAppTest extends TestCase
 
         $this->fixture->advanceTime(Duration::hours(1));
 
-        self::assertSame(['input_select.select_option'], $this->fixture->listCalledServices());
+        self::assertSame(['input_select.select_option'], $this->fixture->listCalledActions());
         self::assertSame(['option' => 'day'], $this->fixture->harness->ha->getLastCall()->data);
         self::assertSame(
             [[self::TOPIC, [
@@ -90,7 +90,7 @@ final class DayNightModeAppTest extends TestCase
 
         $this->fixture->advanceTime(Duration::hours(1));
 
-        self::assertSame(['input_select.select_option'], $this->fixture->listCalledServices());
+        self::assertSame(['input_select.select_option'], $this->fixture->listCalledActions());
         self::assertSame('day', $this->readPublishedEvent());
     }
 
@@ -100,11 +100,11 @@ final class DayNightModeAppTest extends TestCase
 
         $this->fixture->selectOption(self::DAY_STRATEGY, 'fixed_time');
         $this->fixture->advanceTime(Duration::hours(2));
-        self::assertSame([], $this->fixture->listCalledServices());
+        self::assertSame([], $this->fixture->listCalledActions());
 
         $this->fixture->advanceTime(Duration::minutes(30));
 
-        self::assertSame(['input_select.select_option'], $this->fixture->listCalledServices());
+        self::assertSame(['input_select.select_option'], $this->fixture->listCalledActions());
     }
 
     public function testLightLevelNeedsFiveMinutesAbove(): void
@@ -115,7 +115,7 @@ final class DayNightModeAppTest extends TestCase
 
         $this->fixture->harness->ha->pushState(self::LUX_SENSOR, '40');
         $this->fixture->advanceTime(Duration::minutes(4));
-        self::assertSame([], $this->fixture->listCalledServices());
+        self::assertSame([], $this->fixture->listCalledActions());
 
         $this->fixture->advanceTime(Duration::minutes(1));
 
@@ -129,7 +129,7 @@ final class DayNightModeAppTest extends TestCase
         $this->fixture->harness->stopApp();
         $this->fixture->advanceTime(Duration::hours(1));
 
-        self::assertSame([], $this->fixture->listCalledServices());
+        self::assertSame([], $this->fixture->listCalledActions());
     }
 
     public function testRejectsInvalidConfigAtConstruction(): void

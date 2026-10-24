@@ -82,7 +82,7 @@ final class HomeAlertAppTest extends TestCase
 
         self::assertSame(
             ['valve.close_valve', 'notify.mobile_app_phone', 'chime_tts.say'],
-            $this->fixture->listCalledServices(),
+            $this->fixture->listCalledActions(),
         );
     }
 
@@ -109,7 +109,7 @@ final class HomeAlertAppTest extends TestCase
         $this->fixture->publishMqtt('dsmr/reading/phase_voltage_l2', '0.0');
         $this->fixture->advanceTime(Duration::seconds(10));
 
-        self::assertSame(['notify.mobile_app_phone'], $this->fixture->listCalledServices());
+        self::assertSame(['notify.mobile_app_phone'], $this->fixture->listCalledActions());
         self::assertSame(
             'dsmr/reading/phase_voltage_l2 is 0, below 50',
             $this->fixture->ha->getLastCall()->data['message'] ?? null,
@@ -201,9 +201,9 @@ final class HomeAlertAppTest extends TestCase
 
         foreach ($this->fixture->ha->calls as $call) {
             $kind = match (true) {
-                $call->getServiceName() === 'light.turn_on' => 'light',
-                ($call->data['message'] ?? null) === 'TTS'  => 'tts',
-                default                                     => 'text',
+                $call->getActionName() === 'light.turn_on' => 'light',
+                ($call->data['message'] ?? null) === 'TTS' => 'tts',
+                default                                    => 'text',
             };
             $counts[$kind]++;
         }

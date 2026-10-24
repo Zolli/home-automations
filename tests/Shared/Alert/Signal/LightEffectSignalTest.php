@@ -37,7 +37,7 @@ final class LightEffectSignalTest extends TestCase
         $this->signal->emit($this->createFault(self::SMOKE_SENSOR), $this->fixture->ha);
 
         $call = $this->fixture->ha->getLastCall();
-        self::assertSame(['light.turn_on'], $this->fixture->listCalledServices());
+        self::assertSame(['light.turn_on'], $this->fixture->listCalledActions());
         self::assertSame(['effect' => 'okay'], $call->data);
         self::assertSame(['light.kitchen_all'], $call->listTargetedEntityIds());
     }

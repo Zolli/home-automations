@@ -17,7 +17,7 @@ make setup        # pull the images, create .env with a control token, install, 
 Fill in `STEWART_HOME_ASSISTANT__URL` and `STEWART_HOME_ASSISTANT__TOKEN` in `.env`, then:
 
 ```bash
-make generate     # typed entity and service classes from your Home Assistant, into generated/
+make generate     # typed entity and action classes from your Home Assistant, into generated/
 make run          # run in the foreground; Ctrl-C stops it
 make status       # from another terminal
 ```
@@ -42,11 +42,11 @@ name your entities, so keep this repository private if that matters to you.
 ### Developing next to a running production daemon
 
 Both would run every automation against the same Home Assistant. While developing, run only the app you are working
-on, and keep service calls from reaching Home Assistant:
+on, and keep action calls from reaching Home Assistant:
 
 ```bash
 make run ONLY=hello            # only these apps, even if disabled in stewart.yaml
-make run ONLY=hello DRY_RUN=1  # service calls are logged and answered as succeeded, never sent
+make run ONLY=hello DRY_RUN=1  # action calls are logged and answered as succeeded, never sent
 ```
 
 ### Shared components

@@ -19,7 +19,7 @@ final class TurnOffMitigationTest extends TestCase
         $mitigation->mitigate($ha);
 
         self::assertCount(1, $ha->calls);
-        self::assertSame('valve.close_valve', $ha->getLastCall()->getServiceName());
+        self::assertSame('valve.close_valve', $ha->getLastCall()->getActionName());
         self::assertSame(['valve.main_water'], $ha->getLastCall()->listTargetedEntityIds());
         self::assertSame('Closed valve.main_water', $mitigation->describe());
     }
@@ -32,7 +32,7 @@ final class TurnOffMitigationTest extends TestCase
         $mitigation->mitigate($ha);
 
         self::assertCount(1, $ha->calls);
-        self::assertSame('homeassistant.turn_off', $ha->getLastCall()->getServiceName());
+        self::assertSame('homeassistant.turn_off', $ha->getLastCall()->getActionName());
         self::assertSame(['switch.boiler_relay'], $ha->getLastCall()->listTargetedEntityIds());
         self::assertSame('Turned off switch.boiler_relay', $mitigation->describe());
     }

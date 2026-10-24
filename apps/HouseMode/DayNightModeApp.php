@@ -14,10 +14,11 @@ use Shared\HouseMode\ModeTransitionMapper;
 use Shared\HouseMode\Payload\ModeEventPayloadMapper;
 use Stewart\Contracts\App;
 use Stewart\Contracts\Automation;
+use Stewart\Contracts\Disposable;
+use Stewart\Contracts\Exception\ActionCallException;
 use Stewart\Contracts\Exception\ExposureException;
 use Stewart\Contracts\Exception\IdentifierException;
 use Stewart\Contracts\Exception\MqttException;
-use Stewart\Contracts\Exception\ServiceCallException;
 use Stewart\Contracts\Exposure\DeviceInfo;
 use Stewart\Contracts\Exposure\EntityExposure;
 use Stewart\Contracts\HaContext;
@@ -26,7 +27,7 @@ use Stewart\Contracts\Schedule\Scheduler;
 use Stewart\Contracts\Time\Clock;
 
 #[Automation(id: 'day-night-mode')]
-final class DayNightModeApp implements App
+final class DayNightModeApp implements App, Disposable
 {
     private const string PRODUCER = 'stewart/day-night-mode';
     private const string DAY      = 'day';
@@ -94,7 +95,7 @@ final class DayNightModeApp implements App
         try {
             $this->modeSelectEntity->selectOption($mode);
             $this->mqtt->publish($this->topic, $this->eventMapper->mapToPayload($mode, $cause, self::PRODUCER));
-        } catch (ServiceCallException|MqttException $e) {
+        } catch (ActionCallException|MqttException $e) {
             $this->logger->error("[MODE] Switching to {$mode} failed", ['exception' => $e]);
         }
     }

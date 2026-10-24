@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Shared\Alert\Mitigation;
 
+use Stewart\Contracts\Action\ActionTarget;
 use Stewart\Contracts\Entity\EntityId;
 use Stewart\Contracts\HaContext;
-use Stewart\Contracts\Service\ServiceTarget;
 
 final readonly class TurnOffMitigation implements Mitigation
 {
@@ -18,15 +18,15 @@ final readonly class TurnOffMitigation implements Mitigation
 
     public function mitigate(HaContext $ha): void
     {
-        $target = ServiceTarget::forEntities($this->entityId);
+        $target = ActionTarget::forEntities($this->entityId);
 
         if ($this->isValve()) {
-            $ha->callService(self::VALVE_DOMAIN, 'close_valve', target: $target);
+            $ha->callAction('valve.close_valve', target: $target);
 
             return;
         }
 
-        $ha->callService('homeassistant', 'turn_off', target: $target);
+        $ha->callAction('homeassistant.turn_off', target: $target);
     }
 
     public function describe(): string

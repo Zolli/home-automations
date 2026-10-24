@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Shared\Notification;
 
+use App\Tests\SchedulerRecorder;
 use Shared\Notification\Action\ActionRouter;
 use Stewart\Contracts\Event\HaEvent;
 use Stewart\Contracts\State\EventContext;
 use Stewart\Contracts\Time\Duration;
 use Stewart\Testing\App\AppHarness;
-use Stewart\Testing\HaContext\RecordedServiceCall;
+use Stewart\Testing\HaContext\RecordedActionCall;
 use Stewart\Testing\HaContext\RecordingHaContext;
 
 final readonly class NotificationFixture
@@ -18,15 +19,18 @@ final readonly class NotificationFixture
 
     public RecordingHaContext $ha;
 
+    public SchedulerRecorder $scheduler;
+
     public function __construct()
     {
-        $this->harness = new AppHarness();
-        $this->ha      = $this->harness->ha;
+        $this->harness   = new AppHarness();
+        $this->ha        = $this->harness->ha;
+        $this->scheduler = new SchedulerRecorder($this->harness->scheduler);
     }
 
     public function createActionRouter(): ActionRouter
     {
-        return new ActionRouter($this->harness->scheduler, $this->harness->logger);
+        return new ActionRouter($this->scheduler, $this->harness->logger);
     }
 
     /** @param array<string, mixed> $data */
@@ -50,13 +54,18 @@ final readonly class NotificationFixture
     }
 
     /** @return list<string> */
-    public function listCalledServices(): array
+    public function listCalledActions(): array
     {
-        return $this->ha->calls->mapToList(static fn(RecordedServiceCall $call): string => $call->getServiceName());
+        return $this->ha->calls->mapToList(static fn(RecordedActionCall $call): string => $call->getActionName());
     }
 
     public function advanceTime(Duration $duration): void
     {
         $this->harness->advanceTime($duration);
+    }
+
+    public function countActiveTasks(): int
+    {
+        return $this->scheduler->countActiveTasks();
     }
 }

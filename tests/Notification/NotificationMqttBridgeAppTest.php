@@ -139,7 +139,7 @@ final class NotificationMqttBridgeAppTest extends TestCase
             'destinations' => [['type' => 'notify_service', 'target' => 'notify.notify']],
         ]);
 
-        self::assertSame(0, $this->fixture->harness->timers->countPendingTimers());
+        self::assertSame(0, $this->fixture->countActiveTasks());
     }
 
     public function testDoesNotListenWhenNothingDelivered(): void
@@ -148,7 +148,7 @@ final class NotificationMqttBridgeAppTest extends TestCase
 
         $this->receive($this->withButtons(['id' => 'vacuum-bin']));
 
-        self::assertSame(0, $this->fixture->harness->timers->countPendingTimers());
+        self::assertSame(0, $this->fixture->countActiveTasks());
     }
 
     public function testDisposeStopsListeningForButtons(): void

@@ -42,7 +42,7 @@ final class MonitoredAlertTest extends TestCase
     protected function setUp(): void
     {
         $this->fixture  = new AlertFixture();
-        $this->notifier = new NotifierRecorder(new ActionRouter($this->fixture->harness->scheduler, new NullLogger()));
+        $this->notifier = new NotifierRecorder(new ActionRouter($this->fixture->scheduler, new NullLogger()));
         $this->fixture->ha->pushState(self::LEAK_SENSOR, 'off');
     }
 
@@ -52,7 +52,7 @@ final class MonitoredAlertTest extends TestCase
 
         $this->fixture->ha->pushState(self::LEAK_SENSOR, 'on');
 
-        self::assertSame(['valve.close_valve'], $this->fixture->listCalledServices());
+        self::assertSame(['valve.close_valve'], $this->fixture->listCalledActions());
         self::assertSame(["binary_sensor.kitchen_leak is on\nClosed valve.main_water"], $this->listBodies());
         self::assertSame('Kitchen flood', $this->notifier->sent[0]->message->title);
     }
@@ -139,9 +139,9 @@ final class MonitoredAlertTest extends TestCase
 
         $raised = "binary_sensor.kitchen_leak is on\nTurned off binary_sensor.kitchen_leak";
         self::assertSame([$raised, 'Cleared.', $raised, 'Cleared.'], $this->listBodies());
-        self::assertSame(['homeassistant.turn_off', 'homeassistant.turn_off'], $this->fixture->listCalledServices());
+        self::assertSame(['homeassistant.turn_off', 'homeassistant.turn_off'], $this->fixture->listCalledActions());
         self::assertSame(AlertState::Idle, $alert->getState());
-        self::assertSame(0, $this->fixture->countPendingTimers());
+        self::assertSame(0, $this->fixture->countActiveTasks());
     }
 
     public function testRendersMessageWithFaultArea(): void
@@ -175,7 +175,7 @@ final class MonitoredAlertTest extends TestCase
         $this->fixture->advanceTime(Duration::hours(1));
 
         self::assertCount(1, $this->notifier->sent);
-        self::assertSame(0, $this->fixture->countPendingTimers());
+        self::assertSame(0, $this->fixture->countActiveTasks());
     }
 
     private function startMonitoring(Mitigation ...$mitigations): MonitoredAlert

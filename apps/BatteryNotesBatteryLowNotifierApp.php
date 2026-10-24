@@ -31,8 +31,6 @@ final class BatteryNotesBatteryLowNotifierApp implements App
             ->subscribe($this->whenBatteryNotesEventFired(...));
     }
 
-    public function dispose(): void {}
-
     private function whenBatteryNotesEventFired(HaEvent $event): void
     {
         $isLow = $event->getValue('battery_low');

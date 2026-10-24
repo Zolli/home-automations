@@ -33,8 +33,6 @@ class TimedLightComponent
         $stateChangeStream->distinctUntilChanged()->subscribe($this->whenSensorsChanges(...));
     }
 
-    public function dispose(): void {}
-
     private function whenSensorsChanges(StateChange $stateChange): void
     {
         switch ($stateChange->to?->state) {

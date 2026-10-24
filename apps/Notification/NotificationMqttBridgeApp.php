@@ -14,6 +14,7 @@ use Shared\Notification\Payload\NotificationActionPayloadMapper;
 use Shared\Notification\Payload\NotificationPayloadMapper;
 use Stewart\Contracts\App;
 use Stewart\Contracts\Automation;
+use Stewart\Contracts\Disposable;
 use Stewart\Contracts\Exception\MqttException;
 use Stewart\Contracts\HaContext;
 use Stewart\Contracts\Mqtt\Mqtt;
@@ -21,7 +22,7 @@ use Stewart\Contracts\Mqtt\MqttMessage;
 use Stewart\Contracts\Subscription;
 
 #[Automation(id: 'notification-mqtt-bridge')]
-final class NotificationMqttBridgeApp implements App
+final class NotificationMqttBridgeApp implements App, Disposable
 {
     private ?Subscription $subscription = null;
 

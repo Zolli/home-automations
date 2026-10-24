@@ -26,8 +26,6 @@ class HallwayMirrorLightController implements App
             ->subscribe($this->onButtonPress(...));
     }
 
-    public function dispose(): void {}
-
     private function onButtonPress(StateChange $change): void
     {
         $eventType    = $change->to?->getStringAttribute('event_type');

@@ -44,7 +44,7 @@ final class NotificationDispatcherTest extends TestCase
             )
             ->buildNotification());
 
-        self::assertSame(['notify.mobile_app_zoli_phone'], $fixture->listCalledServices());
+        self::assertSame(['notify.mobile_app_zoli_phone'], $fixture->listCalledActions());
     }
 
     public function testReturnsSentNotification(): void

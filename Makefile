@@ -52,12 +52,12 @@ doctor: ## Check the container can run Stewart
 	$(RUN) stewart doctor
 
 .PHONY: generate
-generate: ## Write typed entity and service classes from Home Assistant into generated/ [ARGS=--allow-shrink]
+generate: ## Write typed entity and action classes from Home Assistant into generated/ [ARGS=--allow-shrink]
 	$(RUN) stewart generate $(ARGS)
 
 .PHONY: run
-run: ## Run in the foreground [ONLY="hello porch" to run only those apps, DRY_RUN=1 to send no service calls]
-	$(RUN_APP) $(if $(DRY_RUN),-e STEWART_SERVICE_CALLS__DRY_RUN=true) stewart run $(addprefix --only=,$(ONLY))
+run: ## Run in the foreground [ONLY="hello porch" to run only those apps, DRY_RUN=1 to change nothing in Home Assistant]
+	$(RUN_APP) stewart run $(addprefix --only=,$(ONLY))$(if $(DRY_RUN), --dry-run)
 
 .PHONY: debug
 debug: ## Run in the foreground with Xdebug
