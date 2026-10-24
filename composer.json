@@ -16,8 +16,10 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.95",
-        "phpstan/phpstan": "^2.2",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.3",
         "phpunit/phpunit": "^13.3",
+        "stewart-php/phpstan": "^2.0",
         "stewart-php/testing": "^2.0"
     },
     "autoload": {
@@ -39,6 +41,9 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        },
         "optimize-autoloader": true,
         "sort-packages": true
     }
